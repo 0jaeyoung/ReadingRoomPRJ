@@ -23,12 +23,15 @@ class LoginViewController: UIViewController {
         id.translatesAutoresizingMaskIntoConstraints = false
         id.backgroundColor = .gray
         id.autocapitalizationType = .none
+        id.placeholder = " ID"
         self.view.addSubview(id)
         
         password = UITextField()
         password.translatesAutoresizingMaskIntoConstraints = false
         password.backgroundColor = .gray
         password.autocapitalizationType = .none
+        password.placeholder = " PW"
+        password.isSecureTextEntry = true
         self.view.addSubview(password)
         
         btnLogin = UIButton()
@@ -110,6 +113,12 @@ class LoginViewController: UIViewController {
     @objc func loginClick(_ sender: Any) {
         print("Login Click")
         
+        //로그인 이벤트 주기
+        //1. 텍스트 변화
+        self.btnLogin.setTitle("로그인 중...", for: .normal)
+        //2. 색깔 변화
+        //self.btnLogin.backgroundColor = .lightGray
+        
         // 입력값 가져오기
         let inputID: String = id.text ?? ""
         let inputPW: String = password.text ?? ""
@@ -190,6 +199,12 @@ class LoginViewController: UIViewController {
                 // TODO : 실패시 처리 (ex. 팝업, 네트워크상태 확인, 서버상태 확인 등)
                 print("error: \(String(error.errorDescription!))")
             }
+            
+            //로그인 이벤트 주기
+            //1. 텍스트 변화
+            self.btnLogin.setTitle("로그인", for: .normal)
+            //2. 색깔 변화
+            //self.btnLogin.backgroundColor = .gray
         }
         
     }

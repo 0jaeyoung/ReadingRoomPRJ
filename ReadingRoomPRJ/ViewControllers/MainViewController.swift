@@ -7,7 +7,7 @@
 
 import UIKit
 import Foundation
-
+import PanModal
 
 
 class MainViewController: UIViewController {
@@ -26,13 +26,13 @@ class MainViewController: UIViewController {
     var checkinButton: UIButton!
     
     
-//    var shortFormHeight: PanModalHeight {
-//        return .contentHeight(300)
-//    }
-//
-//    var longFormHeight: PanModalHeight {
-//        return .maxHeightWithTopInset(300)
-//    }
+    var shortFormHeight: PanModalHeight {
+        return .contentHeight(300)
+    }
+
+    var longFormHeight: PanModalHeight {
+        return .maxHeightWithTopInset(300)
+    }
     
     
     
@@ -189,12 +189,8 @@ class MainViewController: UIViewController {
     
     @objc func showMySeat(_ sender: Any) {
         
-        //self.presentPanModal(MySeatViewController())
         
-//        let mainVC: ViewController = ViewController()
-//        mainVC.modalPresentationStyle = .fullScreen
-//        self.present(mainVC, animated: true, completion: nil)
-        
+        self.presentPanModal(MySeatViewController())
     }
     
     @objc func openView(_ sender: Any) {
@@ -210,9 +206,9 @@ class MainViewController: UIViewController {
         vc.modalPresentationStyle = .fullScreen
         present(nextPage, animated: true, completion: nil)
         
-//        vc.modalPresentationStyle = .fullScreen
-//        self.present(vc, animated: true, completion: nil)
-//
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+
         
         //navigationController?.pushViewController(vc, animated: true)
     }

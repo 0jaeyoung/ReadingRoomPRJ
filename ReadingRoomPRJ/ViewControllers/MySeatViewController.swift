@@ -5,7 +5,7 @@
 //  Created by 구본의 on 2021/01/29.
 //
 import UIKit
-//import PanModal
+import PanModal
 
 
 class MySeatViewController: UIViewController {
@@ -105,20 +105,20 @@ class MySeatViewController: UIViewController {
 }
 
 
-//extension MySeatViewController: PanModalPresentable {
-//    var panScrollable: UIScrollView? {
-//        return nil
-//    }
-//
-//    var shortFormHeight: PanModalHeight {
-//        return .contentHeight(300)
-//    }
-//
-//    var longFormHeight: PanModalHeight {
-//        return .contentHeight(300)
-//    }
-//
-//    var anchorModalToLongForm: Bool {
-//        return true
-//    }
-//}
+extension MySeatViewController: PanModalPresentable {
+    var panScrollable: UIScrollView? {
+        return nil
+    }
+
+    var shortFormHeight: PanModalHeight {
+        return .contentHeight(300)
+    }
+
+    var longFormHeight: PanModalHeight {
+        return .contentHeight(300)
+    }
+
+    var anchorModalToLongForm: Bool {
+        return true
+    }
+}
