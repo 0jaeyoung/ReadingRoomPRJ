@@ -1,0 +1,6 @@
+framework module Pods_ReadingRoomPRJ {
+  umbrella header "Pods-ReadingRoomPRJ-umbrella.h"
+
+  export *
+  module * { export * }
+}
