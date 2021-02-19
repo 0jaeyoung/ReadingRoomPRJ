@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */; };
+		2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */; };
 		440220F1F69E5135B49233B7 /* Pods_ReadingRoomPRJ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */; };
 		79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8A25DE44BE00B5C24E /* MainViewController.swift */; };
 		79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReadingRoomPRJ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeat.swift; sourceTree = "<group>"; };
+		2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeatCell.swift; sourceTree = "<group>"; };
 		79A61F8A25DE44BE00B5C24E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySeatViewController.swift; sourceTree = "<group>"; };
 		79A61F9025DE47A400B5C24E /* ReserveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserveViewController.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */,
 				79A61F9025DE47A400B5C24E /* ReserveViewController.swift */,
 				2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */,
+				2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				79A61F9125DE47A400B5C24E /* ReserveViewController.swift in Sources */,
 				79B6A1B325DE347500666EAE /* AppDelegate.swift in Sources */,
 				79B6A1BD25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld in Sources */,
+				2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */,
 				79B6A1B525DE347500666EAE /* SceneDelegate.swift in Sources */,
 				79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */,
 				2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */,
