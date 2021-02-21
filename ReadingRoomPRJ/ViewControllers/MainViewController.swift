@@ -197,7 +197,7 @@ class MainViewController: UIViewController {
         print(sender)
         
         let vc: ReserveViewController = ReserveViewController()
-        
+        //let vc: TmpReserveViewController = TmpReserveViewController()
         
         
         let nextPage = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
@@ -212,45 +212,45 @@ class MainViewController: UIViewController {
         
         //여기 열 때 모든 자리 좌석 보여줌
         
-        let college: String = "TEST"
-        let room: String = "Test"
-
-
-        let showSeatURL = "http://3.34.174.56:8080/room"
-        let PARAM: Parameters = [
-
-            "college": college,
-            "room": room,
-
-        ]
-
-        let alamo = AF.request(showSeatURL, method: .get, parameters: PARAM).validate(statusCode: 200..<450)
-
-        alamo.responseJSON(){ response in
-            
-            print("result::: \(response)")
-            
-            switch response.result {
-            case .success(let value):
-                print("success")
-                if let jsonObj = value as? NSDictionary {
-                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    
-                    if (resultMsg == "Success" && getResult == true) {
-                        UserDefaults.standard.set(jsonObj.object(forKey: "room"), forKey: "roomInfo")
-                        print("데이터 저장 성공")
-                        
-                        
-                    }
-                }
-            case .failure(_):
-                print("error")
-            }
-            
-           
-            
-            }
+//        let college: String = "TEST"
+//        let room: String = "Test"
+//
+//
+//        let showSeatURL = "http://3.34.174.56:8080/room"
+//        let PARAM: Parameters = [
+//
+//            "college": college,
+//            "room": room,
+//
+//        ]
+//
+//        let alamo = AF.request(showSeatURL, method: .get, parameters: PARAM).validate(statusCode: 200..<450)
+//
+//        alamo.responseJSON(){ response in
+//
+//            print("result::: \(response)")
+//
+//            switch response.result {
+//            case .success(let value):
+//                print("success")
+//                if let jsonObj = value as? NSDictionary {
+//                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
+//                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+//
+//                    if (resultMsg == "Success" && getResult == true) {
+//                        UserDefaults.standard.set(jsonObj.object(forKey: "room"), forKey: "roomInfo")
+//                        print("데이터 저장 성공")
+//
+//
+//                    }
+//                }
+//            case .failure(_):
+//                print("error")
+//            }
+//
+//
+//
+//        }
         
         
         

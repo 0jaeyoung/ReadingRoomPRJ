@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ReserveViewController: UIViewController {
 
@@ -16,6 +17,18 @@ class ReserveViewController: UIViewController {
     var endLb: UILabel!
     var endTime: UIDatePicker!
     var completeBtn: UIButton!
+    
+    var rowCount:Int! // 가로 몇칸?
+    var totalCount:Int! // 전체 셀 개수
+    var seatInfo: [Any] = []
+    var seats = [Int:Int]()
+    
+    enum SeatType: Int {
+        case Wall = -1
+        case Empty = 0
+        case Door = -2
+    }
+    
     
     //현재 좌석을 보여주는 컬렉션뷰 생성 /  추가된 라인(20~28)
     let showSeatCollectionView: UICollectionView = {
@@ -157,9 +170,46 @@ class ReserveViewController: UIViewController {
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
         showSeatCollectionView.delegate = self
-        showSeatCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
-        
+        showSeatCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        let college: String = "TEST"
+        let room: String = "Test"
+
+
+        let showSeatURL = "http://3.34.174.56:8080/room"
+        let PARAM: Parameters = [
+
+            "college": college,
+            "room": room,
+
+        ]
+
+        let alamo = AF.request(showSeatURL, method: .get, parameters: PARAM).validate(statusCode: 200..<450)
+
+        alamo.responseJSON(){ [self] response in
+            
+            print("result::: \(response)")
+            
+            switch response.result {
+            case .success(let value):
+                print("success")
+                if let jsonObj = value as? NSDictionary {
+                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
+                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                    
+                    if (resultMsg == "Success" && getResult == true) {
+                        print("API : ROOM : SUCCESS")
+                        let tmp:NSDictionary = jsonObj.object(forKey: "room") as! NSDictionary
+                        seatInfo = tmp["seat"] as! [Any]
+                        //print("arr:\(String(describing: seatInfo))")
+                        rowCount = seatInfo.endIndex
+                        totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
+                    }
+                }
+            case .failure(_):
+                print("error")
+            }
+
+        }
     }
     
     @objc func test(_ sender: UIButton) {
@@ -239,38 +289,62 @@ extension ReserveViewController: UICollectionViewDataSource {
     
         //return 1       //보여지는 검은 블럭 갯수 -> seat.count 처럼 배열 길이로 불러오면 될듯 한데...
         //return 16 -> 정사각형 크기에 4*4로 들어가기 때문에 스크롤이 생기지 않음
-        return 24   //정사각형에 4* 6 으로 들어가기 때문에 좌석 배치 스크롤 생김 -> 만약 좌석을 정사각형으로 보여주면 스크롤 안생기게 추후 보여줄 수 있을 듯
+        return totalCount   //정사각형에 4* 6 으로 들어가기 때문에 좌석 배치 스크롤 생김 -> 만약 좌석을 정사각형으로 보여주면 스크롤 안생기게 추후 보여줄 수 있을 듯
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        var allSeat: [Any] = []
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         
         
-        //좌석 배열 불러오는지 테스트 위해서 변수 명 지정 -> 수정 필요
-        var testCall = UserDefaults.standard.dictionary(forKey: "roomInfo")!["seat"] as! [Any]
-        print("kkkkkkkk")
-        for i in 0..<4 {
-            allSeat.append(testCall[i] as! Array<Int>)
+        let rowNumber:Int = (indexPath[1])/rowCount // 열 구하기
+        let arrayT: [Any] = seatInfo[rowNumber] as! [Any]
+        let curr:Int = arrayT[indexPath[1]%rowCount] as! Int
+        //print("current seat::\(arrayT[indexPath[1]%rowCount])")
         
+        switch curr {
+        case SeatType.Wall.rawValue:
+            cell.backgroundColor = .black
+            break
+        case SeatType.Door.rawValue:
+            cell.backgroundColor = .blue
+            break
+        case SeatType.Empty.rawValue:
+            cell.backgroundColor = .white
+            break
+        default:
+            let title = UILabel(frame: CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width))
+            title.text = String(curr)
+            title.font = UIFont(name: "AvenirNext-Bold", size: 15)
+            title.textAlignment = .center
+            cell.contentView.addSubview(title)
+            seats.updateValue(curr, forKey: indexPath[1])
+            //cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+            cell.backgroundColor = .yellow
         }
-        print("allSeat::: \(allSeat)")      //배열을 불러오는 것은 성공했지만 array[i][j] 처럼 2차원 배열로는 접근이 되지 않음...
-        //본의 생각 : 각각의 [i][j]에서 j 에 해당하는 값을 바탕으로 버튼 + 색깔로 좌석을 표시하면 될꺼라고 생각했지만 위에서 말한것 처럼 접근이 되지 않음...
         
         
-        cell.backgroundColor = .black
         return cell
         
         
     }
        
-
+    @objc func tap(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: self.showSeatCollectionView)
+        let indexPath = self.showSeatCollectionView.indexPathForItem(at: location)
+        if let index = indexPath {
+           print("Got clicked on index: \(index)!")
+            
+        }
+    }
 
 }
 
+
 extension ReserveViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        print(seats[indexPath.item] as Any)
+    }
 
 }
 
@@ -285,12 +359,11 @@ extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = Int(collectionView.frame.width) / rowCount - 1 ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
             
-            let width = collectionView.frame.width / 4 - 1 ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
-            
-            let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
-            return size
-        }
+        let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
+        return size
+    }
 
 }
 

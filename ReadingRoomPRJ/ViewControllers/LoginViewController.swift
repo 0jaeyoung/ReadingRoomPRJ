@@ -198,6 +198,7 @@ class LoginViewController: UIViewController {
             case.failure(let error):
                 // TODO : 실패시 처리 (ex. 팝업, 네트워크상태 확인, 서버상태 확인 등)
                 print("error: \(String(error.errorDescription!))")
+                // 인터넷 오프라인 오류 
             }
             
             //로그인 이벤트 주기
