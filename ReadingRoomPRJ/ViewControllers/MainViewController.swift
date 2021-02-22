@@ -209,9 +209,12 @@ class MainViewController: UIViewController {
         vc.modalPresentationStyle = .fullScreen
         present(nextPage, animated: true, completion: nil)
         
+        
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
 
+        
+        //navigation으로 출력시에는 옵셔널 오휴 발생
         //self.navigationController?.pushViewController(vc, animated: true)
         
         
