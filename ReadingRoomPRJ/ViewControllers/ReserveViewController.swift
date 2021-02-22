@@ -167,10 +167,11 @@ class ReserveViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
         showSeatCollectionView.delegate = self
-        showSeatCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        showSeatCollectionView.register(ShowMySeatCell.self, forCellWithReuseIdentifier: "cell")
         let college: String = "TEST"
         let room: String = "Test"
 
@@ -289,6 +290,7 @@ extension ReserveViewController: UICollectionViewDataSource {
     
         //return 1       //보여지는 검은 블럭 갯수 -> seat.count 처럼 배열 길이로 불러오면 될듯 한데...
         //return 16 -> 정사각형 크기에 4*4로 들어가기 때문에 스크롤이 생기지 않음
+        
         return totalCount   //정사각형에 4* 6 으로 들어가기 때문에 좌석 배치 스크롤 생김 -> 만약 좌석을 정사각형으로 보여주면 스크롤 안생기게 추후 보여줄 수 있을 듯
     }
 
