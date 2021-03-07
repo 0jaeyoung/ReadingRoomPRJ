@@ -175,6 +175,9 @@ class MainViewController: UIViewController {
         // 저장한 학생 데이터 가져오기
         let studentInfo: NSDictionary = UserDefaults.standard.dictionary(forKey: "studentInfo")! as NSDictionary
        
+        //self.title = "aaa"
+        self.view.backgroundColor = .white
+        self.navigationController?.isNavigationBarHidden = true
         print("studentInfo 출력")
         
         
@@ -206,55 +209,13 @@ class MainViewController: UIViewController {
         vc.modalPresentationStyle = .fullScreen
         present(nextPage, animated: true, completion: nil)
         
+        
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
 
         
-        //여기 열 때 모든 자리 좌석 보여줌
-        
-//        let college: String = "TEST"
-//        let room: String = "Test"
-//
-//
-//        let showSeatURL = "http://3.34.174.56:8080/room"
-//        let PARAM: Parameters = [
-//
-//            "college": college,
-//            "room": room,
-//
-//        ]
-//
-//        let alamo = AF.request(showSeatURL, method: .get, parameters: PARAM).validate(statusCode: 200..<450)
-//
-//        alamo.responseJSON(){ response in
-//
-//            print("result::: \(response)")
-//
-//            switch response.result {
-//            case .success(let value):
-//                print("success")
-//                if let jsonObj = value as? NSDictionary {
-//                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
-//                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-//
-//                    if (resultMsg == "Success" && getResult == true) {
-//                        UserDefaults.standard.set(jsonObj.object(forKey: "room"), forKey: "roomInfo")
-//                        print("데이터 저장 성공")
-//
-//
-//                    }
-//                }
-//            case .failure(_):
-//                print("error")
-//            }
-//
-//
-//
-//        }
-        
-        
-        
-        
+        //navigation으로 출력시에는 옵셔널 오휴 발생
+        //self.navigationController?.pushViewController(vc, animated: true)
         
         
     }
@@ -262,10 +223,11 @@ class MainViewController: UIViewController {
     
     @objc func showQr(_ sender: Any) {
         print(sender)
-        let vc: MySeatViewController = MySeatViewController()
-        vc.modalPresentationStyle = .formSheet
-        self.present(vc, animated: true, completion: nil)
-        //navigationController?.pushViewController(vc, animated: true)
+//        let vc: MySeatViewController = MySeatViewController()
+//        vc.modalPresentationStyle = .formSheet
+//        self.present(vc, animated: true, completion: nil)
+        self.navigationController?.pushViewController(MySeatViewController(), animated: true)
+
     }
     
     
