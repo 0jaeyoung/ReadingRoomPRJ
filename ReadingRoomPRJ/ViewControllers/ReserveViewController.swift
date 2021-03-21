@@ -18,23 +18,39 @@ class ReserveViewController: UIViewController {
     var endTime: UIDatePicker!
     var completeBtn: UIButton!
     
-    var rowCount:Int! // 가로 몇칸?
-    var totalCount:Int! // 전체 셀 개수
+    var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
+    var columnCount: Int!
+    var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
     var seatInfo: [Any] = []
     var seats = [Int:Int]()
+    
+    var testArray: [Any] = []
+    var testArr: [Any] = []
+//    var realArray = Dictionary<Int, Int> ()
+//    var asceDic = Dictionary<Int, Int> ()
+    
+    var cellTitle: UILabel!
+    var cellImg: UIImageView!
+    var cellBtn: UIButton!
+    var doorImg: UIImageView!
+    //let emptyImage : UIImage = UIImage(named: "emptySeat.png")!
+    
+    
     
     enum SeatType: Int {
         case Wall = -1
         case Empty = 0
         case Door = -2
+        
     }
     
+    var state: Bool = true
     
     //현재 좌석을 보여주는 컬렉션뷰 생성 /  추가된 라인(20~28)
     let showSeatCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        collectionView.backgroundColor = UIColor.lightGray
+        collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
@@ -43,21 +59,17 @@ class ReserveViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
+        print("ReserveViewController의 loadView가 출력됩니다.")
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
         //컬렉션뷰 생성 라인 34 추가
         self.view.addSubview(showSeatCollectionView)
 
-        
-//        showCurrentSeat = UILabel()
-//        showCurrentSeat.translatesAutoresizingMaskIntoConstraints = false
-//        showCurrentSeat.text = "서버에서 자리정보 불러올 예정"
-//        showCurrentSeat.backgroundColor = .gray
-//        self.view.addSubview(showCurrentSeat)
-        
-        
-        
         currentDay = UILabel()
         currentDay.translatesAutoresizingMaskIntoConstraints = false
-        currentDay.backgroundColor = .lightGray
+        currentDay.backgroundColor = .white
         currentDay.textAlignment = .center
         let currentDayFomatter = DateFormatter()
         currentDayFomatter.locale = Locale(identifier: "ko")
@@ -77,7 +89,7 @@ class ReserveViewController: UIViewController {
         startTime.preferredDatePickerStyle = .wheels
         startTime.datePickerMode = .time
         //startTime.locale = NSLocale(localeIdentifier: "ko_KO") as Locale
-        startTime.minuteInterval = 15
+        startTime.minuteInterval = 10
         self.view.addSubview(startTime)
         
         endLb = UILabel()
@@ -90,19 +102,17 @@ class ReserveViewController: UIViewController {
         endTime.translatesAutoresizingMaskIntoConstraints = false
         endTime.preferredDatePickerStyle = .wheels
         endTime.datePickerMode = .time
-        endTime.minuteInterval = 15
+        endTime.minuteInterval = 10
         self.view.addSubview(endTime)
         
         completeBtn = UIButton(type: .system)
         completeBtn.translatesAutoresizingMaskIntoConstraints = false
         completeBtn.setTitle("예약하기", for: .normal)
-        completeBtn.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        completeBtn.backgroundColor =  #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         //completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
         completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
+        
         self.view.addSubview(completeBtn)
-        
-        
-        
         
         NSLayoutConstraint.activate([
             
@@ -112,14 +122,6 @@ class ReserveViewController: UIViewController {
             showSeatCollectionView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             showSeatCollectionView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor),
             
-            //
-            
-//            showCurrentSeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-//            showCurrentSeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            showCurrentSeat.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-//            showCurrentSeat.heightAnchor.constraint(equalTo: showCurrentSeat.widthAnchor),
-//
-            
             //showCurrentSeat ->showSeatCollectionView 로 수정됨
             currentDay.topAnchor.constraint(equalTo: showSeatCollectionView.bottomAnchor, constant: 10),
             currentDay.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -127,7 +129,7 @@ class ReserveViewController: UIViewController {
             currentDay.heightAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.15),
             
             
-                //최초 한결누나 디자인 따라감 / 아이폰 8에서 종료시간이 보이지 않는 레이아웃 오류 있음
+                
             // startLb, endLb, startTime, endTime, completeBtn
             startLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor),
             startLb.leadingAnchor.constraint(equalTo: currentDay.leadingAnchor),
@@ -156,65 +158,50 @@ class ReserveViewController: UIViewController {
             endTime.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
             //endTime.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.17)
             
-            
         ])
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let nextPage = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
+        let nextPageAction = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
+        nextPage.addAction(nextPageAction)
+        ReserveViewController().modalPresentationStyle = .fullScreen
+        present(nextPage, animated: true, completion: nil)
+        
+        }
+    
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
         
+        let kkkkk = TimeInterval(1616191200000) / 1000
+        let aaaaa = Date(timeIntervalSince1970: kkkkk)
+        print("변환된 시간 값:::::::::::: \(aaaaa)")
+        
+        
+        
+        
+        showSeatCollectionView.minimumZoomScale = 1.0
+        showSeatCollectionView.maximumZoomScale = 5
+        
+        print("ReserveViewController의 viewDidLoad가 출력됩니다")
+        view.backgroundColor = .white
         
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
         showSeatCollectionView.delegate = self
-        showSeatCollectionView.register(ShowMySeatCell.self, forCellWithReuseIdentifier: "cell")
-        let college: String = "TEST"
-        let room: String = "Test"
-
-
-        let showSeatURL = "http://3.34.174.56:8080/room"
-        let PARAM: Parameters = [
-
-            "college": college,
-            "room": room,
-
-        ]
-
-        let alamo = AF.request(showSeatURL, method: .get, parameters: PARAM).validate(statusCode: 200..<450)
-
-        alamo.responseJSON(){ [self] response in
-            
-            print("result::: \(response)")
-            
-            switch response.result {
-            case .success(let value):
-                print("success")
-                if let jsonObj = value as? NSDictionary {
-                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    
-                    if (resultMsg == "Success" && getResult == true) {
-                        print("API : ROOM : SUCCESS")
-                        let tmp:NSDictionary = jsonObj.object(forKey: "room") as! NSDictionary
-                        seatInfo = tmp["seat"] as! [Any]
-                        //print("arr:\(String(describing: seatInfo))")
-                        rowCount = seatInfo.endIndex
-                        totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
-                    }
-                }
-            case .failure(_):
-                print("error")
-            }
-
-        }
+        showSeatCollectionView.register(UINib(nibName: "TestCell", bundle: nil), forCellWithReuseIdentifier: TestCell.identifire)
+        
     }
     
     @objc func test(_ sender: UIButton) {
         btn(a: startTime, b: endTime)
+        //print(realArray)
     }
     
     func btn(a: UIDatePicker, b: UIDatePicker){
@@ -230,6 +217,49 @@ class ReserveViewController: UIViewController {
         let startHour = hourFormatter.string(from: leftDatePickerView.date)
         let startMin = minFormatter.string(from: leftDatePickerView.date)
         
+        
+        
+        
+        let currentDayFomatter = DateFormatter()
+        currentDayFomatter.locale = Locale(identifier: "ko")
+        currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
+        let startTimeString = currentDayFomatter.string(from: leftDatePickerView.date)
+        let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
+        let startTimeLong = Int(startTimeDate.timeIntervalSince1970) * 1000
+        UserDefaults.standard.set(startTimeLong, forKey: "userStartTime")
+        
+        let showFormatter = DateFormatter()
+        showFormatter.locale = Locale(identifier: "ko")
+        showFormatter.dateFormat = "HH시 mm분"
+        let showStartTime = showFormatter.string(from: leftDatePickerView.date)
+        UserDefaults.standard.set(showStartTime, forKey: "startTimeString")
+        
+        
+        
+        let endTimeString = currentDayFomatter.string(from: rightDatePickerView.date)
+        let endTimeDate:Date = currentDayFomatter.date(from: endTimeString)!
+        let endTimeLong = Int(endTimeDate.timeIntervalSince1970) * 1000
+        
+        
+        
+        
+        
+        
+        UserDefaults.standard.set(endTimeLong, forKey: "userEndTime")
+        
+        let showEndTime = showFormatter.string(from: rightDatePickerView.date)
+        UserDefaults.standard.set(showEndTime, forKey: "endTimeString")
+        
+        
+        let nowTime = Int(Date().timeIntervalSince1970) * 1000
+        UserDefaults.standard.set(nowTime, forKey: "nowTime")
+        
+        
+        
+        
+        
+        
         let endHour = hourFormatter.string(from: rightDatePickerView.date)
         let endMin = minFormatter.string(from: rightDatePickerView.date)
         
@@ -240,13 +270,18 @@ class ReserveViewController: UIViewController {
         
         if (end - start) > 0 &&  (end - start) <= 240 {
             print("이용시간은 \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분")
-            let firstAlert = UIAlertController(title: "예약", message: "\(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
+            print("begin: \(UserDefaults.standard.integer(forKey: "userStartTime"))")
+            print("end: \(UserDefaults.standard.integer(forKey: "userEndTime"))")
+            let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
             let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
             let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.back()})
             
             firstAlert.addAction(firstAlertActionNo)
             firstAlert.addAction(firstAlertActionOk)
             present(firstAlert, animated: true, completion: nil)
+            
+           
+            
             
         } else if (end - start) > 240 {
             print("최대 예약 시간은 4시간 입니다")
@@ -273,87 +308,278 @@ class ReserveViewController: UIViewController {
         
     }
     
+    
+    
+    
+    
+//    func myInfo() {
+//        print("유저의 좌석 정보를 보여줍니다.")
+//        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+//        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+//
+//        let myReservedURL = "http://3.34.174.56:8080/room/myReservation"
+//        let PARAM: Parameters = [
+//            "id": ID,
+//            "password": PW
+//        ]
+//
+//        let alamo = AF.request(myReservedURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+//
+//        alamo.responseJSON() { [self] response in
+//            switch response.result {
+//            case .success(let value):
+//
+//                print(value)
+//                if let jsonObj = value as? NSDictionary {
+//                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+//                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
+//                    print("getresult :: \(getResult!)")
+//                    if getResult! {
+//                        let mySeatInfo: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
+//                        print(getResult!)
+//
+//                        print(mySeatInfo)
+//
+//
+//
+//                    }
+//                    else {
+//                        print(getResult!)
+//
+//                        print("예약이 불가능합니다..")
+//                    }
+//
+//                }
+//
+//            case .failure(_):
+//                print("통신 실패")
+//            }
+//
+//
+//            }
+//
+//
+//
+//
+//    }
+//
+//
+    
+    
+    
     func back() {
         print("back")
-        dismiss(animated: true, completion: nil)
+        
+        
+        let studentId: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String
+        let college: String = "TEST"
+        let room: String = "Test"
+        let seat: Int = UserDefaults.standard.integer(forKey: "selectedSeatNumber")
+        let time: Int = UserDefaults.standard.integer(forKey: "nowTime")
+        let begin: Int = UserDefaults.standard.integer(forKey: "userStartTime")
+        let end: Int = UserDefaults.standard.integer(forKey: "userEndTime")
+        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+        
+      
+        let reservedURL = "http://3.34.174.56:8080/room/reserve"
+        let PARAM: Parameters = [
+            "id": ID,
+            "password": PW,
+            "studentId": studentId,
+            "end": end,
+            "begin": begin,
+            "time": time,
+            "seat": seat,
+            "room": room,
+            "college": college
+        ]
+        
+        let alamo = AF.request(reservedURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+        alamo.responseJSON() { [self] response in
+            switch response.result {
+            case .success(let value):
+                
+                print(value)
+                if let jsonObj = value as? NSDictionary {
+                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
+                    print("getresult :: \(getResult!)")
+                    if getResult! {
+                        let mySeatInfo: NSDictionary = jsonObj.object(forKey: "reservation") as! NSDictionary
+                        print("좌석을 예약합니다.")
+                    
+                        print("좌석이 예약되었습니다.")
+                        //self.myInfo()
+                        
+                    
+                    }
+                    else {
+                        print(getResult!)
+                        
+                        print("예약이 불가능합니다..")
+                    }
+                    
+                }
+                
+            case .failure(_):
+                print("error")
+            }
+            
+            
+            }
+        
+        
+        
+        
+        
+        //dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
+        
     }
-    
-   
-    
 }
 
 //컬렉션 뷰 확장 관련 코드        / 234~ end
 
 extension ReserveViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-    
-        //return 1       //보여지는 검은 블럭 갯수 -> seat.count 처럼 배열 길이로 불러오면 될듯 한데...
-        //return 16 -> 정사각형 크기에 4*4로 들어가기 때문에 스크롤이 생기지 않음
-        
-        return totalCount   //정사각형에 4* 6 으로 들어가기 때문에 좌석 배치 스크롤 생김 -> 만약 좌석을 정사각형으로 보여주면 스크롤 안생기게 추후 보여줄 수 있을 듯
+        print("totalCount가 리턴되는 extension이 호출됩니다.")
+        return UserDefaults.standard.integer(forKey: "totalCount")
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        // test let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TestCell.identifire, for: indexPath) as! TestCell
+        
+      
+        
+        //print("indexpath[1] = \(indexPath[1])")
+        UserDefaults.standard.set(indexPath[1], forKey: "indexPath")
+        
+        let columnNumber:Int = ((indexPath[1]) / UserDefaults.standard.integer(forKey: "columnCount")) // 열 구하기
+        UserDefaults.standard.set(columnNumber, forKey: "columnNumber")
+        //print("columnNumber = \(columnNumber)")
         
         
-        let rowNumber:Int = (indexPath[1])/rowCount // 열 구하기
-        let arrayT: [Any] = seatInfo[rowNumber] as! [Any]
-        let curr:Int = arrayT[indexPath[1]%rowCount] as! Int
-        //print("current seat::\(arrayT[indexPath[1]%rowCount])")
         
-        switch curr {
+        let arrayT: [Any] = UserDefaults.standard.array(forKey: "seatInfo")![columnNumber] as! [Any]
+        UserDefaults.standard.set(arrayT, forKey: "arrayT")
+        //print(arrayT)
+        let curr:Int = arrayT[indexPath[1]%(UserDefaults.standard.integer(forKey: "columnCount") )] as! Int
+        UserDefaults.standard.set(curr, forKey: "curr")
+        //print(curr)
+        
+        switch curr{
         case SeatType.Wall.rawValue:
-            cell.backgroundColor = .black
+           
+            cell.myLabel.text = ""
+            cell.myImageView.image = UIImage(named: "wall.png")
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             break
+
         case SeatType.Door.rawValue:
-            cell.backgroundColor = .blue
+            cell.myLabel.text = ""
+            cell.myImageView.image = UIImage(named: "door.jpeg")
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             break
+
         case SeatType.Empty.rawValue:
-            cell.backgroundColor = .white
+            cell.myLabel.text = ""
+            cell.myImageView.image = UIImage(named: "road.png")
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             break
+
         default:
-            let title = UILabel(frame: CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width))
-            title.text = String(curr)
-            title.font = UIFont(name: "AvenirNext-Bold", size: 15)
-            title.textAlignment = .center
-            cell.contentView.addSubview(title)
-            seats.updateValue(curr, forKey: indexPath[1])
-            //cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-            cell.backgroundColor = .yellow
+            
+            
+            
+            
+            if state {
+                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+
+                //cell.myButton = UIButton(type: .system)
+                cell.myButton.setTitle(String(curr), for: .normal)
+                cell.myButton.tintColor = .black
+                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                //cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                
+                
+                
+                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+            } else {
+                cell.myImageView.image = UIImage(named: "intSeat.png")
+                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+
+                //cell.myButton = UIButton(type: .system)
+                cell.myButton.setTitle(String(curr), for: .normal)
+                cell.myButton.tintColor = .black
+                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                //cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                
+                
+                
+                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+            }
+            
+            
+
+            
+           
         }
         
-        
         return cell
-        
-        
     }
-       
+    
+   
+    
     @objc func tap(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.showSeatCollectionView)
         let indexPath = self.showSeatCollectionView.indexPathForItem(at: location)
         if let index = indexPath {
-           print("Got clicked on index: \(index)!")
-            
+        print("Got clicked on index: \(index[1])!")
         }
     }
-
+    
+    @objc func tapBtn(_ sender: UIButton){
+        print(111111)
+        
+        let selectSeat = UIAlertController(title: "선택 좌석", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번을 선택하셨습니다.", preferredStyle: UIAlertController.Style.alert)
+        let cancelSeat = UIAlertAction(title: "다시 선택", style: UIAlertAction.Style.default, handler: nil)
+        let confirmSeat = UIAlertAction(title: "자리 선택", style: UIAlertAction.Style.default, handler: nil)
+        selectSeat.addAction(cancelSeat)
+        selectSeat.addAction(confirmSeat)
+        present(selectSeat, animated: true, completion: nil)
+        
+    }
+    
+    
+    
+   
+    
+    
+    
 }
 
 
 extension ReserveViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         print(seats[indexPath.item] as Any)
+        print("좌석 클릭시에 값 보여주는 extentionDelegate")
     }
-
 }
 
 
 extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt seection: Int) -> CGFloat {
-        return 1
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -361,7 +587,7 @@ extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = Int(collectionView.frame.width) / rowCount - 1 ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
+        let width = (Int(collectionView.frame.width)) / (UserDefaults.standard.integer(forKey: "columnCount") + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
             
         let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
         return size
