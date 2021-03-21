@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import Alamofire
 
 class QRScanViewController: UIViewController {
     
@@ -16,7 +17,7 @@ class QRScanViewController: UIViewController {
     override func loadView() {
         super.loadView()
         view.backgroundColor = .white
-        readerView = QRReaderView()
+        readerView = QRReaderView.init(frame: view.frame)
         readButton = UIButton()
         
         readerView.translatesAutoresizingMaskIntoConstraints = false
@@ -41,11 +42,8 @@ class QRScanViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.readerView.delegate = self
-        
-        self.readButton.layer.masksToBounds = true
-        self.readButton.layer.cornerRadius = 15
+        self.readerView.start()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -72,6 +70,8 @@ extension QRScanViewController: ReaderViewDelegate {
 
         var title = ""
         var message = ""
+        var scanedQRCode = ""
+        
         switch status {
         case let .success(code):
             guard let code = code else {
@@ -82,9 +82,17 @@ extension QRScanViewController: ReaderViewDelegate {
 
             title = "알림"
             message = "인식성공\n\(code)"
+            scanedQRCode = code
+            
+            requestConfirm(code: code)
+            
         case .fail:
             title = "에러"
             message = "QR코드 or 바코드를 인식하지 못했습니다.\n다시 시도해주세요."
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
         case let .stop(isButtonTap):
             if isButtonTap {
                 title = "알림"
@@ -95,12 +103,75 @@ extension QRScanViewController: ReaderViewDelegate {
                 return
             }
         }
+        
+        
+        
 
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-
-        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-
-        alert.addAction(okAction)
-        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func requestConfirm(code: String) {
+        let URL = "http://3.34.174.56:8080/room/confirm"
+        let PARAM: Parameters = [
+            "id":"dlo3olb",
+            "password":"a990324!",
+            "token":code,
+            "studentId":"201635938",
+            "end":1614226200000,
+            "begin":1614226200000,
+            "time":1614226200000,
+            "seat":1,
+            "room":"Test",
+            "college":"TEST"
+        ]
+        
+        let alamo = AF.request(URL, method: .post, parameters: PARAM).validate()
+        alamo.responseJSON() { response in
+            print("===API:REQUEST:CONFIRM:RESULT===")
+            print(response)
+            
+            switch response.result {
+            case .success(let value):
+                //성공
+                self.readerView.stop(isButtonTap: true)
+                self.showToast(controller: self, message: "예약 확정되었습니다.")
+                self.navigationController?.popViewController(animated: true)
+            case .failure(let error):
+                //실패
+                print(error)
+                self.showToast(controller: self, message: "다시 시도 해주세요.")
+            }
+        }
+        
+    }
+    
+    func showToast(controller: UIViewController, message: String) {
+        let width_variable = 10
+        let toastLabel = UILabel(frame: CGRect(x: width_variable, y: Int(self.view.frame.size.height)-100, width: Int(view.frame.size.width)-2*width_variable, height: 35))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.layer.cornerRadius = 15
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.clipsToBounds = true
+        self.navigationController?.view.addSubview(toastLabel)
+        //self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
+                        toastLabel.alpha = 0.0}
+                       , completion: {(isCompleted) in
+                                       toastLabel.removeFromSuperview()
+                       })
+        
+        /*
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.view.backgroundColor = .lightGray
+        alert.view.alpha = 0.6
+        alert.view.layer.cornerRadius = 15
+        controller.present(alert, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
+            alert.dismiss(animated: true)
+            self.navigationController?.popViewController(animated: true)
+        }
+        */
     }
 }
