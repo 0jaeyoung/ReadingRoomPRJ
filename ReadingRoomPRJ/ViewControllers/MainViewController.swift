@@ -10,21 +10,31 @@ import Foundation
 import PanModal
 import Alamofire
 
+enum userType: String {
+    case admin = "ADMIN"
+    case student = "STUDENT"
+}
+
 class MainViewController: UIViewController {
     // UI 요소 정의
     var a = false        //추후 예약 여부에 따라서 bool 값으로 전달 예정
     
     var studentView : UIView!
     var studentImage: UIImage!
-    var studentName: UILabel!
-    var studentID: UILabel!
-    var studentMajor: UILabel!
+    var nameLabel: UILabel!
+    var subNameLabel: UILabel!
     var studentDepartment: UILabel!
+    var studentCollege: UILabel!
     var studentOption: UIImage!
-    var myButton: UIButton!
-    var reserveButton: UIButton!
-    var checkinButton: UIButton!
+    var firstButton: UIButton!
+    var secondButton: UIButton!
+    var thirdButton: UIButton!
     
+    var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
+        var columnCount: Int!
+        var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
+        var seatInfo: [Any] = []
+        var seats = [Int:Int]()
     
     var shortFormHeight: PanModalHeight {
         return .contentHeight(300)
@@ -44,81 +54,72 @@ class MainViewController: UIViewController {
         
         
         studentView = UIView()
+        studentView.layer.cornerRadius = 10
         studentView.translatesAutoresizingMaskIntoConstraints = false
-        studentView.backgroundColor = .gray
+        studentView.backgroundColor = .white
         view.addSubview(studentView)
         
-        let lineImg = UIImage(named: "line")
+        let lineImg = UIImage(named: "line.png")
         let line = UIImageView(image: lineImg)
         line.translatesAutoresizingMaskIntoConstraints = false
         studentView.addSubview(line)
         
-        studentImage = UIImage(named: "imgSmp")
+        studentImage = UIImage(named: "stdEx.png")
         let studentImageView = UIImageView(image: studentImage)
         studentImageView.translatesAutoresizingMaskIntoConstraints = false
         studentView.addSubview(studentImageView)
         
-        studentName = UILabel()     //이름
-        studentName.translatesAutoresizingMaskIntoConstraints = false
-        let studentNameText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["name"]!
-        studentName.text = (studentNameText as! String)
-        //studentName.font = UIFont.fontNames(forFamilyName: "폰트명")
-        studentName.font = UIFont.systemFont(ofSize: 30)
-        studentView.addSubview(studentName)
+        nameLabel = UILabel()     //이름
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.font = UIFont.systemFont(ofSize: 30)
+        studentView.addSubview(nameLabel)
             
-        studentID = UILabel()       //학번
-        studentID.translatesAutoresizingMaskIntoConstraints = false
+        subNameLabel = UILabel()       //학번
+        subNameLabel.translatesAutoresizingMaskIntoConstraints = false
         //studentID.text = "201635938"
-        let studentIDText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]!
-        studentID.text = (studentIDText as! String)
-        studentID.font = UIFont.systemFont(ofSize: 20)
-        studentView.addSubview(studentID)
+        subNameLabel.font = UIFont.systemFont(ofSize: 20)
+        studentView.addSubview(subNameLabel)
         
-        studentDepartment = UILabel()       //단과대학
+        studentCollege = UILabel()       //단과대학
+        studentCollege.translatesAutoresizingMaskIntoConstraints = false
+        studentCollege.font = UIFont.systemFont(ofSize: 20)
+        studentView.addSubview(studentCollege)
+        
+        studentDepartment = UILabel()            //학과
         studentDepartment.translatesAutoresizingMaskIntoConstraints = false
-        let studentDepartmentText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["department"]!
-        studentDepartment.text = (studentDepartmentText as! String)
         studentDepartment.font = UIFont.systemFont(ofSize: 20)
         studentView.addSubview(studentDepartment)
         
-        studentMajor = UILabel()            //학과
-        studentMajor.translatesAutoresizingMaskIntoConstraints = false
-        let studentMajorText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"]!
-        studentMajor.text = (studentMajorText as! String)
-        studentMajor.font = UIFont.systemFont(ofSize: 20)
-        studentView.addSubview(studentMajor)
-        
-        studentOption = UIImage(named: "imgOption")
+        studentOption = UIImage(named: "imgOption.jpg")
         let studentOptionButton = UIButton()
         studentOptionButton.setImage(studentOption, for: .normal)
-        studentOptionButton.backgroundColor = .red
         studentOptionButton.translatesAutoresizingMaskIntoConstraints = false
-        //studentOptionButton.addTarget(self, action: #selector(self.studen), for: .touchUpInside)
+        studentOptionButton.addTarget(self, action: #selector(self.optionView(_:)), for: .touchUpInside)
         studentView.addSubview(studentOptionButton)
         
-        myButton = UIButton(type: .system)
-        myButton.setTitle("나의 자리", for: .normal)
-        myButton.translatesAutoresizingMaskIntoConstraints = false
-        myButton.backgroundColor = .gray
-        myButton.addTarget(self, action: #selector(self.showMySeat(_:)), for: .touchUpInside)
-        view.addSubview(myButton)
+        firstButton = UIButton(type: .system)
+        firstButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        firstButton.layer.cornerRadius = 20
+        firstButton.translatesAutoresizingMaskIntoConstraints = false
+        firstButton.backgroundColor = .white
+        view.addSubview(firstButton)
         
-        reserveButton = UIButton(type: .system)
-        reserveButton.setTitle("자리 선택/예약", for: .normal)
-        reserveButton.translatesAutoresizingMaskIntoConstraints = false
-        reserveButton.backgroundColor = .gray
-        reserveButton.addTarget(self, action: #selector(self.openView(_:)), for: .touchUpInside)
-        view.addSubview(reserveButton)
+        secondButton = UIButton(type: .system)
+        secondButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        secondButton.layer.cornerRadius = 20
+        secondButton.translatesAutoresizingMaskIntoConstraints = false
+        secondButton.backgroundColor = .white
+        view.addSubview(secondButton)
         
-        checkinButton = UIButton(type: .system)
-        checkinButton.setTitle("자리 확정", for: .normal)
-        checkinButton.translatesAutoresizingMaskIntoConstraints = false
-        checkinButton.backgroundColor = .gray
-        checkinButton.addTarget(self, action: #selector(self.showQr(_:)), for: .touchUpInside)
-        view.addSubview(checkinButton)
+        thirdButton = UIButton(type: .system)
+        thirdButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        thirdButton.layer.cornerRadius = 20
+        thirdButton.translatesAutoresizingMaskIntoConstraints = false
+        thirdButton.backgroundColor = .white
+        view.addSubview(thirdButton)
         
         NSLayoutConstraint.activate([
-            studentView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            studentView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             studentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             studentView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             studentView.heightAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: 0.5),
@@ -133,58 +134,89 @@ class MainViewController: UIViewController {
             line.widthAnchor.constraint(equalTo: studentImageView.widthAnchor, multiplier: 0.5),
             line.heightAnchor.constraint(equalToConstant: 5),
             
-            studentName.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 3),
-            studentName.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 5),
+            nameLabel.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 3),
+            nameLabel.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 5),
             
-            studentID.leadingAnchor.constraint(equalTo: studentName.leadingAnchor),
-            studentID.topAnchor.constraint(equalTo: studentName.bottomAnchor, constant: 1),
+            subNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            subNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 1),
+            
+            studentCollege.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 3),
+            studentCollege.bottomAnchor.constraint(equalTo: studentImageView.bottomAnchor),
             
             studentDepartment.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 3),
-            studentDepartment.bottomAnchor.constraint(equalTo: studentImageView.bottomAnchor),
-            
-            studentMajor.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 3),
-            studentMajor.bottomAnchor.constraint(equalTo: studentDepartment.topAnchor, constant: 1),
+            studentDepartment.bottomAnchor.constraint(equalTo: studentCollege.topAnchor, constant: 1),
             
             studentOptionButton.topAnchor.constraint(equalTo: studentImageView.topAnchor),
             studentOptionButton.trailingAnchor.constraint(equalTo: studentView.trailingAnchor, constant: -5),
             studentOptionButton.widthAnchor.constraint(equalToConstant: 30),
             studentOptionButton.heightAnchor.constraint(equalToConstant: 30),
             
-            myButton.topAnchor.constraint(equalTo: studentView.bottomAnchor, constant: 10),
-            myButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            myButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-            myButton.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.2, constant: -studentView.bounds.height),
+            firstButton.topAnchor.constraint(equalTo: studentView.bottomAnchor, constant: 20),
+            firstButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            firstButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
+            firstButton.heightAnchor.constraint(equalTo: view.layoutMarginsGuide.heightAnchor, multiplier: 0.2, constant: -studentView.bounds.height),
             
-            reserveButton.topAnchor.constraint(equalTo: myButton.bottomAnchor, constant: 5),
-            reserveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            reserveButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-            reserveButton.heightAnchor.constraint(equalTo: myButton.heightAnchor),
+            secondButton.topAnchor.constraint(equalTo: firstButton.bottomAnchor, constant: 15),
+            secondButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            secondButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
+            secondButton.heightAnchor.constraint(equalTo: firstButton.heightAnchor),
             
-            checkinButton.topAnchor.constraint(equalTo: reserveButton.bottomAnchor, constant: 5),
-            checkinButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            checkinButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-            checkinButton.heightAnchor.constraint(equalTo: myButton.heightAnchor)
+            thirdButton.topAnchor.constraint(equalTo: secondButton.bottomAnchor, constant: 15),
+            thirdButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            thirdButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
+            thirdButton.heightAnchor.constraint(equalTo: firstButton.heightAnchor)
             
         ])
     } // end of loadView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        print("view did load")
-        // 저장한 학생 데이터 가져오기
-        let studentInfo: NSDictionary = UserDefaults.standard.dictionary(forKey: "studentInfo")! as NSDictionary
-       
-        //self.title = "aaa"
-        self.view.backgroundColor = .white
-        self.navigationController?.isNavigationBarHidden = true
-        print("studentInfo 출력")
         
+        view.backgroundColor = UIColor(displayP3Red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         
+        let logoView = UIImageView(frame: .zero)
+        logoView.contentMode = .scaleAspectFit
+        let logo = UIImage(named: "logo_green.png")
+        logoView.image = logo
+        navigationItem.titleView = logoView
         
+        navigationController?.navigationBar.shadowImage = UIImage() // 네비게이션 바 선 없애기
+        navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
         
-        
-        
+        if (userType.admin.rawValue == UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"] as! String){
+            
+            let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
+            nameLabel.text = (nameLabelText as! String)
+            let subNameLabelText = "관리자"//UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]!
+            subNameLabel.text = (subNameLabelText)
+            
+            firstButton.setTitle("QR코드", for: .normal)
+            secondButton.setTitle("자리 현황", for: .normal)
+            thirdButton.setTitle("열람실 설정", for: .normal)
+            
+            firstButton.addTarget(self, action: #selector(showQr(_:)), for: .touchUpInside)
+            secondButton.addTarget(self, action: #selector(currentSeat(_:)), for: .touchUpInside)
+            thirdButton.addTarget(self, action: #selector(roomOption(_:)), for: .touchUpInside)
+            
+        } else {
+            let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["name"]!
+            nameLabel.text = (nameLabelText as! String)
+            let subNameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]!
+            subNameLabel.text = (subNameLabelText as! String)
+            let studentDepartmentText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["department"]!
+            studentDepartment.text = (studentDepartmentText as! String)
+            let studentCollegeText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
+            studentCollege.text = "(" + (studentCollegeText as! String) + ")"
+            
+            firstButton.setTitle("나의 자리", for: .normal)
+            secondButton.setTitle("자리 선택/예약", for: .normal)
+            thirdButton.setTitle("자리 확정", for: .normal)
+            
+            firstButton.addTarget(self, action: #selector(self.showMySeat(_:)), for: .touchUpInside)
+            secondButton.addTarget(self, action: #selector(self.openView(_:)), for: .touchUpInside)
+            thirdButton.addTarget(self, action: #selector(self.qrReader(_:)), for: .touchUpInside)
+        }
     }
     
     // [나의자리] 버튼 클릭 이벤트
@@ -199,37 +231,161 @@ class MainViewController: UIViewController {
     @objc func openView(_ sender: Any) {
         print(sender)
         
-        let vc: ReserveViewController = ReserveViewController()
-        //let vc: TmpReserveViewController = TmpReserveViewController()
-        
-        
-        let nextPage = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
-        let nextPageAction = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {alertAction in self.present(vc, animated: true, completion: nil)})
-        nextPage.addAction(nextPageAction)
-        vc.modalPresentationStyle = .fullScreen
-        present(nextPage, animated: true, completion: nil)
-        
-        
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true, completion: nil)
+        let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
+                //let college: String = "TEST" //=> 방 5개 출력
+                //let name: String = UserDefaults.standard.string(forKey: actionDefault.title!)
+                
+                
+                let reserveURL = "http://3.34.174.56:8080/rooms"
+                let PARAM: Parameters = [
+                    "college": college,
+                    //"name": name
+                ]
+                
+                let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+                alamo.responseJSON() {[self] response in
+                    switch response.result {
+                    case.success(let value):
+                        print("success")
+                        if let jsonObj = value as? NSDictionary {
+                            let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                            if getResult! {
+                                
+                                //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
+                                let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                                
+                                //let tmpTest = tmp[0] as! NSDictionary
+        //                        print("++")
+        //                        print(tmp)
+        //                        print("++")
+        //                        print(tmpTest["name"]!)
+        //                        print("tmp 출력 성공")
+        //
+                                
+                                
+                                
+                                let tmp1: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                                let tmpInfo1 = tmp1[0] as! NSDictionary
+                                //print(tmpTest["college"]!)
+                                //print(tmpInfo["seat"]!)
+                                seatInfo = tmpInfo1["seat"] as! [Any]
+                                //print(seatInfo)
+                                
+                                rowCount = seatInfo.endIndex
+                                columnCount = (seatInfo[0] as AnyObject).count
+                                totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
+                                
+                                UserDefaults.standard.set(seatInfo, forKey: "seatInfo")
+                                UserDefaults.standard.set(totalCount, forKey: "totalCount")
+                                UserDefaults.standard.set(rowCount, forKey: "rowCount")
+                                UserDefaults.standard.set(columnCount, forKey: "columnCount")
+                               
+        //                        print(columnCount!)
+        //                        print(rowCount!)
+        //                        print(totalCount!)
+               
+                                let vc: ReserveViewController = ReserveViewController()
+                                var arr: [String] = []
+                                
+                                for i in 0..<tmp.count {
+                                    let a: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                                    let b = a[i] as! NSDictionary
+                                    arr.append(b["name"] as! String)
+                                }
+                                
+                                
+                                
+                                let actionSheetController = UIAlertController(title: "열람실", message: "이용하실 단과대학의 열람실을 선택해주세요.", preferredStyle: .actionSheet)
+                                
+                                for i in 0..<arr.count {
+                                    let actionDefault = UIAlertAction(title: arr[i], style: .default, handler: goTestView(_:))
+                                    UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
 
-        
-        //navigation으로 출력시에는 옵셔널 오휴 발생
-        //self.navigationController?.pushViewController(vc, animated: true)
-        
-        
+                                    let alpha = arr[i]
+
+                                    //print("alpha : \(String(describing: alpha))")
+
+                                    UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "collegeSeat")
+
+
+
+                                    actionSheetController.addAction(actionDefault)
+                                }
+
+        //                        for i in 0..<arr.count {
+        //                            let actionDefault = UIAlertAction(title: arr[i], style: .default, handler: nil)
+        //                            UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
+        //
+        //                            let alpha = arr[i]
+        //
+        //                            print("alpha : \(String(describing: alpha))")
+        //
+        //                            UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "collegeSeat")
+        //                            UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
+        //
+        //
+        //                            actionSheetController.addAction(actionDefault)
+        //                        }
+        //
+
+                                let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                                actionSheetController.addAction(actionCancel)
+                                print(actionCancel.title as Any)
+                                vc.modalPresentationStyle = .fullScreen
+                                present(actionSheetController, animated: true, completion: nil)
+
+
+        //                        print("121212")
+        //                        print(UserDefaults.standard.string(forKey: "BigRoom")!)
+
+                                vc.modalPresentationStyle = .fullScreen
+                                self.present(vc, animated: true, completion: nil)
+                                
+                                
+                                
+                               
+
+                                
+                            }
+                        }
+                    case .failure(_):
+                        print("error")
+                    }
+                    
+                }
+    }
+    @objc func goTestView(_ sender: Any) {
+           let vc = ReserveViewController()
+           vc.modalPresentationStyle = .fullScreen
+           
+           //self.present(vc, animated: true, completion: nil)
+           self.navigationController?.pushViewController(vc, animated: true)
+           //self.present(vc, animated: true, completion: nil)
+       }
+
+    
+    
+    @objc func qrReader(_ sender: Any) {
+        let vc: QRScanViewController = QRScanViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc func optionView(_ sender: Any) {
+        print("option")
+        let vc: OptionViewController = OptionViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
     @objc func showQr(_ sender: Any) {
-        print(sender)
-//        let vc: MySeatViewController = MySeatViewController()
-//        vc.modalPresentationStyle = .formSheet
-//        self.present(vc, animated: true, completion: nil)
-        self.navigationController?.pushViewController(MySeatViewController(), animated: true)
-
+        let vc: QRCodeViewController = QRCodeViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc func currentSeat(_ sender: Any) {
+        print("자리 현황")
+    }
     
-
+    @objc func roomOption(_ sender: Any) {
+        print("열람실 설정")
+    }
 }

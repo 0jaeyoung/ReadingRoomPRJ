@@ -18,25 +18,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         //윈도우의 씬을 가져온다
             guard let windowScene = (scene as? UIWindowScene) else { return }
-            
-            //윈도우의 크기 설정
-            window = UIWindow(frame: UIScreen.main.bounds)
-            
-            //뷰컨트롤러 인스턴스 설정
-            let mainVC = LoginViewController()
-            
-            //루트 네비게이션 컨트롤러 설정
-            let navVC = UINavigationController(rootViewController: mainVC)
-            
-            //뿌리 뷰컨트롤러를 위에서 설정한 네비게이션 컨트롤러로 설정
-            window?.rootViewController = navVC
-            
-            //설정한 윈도우를 보이게 끔 설정
-            window?.makeKeyAndVisible()
-            
-            //윈도우 씬 설정
-            window?.windowScene = windowScene
+//
+//            //윈도우의 크기 설정
+//            window = UIWindow(frame: UIScreen.main.bounds)
+//
+//            //뷰컨트롤러 인스턴스 설정
+//            let mainVC = LoginViewController()
+//
+//            //루트 네비게이션 컨트롤러 설정
+//            let navVC = UINavigationController(rootViewController: mainVC)
+//
+//            //뿌리 뷰컨트롤러를 위에서 설정한 네비게이션 컨트롤러로 설정
+//            window?.rootViewController = navVC
+//
+//            //설정한 윈도우를 보이게 끔 설정
+//            window?.makeKeyAndVisible()
+//
+//            //윈도우 씬 설정
+//            window?.windowScene = windowScene
                 
+        /*
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window?.windowScene = windowScene
+        window?.makeKeyAndVisible()
+        
+        self.window = UIWindow(windowScene: windowScene)
+        let rootViewController = MainViewController()
+        let nv = UINavigationController(rootViewController: rootViewController)
+        self.window?.rootViewController = nv
+ */
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

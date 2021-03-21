@@ -87,10 +87,6 @@ class LoginViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        //네비게이션 테스트
-        self.title = "열람실"
-        self.view.backgroundColor = .white
-        
         // 저장된 로그인 정보 가져오기
         if let autoLoginValue = UserDefaults.standard.dictionary(forKey: "autoLoginValue") as NSDictionary? {
             let isAutoLogin: Bool = autoLoginValue.object(forKey: "autoLogin") as! Bool
@@ -179,11 +175,10 @@ class LoginViewController: UIViewController {
                         UserDefaults.standard.setValue(autoLoginValue, forKey: "autoLoginValue")
                         
                         // 메인화면 이동
-//                        let mainVC: MainViewController = MainViewController()
-//                        mainVC.modalPresentationStyle = .fullScreen
-//                        self.present(mainVC, animated: true, completion: nil)
-                        self.navigationController?.pushViewController(MainViewController(), animated: true)
-                        
+                        let mainVC: MainViewController = MainViewController()
+                        let navVC = UINavigationController(rootViewController: mainVC)
+                        navVC.modalPresentationStyle = .fullScreen
+                        self.present(navVC, animated: true, completion: nil)
                     } else {
                         // message != SUCCESS일 경우 (=로그인 실패)
                         // TODO : 로그인 실패시 처리 (ex. 알림팝업, 입력창 강조처리)
@@ -204,7 +199,7 @@ class LoginViewController: UIViewController {
             case.failure(let error):
                 // TODO : 실패시 처리 (ex. 팝업, 네트워크상태 확인, 서버상태 확인 등)
                 print("error: \(String(error.errorDescription!))")
-                // 인터넷 오프라인 오류 
+                // 인터넷 오프라인 오류
             }
             
             //로그인 이벤트 주기

@@ -14,6 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//        self.window = UIWindow(frame: UIScreen.main.bounds)
+//        let nv = UINavigationController()
+//        let mainView = MainViewController(nibName: nil, bundle: nil)
+//        nv.viewControllers = [mainView]
+//        self.window?.rootViewController = nv
+//        self.window?.makeKeyAndVisible()
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        //let rootViewController = UINavigationController(rootViewController: UINavigationController())
+        //let rootViewController: UINavigationController = MainViewController()
+        //window?.rootViewController = rootViewController
         return true
     }
 

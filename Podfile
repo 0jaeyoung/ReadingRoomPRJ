@@ -7,5 +7,6 @@ target 'ReadingRoomPRJ' do
 
   # Pods for ReadingRoomPRJ
   pod 'Alamofire'
+  pod 'PanModal'
 
 end
