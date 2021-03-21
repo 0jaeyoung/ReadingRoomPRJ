@@ -9,7 +9,7 @@ import UIKit
 import Alamofire
 
 class LoginViewController: UIViewController {
-    // 아이디 입력창, 비밀번호 입력창, 자동로그인, 로그인 버튼
+    var subLogo: UIImageView!
     var id: UITextField!
     var password: UITextField!
     var btnLogin: UIButton!
@@ -18,6 +18,13 @@ class LoginViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
+        view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
+        subLogo = UIImageView()
+        subLogo.translatesAutoresizingMaskIntoConstraints = false
+        subLogo.contentMode = .scaleAspectFit
+        let subLogoImage = UIImage(named: "logo_jungsook.png")
+        subLogo.image = subLogoImage
+        self.view.addSubview(subLogo)
         
         id = UITextField()
         id.translatesAutoresizingMaskIntoConstraints = false
@@ -56,6 +63,10 @@ class LoginViewController: UIViewController {
         self.view.addSubview(autoLoginLb)
         
         NSLayoutConstraint.activate([
+            subLogo.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height/7),
+            subLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            subLogo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 3/5),
+            
             id.topAnchor.constraint(equalTo: view.centerYAnchor),
             id.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             id.heightAnchor.constraint(equalToConstant: 40),

@@ -172,7 +172,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(displayP3Red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        view.backgroundColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
         
         let logoView = UIImageView(frame: .zero)
         logoView.contentMode = .scaleAspectFit
@@ -181,7 +181,8 @@ class MainViewController: UIViewController {
         navigationItem.titleView = logoView
         
         navigationController?.navigationBar.shadowImage = UIImage() // 네비게이션 바 선 없애기
-        navigationController?.navigationBar.barTintColor = UIColor(displayP3Red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        navigationController?.navigationBar.barTintColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
+        
         navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
         
         if (userType.admin.rawValue == UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"] as! String){
