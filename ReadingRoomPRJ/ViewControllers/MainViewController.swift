@@ -5,6 +5,8 @@
 //  Created by MCNC on 2021/02/18.
 //
 
+
+
 import UIKit
 import Foundation
 import PanModal
@@ -30,6 +32,7 @@ class MainViewController: UIViewController {
     var secondButton: UIButton!
     var thirdButton: UIButton!
     
+    //mainView 에서 셀을 먼저 생성한 후 reserveView 에서 호출
     var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
         var columnCount: Int!
         var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
@@ -43,7 +46,6 @@ class MainViewController: UIViewController {
     var longFormHeight: PanModalHeight {
         return .maxHeightWithTopInset(300)
     }
-    
     
     
     
@@ -209,13 +211,14 @@ class MainViewController: UIViewController {
             studentDepartment.text = (studentDepartmentText as! String)
             let studentCollegeText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
             studentCollege.text = "(" + (studentCollegeText as! String) + ")"
+           
             
             firstButton.setTitle("나의 자리", for: .normal)
             secondButton.setTitle("자리 선택/예약", for: .normal)
             thirdButton.setTitle("자리 확정", for: .normal)
             
             firstButton.addTarget(self, action: #selector(self.showMySeat(_:)), for: .touchUpInside)
-            secondButton.addTarget(self, action: #selector(self.openView(_:)), for: .touchUpInside)
+            secondButton.addTarget(self, action: #selector(self.openReserveView(_:)), for: .touchUpInside)
             thirdButton.addTarget(self, action: #selector(self.qrReader(_:)), for: .touchUpInside)
         }
     }
@@ -229,19 +232,20 @@ class MainViewController: UIViewController {
         self.presentPanModal(MySeatViewController())
     }
     
-    @objc func openView(_ sender: Any) {
+    @objc func openReserveView(_ sender: Any) {
         print(sender)
         
         let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-                //let college: String = "TEST" //=> 방 5개 출력
-                //let name: String = UserDefaults.standard.string(forKey: actionDefault.title!)
+        //let college: String = "TEST" //=> 방 5개 출력용 college
+                
                 
                 
                 let reserveURL = "http://3.34.174.56:8080/rooms"
                 let PARAM: Parameters = [
                     "college": college,
-                    //"name": name
+                    
                 ]
+        
                 
                 let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
                 alamo.responseJSON() {[self] response in
@@ -252,83 +256,66 @@ class MainViewController: UIViewController {
                             let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
                             if getResult! {
                                 
-                                //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
-                                let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                
-                                //let tmpTest = tmp[0] as! NSDictionary
-        //                        print("++")
-        //                        print(tmp)
-        //                        print("++")
-        //                        print(tmpTest["name"]!)
-        //                        print("tmp 출력 성공")
-        //
-                                
-                                
-                                
-                                let tmp1: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                let tmpInfo1 = tmp1[0] as! NSDictionary
-                                //print(tmpTest["college"]!)
-                                //print(tmpInfo["seat"]!)
-                                seatInfo = tmpInfo1["seat"] as! [Any]
-                                //print(seatInfo)
-                                
-                                rowCount = seatInfo.endIndex
-                                columnCount = (seatInfo[0] as AnyObject).count
-                                totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
-                                
-                                UserDefaults.standard.set(seatInfo, forKey: "seatInfo")
-                                UserDefaults.standard.set(totalCount, forKey: "totalCount")
-                                UserDefaults.standard.set(rowCount, forKey: "rowCount")
-                                UserDefaults.standard.set(columnCount, forKey: "columnCount")
                                
-        //                        print(columnCount!)
-        //                        print(rowCount!)
-        //                        print(totalCount!)
-               
-                                let vc: ReserveViewController = ReserveViewController()
-                                var arr: [String] = []
+                                let roomsArr: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
                                 
-                                for i in 0..<tmp.count {
-                                    let a: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                    let b = a[i] as! NSDictionary
-                                    arr.append(b["name"] as! String)
+                                var addRoom: [String] = []
+                                
+                                for i in 0..<roomsArr.count {
+                                    
+                                    let tmp = roomsArr[i] as! NSDictionary
+                                    addRoom.append(tmp["name"] as! String)
                                 }
+                                
+                                
+                            
                                 
                                 
                                 
                                 let actionSheetController = UIAlertController(title: "열람실", message: "이용하실 단과대학의 열람실을 선택해주세요.", preferredStyle: .actionSheet)
-                                
-                                for i in 0..<arr.count {
-                                    let actionDefault = UIAlertAction(title: arr[i], style: .default, handler: goTestView(_:))
-                                    UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
+                                for i in 0..<addRoom.count {
+                                   
+                                    let actionDefault = UIAlertAction(title: addRoom[i], style: .default, handler: { action in showSelectedRoomSeats(var: i)})
+                                    UserDefaults.standard.set(addRoom[i], forKey: actionDefault.title!)
 
-                                    let alpha = arr[i]
-
-                                    //print("alpha : \(String(describing: alpha))")
-
+                                    
                                     UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "collegeSeat")
-
-
-
+                                    
                                     actionSheetController.addAction(actionDefault)
                                 }
 
-        //                        for i in 0..<arr.count {
-        //                            let actionDefault = UIAlertAction(title: arr[i], style: .default, handler: nil)
-        //                            UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
-        //
-        //                            let alpha = arr[i]
-        //
-        //                            print("alpha : \(String(describing: alpha))")
-        //
-        //                            UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "collegeSeat")
-        //                            UserDefaults.standard.set(arr[i], forKey: actionDefault.title!)
-        //
-        //
-        //                            actionSheetController.addAction(actionDefault)
-        //                        }
-        //
+                                
+                                
+                                //방 여러개일 경우 각 방에 맞게 좌석을 불러오기 위한 함수
+                                func showSelectedRoomSeats(var k: Int) {
+                                    
+                                    let showSeats = roomsArr[k] as! NSDictionary
+                                    
+                                    seatInfo = showSeats["seat"] as! [Any]
+                                    UserDefaults.standard.set(showSeats["name"], forKey: "roomName")
+                                    print(showSeats["name"]!)
+                                    
+                                    rowCount = seatInfo.endIndex
+                                    columnCount = (seatInfo[0] as AnyObject).count
+                                    totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
+                                    
+                                    UserDefaults.standard.set(seatInfo, forKey: "seatInfo")
+                                    UserDefaults.standard.set(totalCount, forKey: "totalCount")
+                                    UserDefaults.standard.set(rowCount, forKey: "rowCount")
+                                    UserDefaults.standard.set(columnCount, forKey: "columnCount")
+                                    
+                                    print("좌석 호출 성공")
+                                    
+                                    goReserveView((Any).self)
 
+                                }
+                                
+                               
+  
+               
+                                let vc: ReserveViewController = ReserveViewController()
+                               
+                                
                                 let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
                                 actionSheetController.addAction(actionCancel)
                                 print(actionCancel.title as Any)
@@ -336,16 +323,10 @@ class MainViewController: UIViewController {
                                 present(actionSheetController, animated: true, completion: nil)
 
 
-        //                        print("121212")
-        //                        print(UserDefaults.standard.string(forKey: "BigRoom")!)
-
                                 vc.modalPresentationStyle = .fullScreen
                                 self.present(vc, animated: true, completion: nil)
                                 
-                                
-                                
-                               
-
+                 
                                 
                             }
                         }
@@ -355,13 +336,13 @@ class MainViewController: UIViewController {
                     
                 }
     }
-    @objc func goTestView(_ sender: Any) {
-           let vc = ReserveViewController()
-           vc.modalPresentationStyle = .fullScreen
+    @objc func goReserveView(_ sender: Any) {
+            
+            let vc = ReserveViewController()
+            vc.modalPresentationStyle = .fullScreen
            
-           //self.present(vc, animated: true, completion: nil)
-           self.navigationController?.pushViewController(vc, animated: true)
-           //self.present(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
+           
        }
 
     

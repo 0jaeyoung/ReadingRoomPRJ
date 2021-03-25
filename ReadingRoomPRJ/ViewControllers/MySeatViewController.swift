@@ -4,6 +4,9 @@
 //
 //  Created by 구본의 on 2021/01/29.
 //
+
+
+
 import UIKit
 import PanModal
 import Alamofire
@@ -16,35 +19,18 @@ class MySeatViewController: UIViewController {
     var seatNum: UILabel!
     var reserveStartTime: UILabel!
     var reserveEndTime: UILabel!
-    var spinner = UIActivityIndicatorView(style: .gray)
+    var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large) //서버 통신 대기를 위한 스피너 생성
+    
+    var extend: UIButton!
+    var returned: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("디드 로드뷰")
         self.title = "자리확정"
         
-        
-        
-        
-        //self.navigationController?.isNavigationBarHidden = false
-        //self.navigationController?.popViewController(animated: true)
-        
-    }
-    
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.topItem?.title = ""
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
-    
     
     
    
@@ -54,102 +40,19 @@ class MySeatViewController: UIViewController {
         view = UIView()
         view.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         
+        //스피너 생성 코드
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.startAnimating()
         view.addSubview(spinner)
-        
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        
-        
-        
-        
         self.myInfo()
-        
-        
-//        mySeat = UILabel()
-//        mySeat.translatesAutoresizingMaskIntoConstraints = false
-//        mySeat.textAlignment = .center
-//        mySeat.text = "나의 자리"
-//        mySeat.font = UIFont.systemFont(ofSize: 30)
-//        mySeat.textColor = .black
-//        mySeat.backgroundColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
-//        view.addSubview(mySeat)
-//
-//        location = UILabel()
-//        location.translatesAutoresizingMaskIntoConstraints = false
-//        location.text = "장소: " + UserDefaults.standard.string(forKey: "mySeatPlace")!
-//        //location.text = "장소: "
-//        location.font = UIFont.systemFont(ofSize: 20)
-//        view.addSubview(location)
-//
-//        seatNum = UILabel()
-//        seatNum.translatesAutoresizingMaskIntoConstraints = false
-//        seatNum.text = "자리 번호: \(UserDefaults.standard.integer(forKey: "selectedSeatNumber"))"
-//        //seatNum.text = "자리 번호: "
-//        seatNum.font = UIFont.systemFont(ofSize: 20)
-//        view.addSubview(seatNum)
-//
-//        reserveTime = UILabel()
-//        reserveTime.translatesAutoresizingMaskIntoConstraints = false
-//        reserveTime.text = "예약 시간: " +  UserDefaults.standard.string(forKey: "startTimeString")! + "~" + UserDefaults.standard.string(forKey: "endTimeString")!
-//        //reserveTime.text = "예약 시간: "
-//        reserveTime.font = UIFont.systemFont(ofSize: 20)
-//        view.addSubview(reserveTime)
-//
-//        let extend = UIButton(type: .system)
-//        extend.translatesAutoresizingMaskIntoConstraints = false
-//        extend.setTitle("연장", for: .normal)
-//        extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
-//        extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-//        extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
-//        view.addSubview(extend)
-//
-//
-//        let returned = UIButton(type: .system)
-//        returned.translatesAutoresizingMaskIntoConstraints = false
-//        returned.setTitle("반납", for: .normal)
-//        returned.addTarget(self, action: #selector(self.clickReturn(_:)), for: .touchUpInside)
-//        returned.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-//        returned.backgroundColor = #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)
-//        view.addSubview(returned)
-//
-//
-//        NSLayoutConstraint.activate([
-//            mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            mySeat.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-//            mySeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
-//
-//            location.topAnchor.constraint(equalTo: mySeat.bottomAnchor, constant: 25),
-//            location.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-//
-//            seatNum.topAnchor.constraint(equalTo: location.bottomAnchor, constant: 10),
-//            seatNum.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-//
-//            reserveTime.topAnchor.constraint(equalTo: seatNum.bottomAnchor, constant: 10),
-//            reserveTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-//
-//            extend.topAnchor.constraint(equalTo: reserveTime.bottomAnchor, constant: 20),
-//            extend.trailingAnchor.constraint(equalTo: view.centerXAnchor),
-//            extend.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-//            extend.heightAnchor.constraint(equalToConstant: 45),
-//
-//            returned.topAnchor.constraint(equalTo: reserveTime.bottomAnchor, constant: 20),
-//            returned.leadingAnchor.constraint(equalTo: view.centerXAnchor),
-//            returned.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-//            returned.heightAnchor.constraint(equalToConstant: 45)
-//
-//        ])
-//
-//
-//
-//
-        
-        
+   
     }
     
     
+    //myReservation API 통해서 예약한 유저의 정보 가져오는 함수
     func myInfo() {
         
         
@@ -173,13 +76,14 @@ class MySeatViewController: UIViewController {
                 print(value)
                 if let jsonObj = value as? NSDictionary {
                     let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
                     print("getresult :: \(getResult!)")
                     if getResult! {
                         let mySeatInfo: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
                         print(getResult!)
                         
                         print(mySeatInfo)
+                        
+                        //예약을 하지 않은 상태일 경우 배열 크기 비교를 통해서 확인. 추후 텍스트가 아닌 별도 이미지 파일로 교체 예정
                         if mySeatInfo.count == 0 {
                             print("사용자의 예약 내역이 없습니다.")
                             mySeat = UILabel()
@@ -194,21 +98,18 @@ class MySeatViewController: UIViewController {
                             location = UILabel()
                             location.translatesAutoresizingMaskIntoConstraints = false
                             location.text = "장소: " + "예약을 진행해 주세요."
-                            //location.text = "장소: "
                             location.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(location)
                             
                             seatNum = UILabel()
                             seatNum.translatesAutoresizingMaskIntoConstraints = false
                             seatNum.text = "자리 번호: 예약을 진행해 주세요."
-                            //seatNum.text = "자리 번호: "
                             seatNum.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(seatNum)
                             
                             reserveStartTime = UILabel()
                             reserveStartTime.translatesAutoresizingMaskIntoConstraints = false
                             reserveStartTime.text = "시작 시간: " + "예약을 진행해 주세요."
-                            reserveStartTime.textAlignment = .right
                             reserveStartTime.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(reserveStartTime)
                             
@@ -216,10 +117,29 @@ class MySeatViewController: UIViewController {
                             reserveEndTime = UILabel()
                             reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
                             reserveEndTime.text = "종료 시간: " + "예약을 진행해 주세요."
-                            reserveEndTime.textAlignment = .right
                             reserveEndTime.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(reserveEndTime)
-//
+                            
+                            extend = UIButton(type: .system)
+                            extend.translatesAutoresizingMaskIntoConstraints = false
+                            extend.setTitle("연장", for: .normal)
+                            extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
+                            extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+                            extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
+                            extend.isEnabled = false    //예약된 내역이 없기 때문에 연장 버튼 비활성화
+                            view.addSubview(extend)
+                            
+                            
+                            returned = UIButton(type: .system)
+                            returned.translatesAutoresizingMaskIntoConstraints = false
+                            returned.setTitle("반납", for: .normal)
+                            returned.addTarget(self, action: #selector(self.clickReturn(_:)), for: .touchUpInside)
+                            returned.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+                            returned.backgroundColor = #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)
+                            returned.isEnabled = false   //예약된 내역이 없기 때문에 반납 버튼 비활성화
+                            view.addSubview(returned)
+                            
+
                             
                             NSLayoutConstraint.activate([
                                 mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -238,13 +158,24 @@ class MySeatViewController: UIViewController {
                                 reserveEndTime.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 10),
                                 reserveEndTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
                                 
+                                extend.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+                                extend.trailingAnchor.constraint(equalTo: view.centerXAnchor),
+                                extend.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+                                extend.heightAnchor.constraint(equalToConstant: 45),
+                                
+                                returned.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+                                returned.leadingAnchor.constraint(equalTo: view.centerXAnchor),
+                                returned.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+                                returned.heightAnchor.constraint(equalToConstant: 45)
+                                
+                                
                                 
                             ])
                             
                             
-                        } else {
+                        } else {    //예약된 내역이 있을 경우(확정여부와는 상관 x) = 길이 != 0
                             let length = mySeatInfo.count
-                            let userCurrentInfo = mySeatInfo[length - 1] as! Dictionary<String, Any>
+                            let userCurrentInfo = mySeatInfo[length - 1] as! Dictionary<String, Any>    //이전에 사용자 정보 계속 저장한다고 했어서 맨 마지막 요소 불러옴. 저장 안한다면 0으로 해도 무관
                             print(userCurrentInfo)
                             mySeat = UILabel()
                             mySeat.translatesAutoresizingMaskIntoConstraints = false
@@ -258,23 +189,21 @@ class MySeatViewController: UIViewController {
                             location = UILabel()
                             location.translatesAutoresizingMaskIntoConstraints = false
                             location.text = "장소: \(String(describing: userCurrentInfo["college"]!))"
-                            //location.text = "장소: "
                             location.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(location)
                             
                             seatNum = UILabel()
                             seatNum.translatesAutoresizingMaskIntoConstraints = false
                             seatNum.text = "자리 번호: \((userCurrentInfo["seat"]!))"
-                            //seatNum.text = "자리 번호: "
                             seatNum.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(seatNum)
                             
                             
                             let beginTime = userCurrentInfo["begin"] as! Int
                             let endTime = userCurrentInfo["end"] as! Int
-                            let beginTimeInterval = TimeInterval(beginTime + 32400000) / 1000
+                            let beginTimeInterval = TimeInterval(beginTime + 32400000) / 1000       //9시간 시차 때문에 32,400,000 더해줌
                             let endTimeInterval = TimeInterval(endTime + 32400000) / 1000
-                            let insertBeginTime = Date(timeIntervalSince1970: beginTimeInterval)
+                            let insertBeginTime = Date(timeIntervalSince1970: beginTimeInterval)    //long값으로 된 시간값을 바꿔줌
                             let insertEndTime = Date(timeIntervalSince1970: endTimeInterval)
                             
                             reserveStartTime = UILabel()
@@ -289,7 +218,7 @@ class MySeatViewController: UIViewController {
                             reserveEndTime.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(reserveEndTime)
                             
-                            let extend = UIButton(type: .system)
+                            extend = UIButton(type: .system)
                             extend.translatesAutoresizingMaskIntoConstraints = false
                             extend.setTitle("연장", for: .normal)
                             extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
@@ -298,7 +227,7 @@ class MySeatViewController: UIViewController {
                             view.addSubview(extend)
                             
                             
-                            let returned = UIButton(type: .system)
+                            returned = UIButton(type: .system)
                             returned.translatesAutoresizingMaskIntoConstraints = false
                             returned.setTitle("반납", for: .normal)
                             returned.addTarget(self, action: #selector(self.clickReturn(_:)), for: .touchUpInside)
@@ -338,16 +267,7 @@ class MySeatViewController: UIViewController {
                             
                         }
                         
-                        
-                       
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
+                  
                     }
                     else {
                         print(getResult!)
@@ -370,31 +290,81 @@ class MySeatViewController: UIViewController {
     }
     
     
-    
-    
-    
-    
-   
-    
-    @objc func clickExtend(_ sender: Any) {
+        
+    @objc func clickExtend(_ sender: Any) { //alert 생성
         print("연장 버튼 클릭")
         let extend = UIAlertController(title: "연장", message: "얼마나 더 공부하실 껀가요?", preferredStyle: UIAlertController.Style.alert)
-        let first = UIAlertAction(title: "30분", style: UIAlertAction.Style.default, handler: nil)
-        let second = UIAlertAction(title: "60분", style: UIAlertAction.Style.default, handler: nil)
-        let third = UIAlertAction(title: "90분", style: UIAlertAction.Style.default, handler: nil)
-        let fourth = UIAlertAction(title: "120분", style: UIAlertAction.Style.default, handler: nil)
+        let time30 = UIAlertAction(title: "30분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend()})
+        let time60 = UIAlertAction(title: "60분", style: UIAlertAction.Style.default, handler: nil)
+        let time90 = UIAlertAction(title: "90분", style: UIAlertAction.Style.default, handler: nil)
+        let time120 = UIAlertAction(title: "120분", style: UIAlertAction.Style.default, handler: nil)
         let cancel = UIAlertAction(title: "취소", style: UIAlertAction.Style.destructive, handler: nil)
-        extend.addAction(first)
-        extend.addAction(second)
-        extend.addAction(third)
-        extend.addAction(fourth)
+        extend.addAction(time30)
+        extend.addAction(time60)
+        extend.addAction(time90)
+        extend.addAction(time120)
         extend.addAction(cancel)
         
         present(extend, animated: true, completion: nil)
     }
     
     
-    
+    func seatExtend() { //연장 api 사용 방법 확인되면 구현 예정 현재는 예약된 좌석 확인용으로 사용중
+        print("시간을 연장합니다")
+        
+        
+       
+        let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
+        
+                let reserveURL = "http://3.34.174.56:8080/rooms"
+                let PARAM: Parameters = [
+                    "college": college,
+                    
+                ]
+        
+        
+                
+                let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+                alamo.responseJSON() {[self] response in
+                    switch response.result {
+                    case.success(let value):
+                        print("success")
+                        if let jsonObj = value as? NSDictionary {
+                            let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                            if getResult! {
+                                
+                                //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
+                                let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                                print(type(of: tmp))
+                                print("tmp 출력 \(tmp)")
+                                let kkk: NSDictionary = tmp[0] as! NSDictionary
+                                print("kkk")
+                                //let aaa = kkk["reserved"] as! Array<Any>
+                                
+                                //let bbb = aaa[2] as! Array<Any>
+                                //let ccc = bbb[0] as! Dictionary<String, Any>
+                                
+                                
+                                
+//                                let kkkkk = TimeInterval(ccc["begin"] as! Int) / 1000
+//                                let aaaaa = Date(timeIntervalSince1970: kkkkk)
+//                                print("변환된 시간 값:::::::::::: \(aaaaa)")
+//
+                                
+                                
+                                
+                               
+
+                                
+                            }
+                        }
+                    case .failure(_):
+                        print("error")
+                    }
+                    
+                }
+        
+    }
     
     
     
@@ -414,94 +384,103 @@ class MySeatViewController: UIViewController {
 
     
     
-    func seatReturn() {
+    func seatReturn() { //myReservation 에서 예약 여부 확인 후 cancel api 호출함 -> 서버 통신 2번 이루어지게 됌
         print("반납 버튼이 눌렸습니다.")
         spinner.startAnimating()
-        let studentId: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String
-        let college: String = "TEST"
-        let room: String = "Test"
-        let seat: Int = UserDefaults.standard.integer(forKey: "selectedSeatNumber")
-        let time: Int = UserDefaults.standard.integer(forKey: "nowTime")
-        let begin: Int = UserDefaults.standard.integer(forKey: "userStartTime")
-        let end: Int = UserDefaults.standard.integer(forKey: "userEndTime")
-        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
-
-
-
-//        let studentId: String = "201736038"
-//        let college: String = "TEST"
-//        let room: String = "Test"
-//        let seat: Int = 2
-//        let time: Int = 1616140988000
-//        let begin: Int = 1616148055000
-//        let end: Int = 1616151655000
-//        let ID: String = "ownerchef2"
-//        let PW: String = "owner9809~"
-
-//
-
-        let reservedURL = "http://3.34.174.56:8080/room/cancel"
-        let PARAM: Parameters = [
-            "id": ID,
-            "password": PW,
-            "studentId": studentId,
-            "end": end,
-            "begin": begin,
-            "time": time,
-            "seat": seat,
-            "room": room,
-            "college": college
+        
+        
+        let userID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+        let userPW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+        let userURL = "http://3.34.174.56:8080/room/myReservation"
+        
+        let PARAMETER: Parameters = [
+            "id": userID,
+            "password": userPW
         ]
         
-        let alamo = AF.request(reservedURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-        alamo.responseJSON() { [self] response in
+        let myReservationAlamo = AF.request(userURL, method: .post, parameters: PARAMETER).validate(statusCode: 200..<450)
+        
+        myReservationAlamo.responseJSON() { response in
             switch response.result {
-            case .success(let value):
-                print("좌석을 반납합니다")
-                print(value)
-                if let jsonObj = value as? NSDictionary {
+            case .success(let v):
+                if let jsonObj = v as? NSDictionary {
                     let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
-                    print("getresult :: \(getResult!)")
                     if getResult! {
-                        spinner.stopAnimating()
-                        let mySeatInfo: NSDictionary = jsonObj.object(forKey: "reservation") as! NSDictionary
-                        print(mySeatInfo["reserved"] as Any)
-                        print("좌석을 취소취소취소")
+                        let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
                         
+                        print("취소를 위한 나의 정보에 접근했습니다.")
+                        let mySeatInfo = mySeat[0] as! NSDictionary
                         
-                        location.text = "장소: 예약을 진행해 주세요."
-                        seatNum.text = "자리 번호: 예약을 진행해 주세요."
-                        reserveStartTime.text = "시작시간: 예약을 진행해 주세요."
-                        reserveEndTime.text = "종료 시간: 예약을 진행해 주세요."
+                        //값 비교를 위해서 myReservation -> cancel 로 진행
                         
+                        let studentId: String = mySeatInfo["studentId"] as! String
+                        let college: String = mySeatInfo["college"] as! String
+                        let room: String = mySeatInfo["room"] as! String
+                        let seat: Int = mySeatInfo["seat"] as! Int
+                        let time: Int = mySeatInfo["time"] as! Int
+                        let begin: Int = mySeatInfo["begin"] as! Int
+                        let end: Int = mySeatInfo["end"] as! Int
+                        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+                        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+                        let cancelURL = "http://3.34.174.56:8080/room/cancel"
                         
+                        let PARAM: Parameters = [
+                            "id": ID,
+                            "password": PW,
+                            "studentId": studentId,
+                            "end": end,
+                            "begin": begin,
+                            "time": time,
+                            "seat": seat,
+                            "room": room,
+                            "college": college
+                        ]
                         
-                        
-                        self.showToast(controller: self, message: "좌석이 반납되었습니다.")
-                 
-                    
+                        let alamo = AF.request(cancelURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+                        alamo.responseJSON() { [self] response in
+                            switch response.result {
+                            case .success(let value):
+                                print("좌석을 반납합니다")
+                                print(value)
+                                if let jsonObj = value as? NSDictionary {
+                                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
+                                    print("getresult :: \(getResult!)")
+                                    if getResult! {
+                                        spinner.stopAnimating()
+                                        let mySeatInfo: NSDictionary = jsonObj.object(forKey: "reservation") as! NSDictionary
+                                        print(mySeatInfo["reserved"] as Any)
+                                        print("좌석을 반납중입니다.")
+                                        
+                                        //여기도 추후 이미지로 변경 예정
+                                        location.text = "장소: 예약을 진행해 주세요."
+                                        seatNum.text = "자리 번호: 예약을 진행해 주세요."
+                                        reserveStartTime.text = "시작시간: 예약을 진행해 주세요."
+                                        reserveEndTime.text = "종료 시간: 예약을 진행해 주세요."
+                                        extend.isEnabled = false
+                                        returned.isEnabled = false
+                                        
+                                        self.showToast(controller: self, message: "좌석이 반납되었습니다.")
+                                    }
+                                    else {
+                                        print(getResult!)
+                                        print("예약된 좌석이 없습니다.")
+                                    }
+                                }
+                                
+                            case .failure(_):
+                                print("error")
+                            }
+                        }
                     }
-                    else {
-                        print(getResult!)
-                        
-                        print("예약된 좌석이 없습니다.취소취소를 출력하지 못합니다.")
-                    }
-                    
                 }
-                
             case .failure(_):
                 print("error")
             }
-            
-            
-            }
-            
-        
+        }
     }
     
-    func showToast(controller: UIViewController, message: String) {
+    func showToast(controller: UIViewController, message: String) { //좌석 반납시 토스트 띄어줌.
         print("토스트 출력")
         let width_variable = 10
         let toastLabel = UILabel(frame: CGRect(x: width_variable, y: Int(self.view.frame.size.height)-100, width: Int(view.frame.size.width)-2*width_variable, height: 35))
@@ -514,30 +493,11 @@ class MySeatViewController: UIViewController {
         toastLabel.clipsToBounds = true
         self.view.addSubview(toastLabel)
         //self.view.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-                        toastLabel.alpha = 0.0}
-                       , completion: {(isCompleted) in
-                                       toastLabel.removeFromSuperview()
-                       })
-        
-        /*
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.view.backgroundColor = .lightGray
-        alert.view.alpha = 0.6
-        alert.view.layer.cornerRadius = 15
-        controller.present(alert, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
-            alert.dismiss(animated: true)
-            self.navigationController?.popViewController(animated: true)
-        }
-        */
+        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {toastLabel.alpha = 0.0}, completion: {(isCompleted) in toastLabel.removeFromSuperview()})
     }
-    
-    
-    
 }
 
-
+//판모달
 extension MySeatViewController: PanModalPresentable {
     var panScrollable: UIScrollView? {
         return nil
@@ -555,5 +515,3 @@ extension MySeatViewController: PanModalPresentable {
         return true
     }
 }
-
-

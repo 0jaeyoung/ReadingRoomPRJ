@@ -9,6 +9,19 @@
 /* Begin PBXBuildFile section */
 		2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */; };
 		2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */; };
+		2C59B34C260CC300003AB505 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B34B260CC300003AB505 /* QRScanViewController.swift */; };
+		2C59B34F260CC305003AB505 /* QRReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B34E260CC305003AB505 /* QRReaderView.swift */; };
+		2C59B352260CC311003AB505 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B351260CC311003AB505 /* QRCodeViewController.swift */; };
+		2C59B355260CC31A003AB505 /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B354260CC31A003AB505 /* OptionViewController.swift */; };
+		2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B357260CC326003AB505 /* CollectionCell.swift */; };
+		2C59B35A260CC326003AB505 /* CollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B358260CC326003AB505 /* CollectionCell.xib */; };
+		2C59B371260CC4D6003AB505 /* logo_jungsook.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36D260CC4D6003AB505 /* logo_jungsook.png */; };
+		2C59B372260CC4D6003AB505 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36E260CC4D6003AB505 /* logo_green.png */; };
+		2C59B373260CC4D6003AB505 /* logo_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36F260CC4D6003AB505 /* logo_white.png */; };
+		2C59B374260CC4D6003AB505 /* splash_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B370260CC4D6003AB505 /* splash_background.png */; };
+		2C59B37C260CC575003AB505 /* RGBColorPick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B37B260CC575003AB505 /* RGBColorPick.swift */; };
+		2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B37F260CC599003AB505 /* RequestAPI.swift */; };
+		2C59B383260CC621003AB505 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B382260CC621003AB505 /* Assets.xcassets */; };
 		440220F1F69E5135B49233B7 /* Pods_ReadingRoomPRJ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */; };
 		79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8A25DE44BE00B5C24E /* MainViewController.swift */; };
 		79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */; };
@@ -18,7 +31,6 @@
 		79B6A1B725DE347500666EAE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B6A1B625DE347500666EAE /* LoginViewController.swift */; };
 		79B6A1BA25DE347500666EAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B6A1B825DE347500666EAE /* Main.storyboard */; };
 		79B6A1BD25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79B6A1BB25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld */; };
-		79B6A1BF25DE347800666EAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79B6A1BE25DE347800666EAE /* Assets.xcassets */; };
 		79B6A1C225DE347800666EAE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B6A1C025DE347800666EAE /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +38,20 @@
 		24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReadingRoomPRJ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeat.swift; sourceTree = "<group>"; };
 		2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeatCell.swift; sourceTree = "<group>"; };
+		2C59B34B260CC300003AB505 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRScanViewController.swift; path = ../../../../ReadingRoomPRJ/ReadingRoomPRJ/ViewControllers/QRScanViewController.swift; sourceTree = "<group>"; };
+		2C59B34E260CC305003AB505 /* QRReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRReaderView.swift; path = ../../../../ReadingRoomPRJ/ReadingRoomPRJ/ViewControllers/QRReaderView.swift; sourceTree = "<group>"; };
+		2C59B351260CC311003AB505 /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeViewController.swift; path = ../../../../ReadingRoomPRJ/ReadingRoomPRJ/ViewControllers/QRCodeViewController.swift; sourceTree = "<group>"; };
+		2C59B354260CC31A003AB505 /* OptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionViewController.swift; path = ../../../../ReadingRoomPRJ/ReadingRoomPRJ/ViewControllers/OptionViewController.swift; sourceTree = "<group>"; };
+		2C59B357260CC326003AB505 /* CollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
+		2C59B358260CC326003AB505 /* CollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionCell.xib; sourceTree = "<group>"; };
+		2C59B36D260CC4D6003AB505 /* logo_jungsook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_jungsook.png; sourceTree = "<group>"; };
+		2C59B36E260CC4D6003AB505 /* logo_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_green.png; sourceTree = "<group>"; };
+		2C59B36F260CC4D6003AB505 /* logo_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_white.png; sourceTree = "<group>"; };
+		2C59B370260CC4D6003AB505 /* splash_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_background.png; sourceTree = "<group>"; };
+		2C59B376260CC4EA003AB505 /* RobotoMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoMono-Regular.ttf"; sourceTree = "<group>"; };
+		2C59B37B260CC575003AB505 /* RGBColorPick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBColorPick.swift; sourceTree = "<group>"; };
+		2C59B37F260CC599003AB505 /* RequestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAPI.swift; sourceTree = "<group>"; };
+		2C59B382260CC621003AB505 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../ReadingRoomPRJ/ReadingRoomPRJ/Assets.xcassets; sourceTree = "<group>"; };
 		79A61F8A25DE44BE00B5C24E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySeatViewController.swift; sourceTree = "<group>"; };
 		79A61F9025DE47A400B5C24E /* ReserveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserveViewController.swift; sourceTree = "<group>"; };
@@ -35,7 +61,6 @@
 		79B6A1B625DE347500666EAE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		79B6A1B925DE347500666EAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		79B6A1BC25DE347500666EAE /* ReadingRoomPRJ.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReadingRoomPRJ.xcdatamodel; sourceTree = "<group>"; };
-		79B6A1BE25DE347800666EAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79B6A1C125DE347800666EAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79B6A1C325DE347800666EAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E06083627197587410796F84 /* Pods-ReadingRoomPRJ.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadingRoomPRJ.debug.xcconfig"; path = "Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ.debug.xcconfig"; sourceTree = "<group>"; };
@@ -54,6 +79,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C59B36B260CC450003AB505 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				2C59B376260CC4EA003AB505 /* RobotoMono-Regular.ttf */,
+				2C59B36C260CC488003AB505 /* images */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		2C59B36C260CC488003AB505 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				2C59B36E260CC4D6003AB505 /* logo_green.png */,
+				2C59B36D260CC4D6003AB505 /* logo_jungsook.png */,
+				2C59B36F260CC4D6003AB505 /* logo_white.png */,
+				2C59B370260CC4D6003AB505 /* splash_background.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		2C59B378260CC522003AB505 /* Commons */ = {
+			isa = PBXGroup;
+			children = (
+				2C59B37B260CC575003AB505 /* RGBColorPick.swift */,
+				2C59B37F260CC599003AB505 /* RequestAPI.swift */,
+			);
+			path = Commons;
+			sourceTree = "<group>";
+		};
 		6F6EDE87115E467A7F18EC6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +134,12 @@
 				79A61F9025DE47A400B5C24E /* ReserveViewController.swift */,
 				2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */,
 				2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */,
+				2C59B357260CC326003AB505 /* CollectionCell.swift */,
+				2C59B358260CC326003AB505 /* CollectionCell.xib */,
+				2C59B354260CC31A003AB505 /* OptionViewController.swift */,
+				2C59B34B260CC300003AB505 /* QRScanViewController.swift */,
+				2C59B34E260CC305003AB505 /* QRReaderView.swift */,
+				2C59B351260CC311003AB505 /* QRCodeViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -105,11 +165,13 @@
 		79B6A1B125DE347500666EAE /* ReadingRoomPRJ */ = {
 			isa = PBXGroup;
 			children = (
+				2C59B378260CC522003AB505 /* Commons */,
+				2C59B36B260CC450003AB505 /* Resource */,
 				79A61F8425DE42C700B5C24E /* ViewControllers */,
 				79B6A1B225DE347500666EAE /* AppDelegate.swift */,
 				79B6A1B425DE347500666EAE /* SceneDelegate.swift */,
 				79B6A1B825DE347500666EAE /* Main.storyboard */,
-				79B6A1BE25DE347800666EAE /* Assets.xcassets */,
+				2C59B382260CC621003AB505 /* Assets.xcassets */,
 				79B6A1C025DE347800666EAE /* LaunchScreen.storyboard */,
 				79B6A1C325DE347800666EAE /* Info.plist */,
 				79B6A1BB25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld */,
@@ -176,9 +238,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C59B372260CC4D6003AB505 /* logo_green.png in Resources */,
+				2C59B373260CC4D6003AB505 /* logo_white.png in Resources */,
+				2C59B374260CC4D6003AB505 /* splash_background.png in Resources */,
+				2C59B371260CC4D6003AB505 /* logo_jungsook.png in Resources */,
 				79B6A1C225DE347800666EAE /* LaunchScreen.storyboard in Resources */,
-				79B6A1BF25DE347800666EAE /* Assets.xcassets in Resources */,
 				79B6A1BA25DE347500666EAE /* Main.storyboard in Resources */,
+				2C59B383260CC621003AB505 /* Assets.xcassets in Resources */,
+				2C59B35A260CC326003AB505 /* CollectionCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,10 +302,17 @@
 				79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */,
 				79A61F9125DE47A400B5C24E /* ReserveViewController.swift in Sources */,
 				79B6A1B325DE347500666EAE /* AppDelegate.swift in Sources */,
+				2C59B37C260CC575003AB505 /* RGBColorPick.swift in Sources */,
 				79B6A1BD25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld in Sources */,
 				2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */,
+				2C59B352260CC311003AB505 /* QRCodeViewController.swift in Sources */,
+				2C59B34F260CC305003AB505 /* QRReaderView.swift in Sources */,
 				79B6A1B525DE347500666EAE /* SceneDelegate.swift in Sources */,
 				79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */,
+				2C59B34C260CC300003AB505 /* QRScanViewController.swift in Sources */,
+				2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */,
+				2C59B355260CC31A003AB505 /* OptionViewController.swift in Sources */,
+				2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */,
 				2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,7 +468,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.boni.RdadingRoomPRJ;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boni.ReadingRoomPRJ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -414,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.boni.RdadingRoomPRJ;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boni.ReadingRoomPRJ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
