@@ -9,6 +9,10 @@ import UIKit
 import AVFoundation
 import Alamofire
 
+import UIKit
+import AVFoundation
+import Alamofire
+
 class QRScanViewController: UIViewController {
     
     var readerView: QRReaderView!
@@ -112,16 +116,16 @@ extension QRScanViewController: ReaderViewDelegate {
     func requestConfirm(code: String) {
         let URL = "http://3.34.174.56:8080/room/confirm"
         let PARAM: Parameters = [
-            "id":"dlo3olb",
-            "password":"a990324!",
+            "id":UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String,
+            "password":UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String,
             "token":code,
-            "studentId":"201635938",
-            "end":1614226200000,
-            "begin":1614226200000,
-            "time":1614226200000,
-            "seat":1,
-            "room":"Test",
-            "college":"TEST"
+            "studentId":UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String,
+            "end":UserDefaults.standard.integer(forKey: "userEndTime"),
+            "begin":UserDefaults.standard.integer(forKey: "userStartTime"),
+            "time":UserDefaults.standard.integer(forKey: "nowTime"),
+            "seat":UserDefaults.standard.integer(forKey: "selectedSeatNumber"),
+            "room":"2층",
+            "college":UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]! as! String
         ]
         
         let alamo = AF.request(URL, method: .post, parameters: PARAM).validate()

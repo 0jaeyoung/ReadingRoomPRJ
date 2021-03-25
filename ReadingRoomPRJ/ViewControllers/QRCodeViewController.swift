@@ -7,6 +7,8 @@
 
 import UIKit
 
+import UIKit
+
 class QRCodeViewController: UIViewController {
     var qrCodeView: UIImageView!
     override func loadView() {
@@ -46,7 +48,6 @@ class QRCodeViewController: UIViewController {
 
     /*
     // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
