@@ -135,7 +135,7 @@ class ReserveViewController: UIViewController {
         completeBtn.setTitle("예약하기", for: .normal)
         completeBtn.backgroundColor =  #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         //completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
-        completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
+        completeBtn.addTarget(self, action: #selector(self.reserveBtn(_:)), for: .touchUpInside)
         
         self.view.addSubview(completeBtn)
         
@@ -224,6 +224,9 @@ class ReserveViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
+        
         //시작시간 데이트피커 시간 반올림 세팅 -> ex. 현재시간 36분 -> 설정자체를 40분으로 초기 세팅함.
         let calendar = Calendar.current
             var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
@@ -271,6 +274,10 @@ class ReserveViewController: UIViewController {
         }
         
         endTime.date = addHour
+        
+        
+        
+        print("데이트피커 시간 표시 : \(startTime.date)") //이것도 9시간 더해줘야함.
     
        
         //좌석 샘플 표시 스택뷰 생성 (네비게이션 바 위에 생성)
@@ -357,7 +364,7 @@ class ReserveViewController: UIViewController {
     
     
     
-    @objc func test(_ sender: UIButton) {
+    @objc func reserveBtn(_ sender: UIButton) {
         btnDatePicker(firstDatePicker: startTime, secondDatePicker: endTime)
         
     }
@@ -582,19 +589,237 @@ extension ReserveViewController: UICollectionViewDataSource {
         default:
             
             
-                cell.myImageView.image = UIImage(named: "emptySeat.png")
-                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
+//
+//
+//
+//            if curr % 2 == 0{
+//                cell.myImageView.image = UIImage(named: "emptySeat.png")
+//                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//
+//
+//                cell.myButton.setTitle(String(curr), for: .normal)
+//
+//                cell.myButton.tintColor = .black
+//                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+//                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+//                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+//            }
+//            else {
+//                cell.myImageView.image = UIImage(named: "ingSeat.png")
+//                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//
+//
+//                cell.myButton.setTitle(String(curr), for: .normal)
+//
+//                cell.myButton.tintColor = .black
+//                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+//                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+//                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+//            }
+//
+//            
+            let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
             
-                
-                cell.myButton.setTitle(String(curr), for: .normal)
-                cell.myButton.tintColor = .black
-                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                
-                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                
+                    let reserveURL = "http://3.34.174.56:8080/rooms"
+                    let PARAM: Parameters = [
+                        "college": college,
+                        
+                    ]
+            
+            
+                    
+                    let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+                    alamo.responseJSON() {[self] response in
+                        switch response.result {
+                        case.success(let value):
+                            print("success")
+                            if let jsonObj = value as? NSDictionary {
+                                let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                                if getResult! {
+                                    
+                                    //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
+                                    let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                                    print(type(of: tmp))
+                                    print("tmp 출력 \(tmp)")
+                                    let kkk: NSDictionary = tmp[0] as! NSDictionary
+                                    print("kkk")
+                                    let aaa = kkk["reserved"] as! Array<Any>
+                                    
+                                    
+                                    if (aaa[curr] as AnyObject).count == 0 {
+                                        cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+                                        
+                                        
+                                        cell.myButton.setTitle(String(curr), for: .normal)
+
+                                        cell.myButton.tintColor = .black
+                                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                        cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                        
+                                        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                    } else {
+                                        
+                                        
+//                                        let kkkkk = TimeInterval(ccc["begin"] as! Int) / 1000
+                                        //                                let aaaaa = Date(timeIntervalSince1970: kkkkk)
+                                        //                                print("변환된 시간 값:::::::::::: \(aaaaa)")
+                                        
+                                        let currentDayFomatter = DateFormatter()
+                                        currentDayFomatter.locale = Locale(identifier: "ko")
+                                        currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
+                                        
+                                        let startTimeString = currentDayFomatter.string(from: startTime.date)
+                                        let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
+                                        let startTimeLong = Int(startTimeDate.timeIntervalSince1970) * 1000 //실질적으로 시간 비교에 사용 되는 시간 값
+                                        
+                                        let endTimeString = currentDayFomatter.string(from: endTime.date)
+                                        let endTimeDate:Date = currentDayFomatter.date(from: endTimeString)!
+                                        let endTimeLong = Int(endTimeDate.timeIntervalSince1970) * 1000 //실질적으로 시간 비교에 사용 되는 시간 값
+                                        
+                                        let bbb = aaa[curr] as! Array<Any>
+                                        for i in 0..<(aaa[curr] as AnyObject).count {
+                                            let ccc = bbb[i] as! Dictionary<String, Any>
+                                            let begin = ccc["begin"] as! Int    //예약된 좌석의 시작시간
+                                            let end = ccc["end"] as! Int        //예약된 좌석의 종료시간
+                                            
+                                            
+                                            if startTimeLong < end && endTimeLong > begin {
+                                                if ccc["confirmed"] as! Int == 0 {
+                                                    cell.myImageView.image = UIImage(named: "ingSeat.png")
+                                                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+                                                    
+                                                    
+                                                    cell.myButton.setTitle(String(curr), for: .normal)
+
+                                                    cell.myButton.tintColor = .black
+                                                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                                    cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                                    cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                    cell.myButton.isEnabled = true
+                                                    cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                                } else {
+                                                    cell.myImageView.image = UIImage(named: "fullSeat.png")
+                                                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+                                                    
+                                                    
+                                                    cell.myButton.setTitle(String(curr), for: .normal)
+
+                                                    cell.myButton.tintColor = .black
+                                                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                                    cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                                    cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                    cell.myButton.isEnabled = true
+                                                    cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                                }
+                                            } else {
+                                                
+                                                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+
+
+                                                cell.myButton.setTitle(String(curr), for: .normal)
+
+                                                cell.myButton.tintColor = .black
+                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                cell.myButton.isEnabled = true
+                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                            }
+                                            
+                                            
+                                            
+                                     
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            //startTime.date
+                                        }
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+//
+//                                        cell.myImageView.image = UIImage(named: "fullSeat.png")
+//                                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//
+//
+//                                        cell.myButton.setTitle(String(curr), for: .normal)
+//
+//                                        cell.myButton.tintColor = .black
+//                                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+//                                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+//                                        cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//                                        cell.myButton.isEnabled = true
+//                                        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                    }
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                   
+
+                                    
+                                }
+                            }
+                        case .failure(_):
+                            print("error")
+                        }
+                        
+                    }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+//
+//
+//                cell.myImageView.image = UIImage(named: "emptySeat.png")
+//                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//
+//
+//                cell.myButton.setTitle(String(curr), for: .normal)
+//
+//                cell.myButton.tintColor = .black
+//                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+//                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+//                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+//
+//                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+//
         
                 //좌석이 아닌 경우 button 비활성화를 한다면....?
             

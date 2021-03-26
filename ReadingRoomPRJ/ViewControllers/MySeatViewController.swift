@@ -339,17 +339,19 @@ class MySeatViewController: UIViewController {
                                 print("tmp 출력 \(tmp)")
                                 let kkk: NSDictionary = tmp[0] as! NSDictionary
                                 print("kkk")
-                                //let aaa = kkk["reserved"] as! Array<Any>
-                                
-                                //let bbb = aaa[2] as! Array<Any>
-                                //let ccc = bbb[0] as! Dictionary<String, Any>
-                                
-                                
-                                
+                                let aaa = kkk["reserved"] as! Array<Any>
+                                //print(aaa)
+                                let bbb = aaa[1] as! Array<Any>
+                                print(aaa.count)
+                                print(bbb.count)
+//                                let ccc = bbb[0] as! Dictionary<String, Any>
+//
+//
+//
 //                                let kkkkk = TimeInterval(ccc["begin"] as! Int) / 1000
 //                                let aaaaa = Date(timeIntervalSince1970: kkkkk)
 //                                print("변환된 시간 값:::::::::::: \(aaaaa)")
-//
+
                                 
                                 
                                 
