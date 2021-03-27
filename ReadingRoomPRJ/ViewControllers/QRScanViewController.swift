@@ -13,6 +13,10 @@ import UIKit
 import AVFoundation
 import Alamofire
 
+var tokenDic = Dictionary<String, String>()
+
+
+
 class QRScanViewController: UIViewController {
     
     var readerView: QRReaderView!
@@ -128,6 +132,8 @@ extension QRScanViewController: ReaderViewDelegate {
             "college":UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]! as! String
         ]
         
+        tokenDic[UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String] = code
+        UserDefaults.standard.set(tokenDic, forKey: "tokenDic")
         let alamo = AF.request(URL, method: .post, parameters: PARAM).validate()
         alamo.responseJSON() { response in
             print("===API:REQUEST:CONFIRM:RESULT===")

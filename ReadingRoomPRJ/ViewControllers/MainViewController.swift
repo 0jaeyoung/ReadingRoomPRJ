@@ -174,6 +174,11 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        print("I'm test")
+        print(tokenDic)
+        
+        
         view.backgroundColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
         
         let logoView = UIImageView(frame: .zero)

@@ -31,6 +31,16 @@ class OptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("option view")
+        
+        print("I'm test")
+        if UserDefaults.standard.dictionary(forKey: "tokenDic")?.count == 0{
+            print("x")
+        }else {
+        print(UserDefaults.standard.dictionary(forKey: "tokenDic")! as Dictionary)
+        print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
+        }
+        
+        
         // Do any additional setup after loading the view.
         logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
     }

@@ -26,6 +26,9 @@ class MySeatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("1213")
+        print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
         print("디드 로드뷰")
         self.title = "자리확정"
         
@@ -310,61 +313,91 @@ class MySeatViewController: UIViewController {
     
     
     func seatExtend() { //연장 api 사용 방법 확인되면 구현 예정 현재는 예약된 좌석 확인용으로 사용중
-        print("시간을 연장합니다")
+        print("시간을 연장을 위해 세팅합니다")
+    
+        //myreservation -> token -> extend api 순으로 넘어감
+        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+        let myReservedURL = "http://3.34.174.56:8080/room/myReservation"
+        let myReservePARAM: Parameters = [
+            "id": ID,
+            "password": PW
+        ]
         
-        
-       
-        let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-        
-                let reserveURL = "http://3.34.174.56:8080/rooms"
-                let PARAM: Parameters = [
-                    "college": college,
-                    
-                ]
-        
-        
-                
-                let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-                alamo.responseJSON() {[self] response in
-                    switch response.result {
-                    case.success(let value):
-                        print("success")
-                        if let jsonObj = value as? NSDictionary {
-                            let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                            if getResult! {
-                                
-                                //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
-                                let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                print(type(of: tmp))
-                                print("tmp 출력 \(tmp)")
-                                let kkk: NSDictionary = tmp[0] as! NSDictionary
-                                print("kkk")
-                                let aaa = kkk["reserved"] as! Array<Any>
-                                //print(aaa)
-                                let bbb = aaa[1] as! Array<Any>
-                                print(aaa.count)
-                                print(bbb.count)
-//                                let ccc = bbb[0] as! Dictionary<String, Any>
-//
-//
-//
-//                                let kkkkk = TimeInterval(ccc["begin"] as! Int) / 1000
-//                                let aaaaa = Date(timeIntervalSince1970: kkkkk)
-//                                print("변환된 시간 값:::::::::::: \(aaaaa)")
-
-                                
-                                
-                                
-                               
-
-                                
+        let myReserveAlamo = AF.request(myReservedURL, method: .post, parameters: myReservePARAM).validate(statusCode: 200..<450)
+        myReserveAlamo.responseJSON() { response in
+            switch response.result {
+            case .success(let value):
+                if let jsonObj = value as? NSDictionary {
+                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                    if getResult! {
+                        let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
+                        
+                        
+                        let mySeatInfo = mySeat[0] as! NSDictionary
+                        
+                        //값 비교를 위해서 myReservation -> cancel 로 진행
+                        
+                        print("898989")
+                        print(mySeatInfo)
+                        
+                        let studentId: String = mySeatInfo["studentId"] as! String
+                        let college: String = mySeatInfo["college"] as! String
+                        let room: String = mySeatInfo["room"] as! String
+                        let seat: Int = mySeatInfo["seat"] as! Int
+                        let time: Int = mySeatInfo["time"] as! Int
+                        let begin: Int = mySeatInfo["begin"] as! Int
+                        let end: Int = mySeatInfo["end"] as! Int
+                        //let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
+                        //let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+                        let token: String = UserDefaults.standard.dictionary(forKey: "tokenDic")![studentId] as! String
+                        let extendURL = "http://3.34.174.56:8080/room/extend"
+                        let extendedTime = 1800000
+                        
+                        print(token)
+                        //토큰을 가져오기 위한 파라미터 설정
+                        let extendPARAM: Parameters = [
+                            "id": ID,
+                            "password": PW,
+                            "token": token,
+                            "studentId": studentId,
+                            "room": room,
+                            "college": college,
+                            "seat": seat,
+                            "time": time,
+                            "begin": begin,
+                            "end": end,
+                            "extendedTime": extendedTime
+                        ]
+                        
+                        
+                        //print(QRScanViewController.requestConfirm().code)
+                        
+                        let extendAlamo = AF.request(extendURL, method: .post, parameters: extendPARAM).validate(statusCode: 200..<450)
+                        extendAlamo.responseJSON() { [self] response in
+                            switch response.result {
+                            
+                            case .success(let extendValue):
+                                print("시간을 연장합니다.")
+                                print(extendValue)
+                                print("시간이 연장되었습니다.")
+                            case .failure(_):
+                                print("err")
                             }
+                            
                         }
-                    case .failure(_):
-                        print("error")
+                        
+
                     }
-                    
                 }
+            case .failure(_):
+                print("error")
+            }
+        }
+        
+        
+        
+        
         
     }
     
