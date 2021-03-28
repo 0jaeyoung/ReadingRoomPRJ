@@ -204,8 +204,8 @@ class MySeatViewController: UIViewController {
                             
                             let beginTime = userCurrentInfo["begin"] as! Int
                             let endTime = userCurrentInfo["end"] as! Int
-                            let beginTimeInterval = TimeInterval(beginTime + 32400000) / 1000       //9시간 시차 때문에 32,400,000 더해줌
-                            let endTimeInterval = TimeInterval(endTime + 32400000) / 1000
+                            let beginTimeInterval = TimeInterval(beginTime) / 1000       //9시간 시차 때문에 32,400,000 더해줌
+                            let endTimeInterval = TimeInterval(endTime) / 1000
                             let insertBeginTime = Date(timeIntervalSince1970: beginTimeInterval)    //long값으로 된 시간값을 바꿔줌
                             let insertEndTime = Date(timeIntervalSince1970: endTimeInterval)
                             
