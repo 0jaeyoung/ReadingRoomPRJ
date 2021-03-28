@@ -34,10 +34,10 @@ class MainViewController: UIViewController {
     
     //mainView 에서 셀을 먼저 생성한 후 reserveView 에서 호출
     var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
-        var columnCount: Int!
-        var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
-        var seatInfo: [Any] = []
-        var seats = [Int:Int]()
+    var columnCount: Int!
+    var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
+    var seatInfo: [Any] = []
+    var seats = [Int:Int]()
     
     var shortFormHeight: PanModalHeight {
         return .contentHeight(300)
@@ -176,7 +176,7 @@ class MainViewController: UIViewController {
         
         
         print("I'm test")
-        print(tokenDic)
+        //print(tokenDic)
         
         
         view.backgroundColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
@@ -189,14 +189,13 @@ class MainViewController: UIViewController {
         
         navigationController?.navigationBar.shadowImage = UIImage() // 네비게이션 바 선 없애기
         navigationController?.navigationBar.barTintColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
-        
         navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
         
         if (userType.admin.rawValue == UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"] as! String){
             
             let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
             nameLabel.text = (nameLabelText as! String)
-            let subNameLabelText = "관리자"//UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]!
+            let subNameLabelText = "관리자"
             subNameLabel.text = (subNameLabelText)
             
             firstButton.setTitle("QR코드", for: .normal)
@@ -228,118 +227,38 @@ class MainViewController: UIViewController {
         }
     }
     
-    // [나의자리] 버튼 클릭 이벤트
-    
-    
     @objc func showMySeat(_ sender: Any) {
-        
-        
         self.presentPanModal(MySeatViewController())
     }
     
     @objc func openReserveView(_ sender: Any) {
-        print(sender)
-        
-        let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-        //let college: String = "TEST" //=> 방 5개 출력용 college
+        let college = UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String //2층
+        // #boni --- API 통신 함수뺀걸로 바꿔놨어
+        let param = [ "college":college ]
+        RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: { (result, response) in
+            if (result) {
+                let rooms = response as! NSArray
                 
-                
-                
-                let reserveURL = "http://3.34.174.56:8080/rooms"
-                let PARAM: Parameters = [
-                    "college": college,
-                    
-                ]
-        
-                
-                let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-                alamo.responseJSON() {[self] response in
-                    switch response.result {
-                    case.success(let value):
-                        print("success")
-                        if let jsonObj = value as? NSDictionary {
-                            let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                            if getResult! {
-                                
-                               
-                                let roomsArr: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                
-                                var addRoom: [String] = []
-                                
-                                for i in 0..<roomsArr.count {
-                                    
-                                    let tmp = roomsArr[i] as! NSDictionary
-                                    addRoom.append(tmp["name"] as! String)
-                                }
-                                
-                                
-                            
-                                
-                                
-                                
-                                let actionSheetController = UIAlertController(title: "열람실", message: "이용하실 단과대학의 열람실을 선택해주세요.", preferredStyle: .actionSheet)
-                                for i in 0..<addRoom.count {
-                                   
-                                    let actionDefault = UIAlertAction(title: addRoom[i], style: .default, handler: { action in showSelectedRoomSeats(var: i)})
-                                    UserDefaults.standard.set(addRoom[i], forKey: actionDefault.title!)
-
-                                    
-                                    UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "collegeSeat")
-                                    
-                                    actionSheetController.addAction(actionDefault)
-                                }
-
-                                
-                                
-                                //방 여러개일 경우 각 방에 맞게 좌석을 불러오기 위한 함수
-                                func showSelectedRoomSeats(var k: Int) {
-                                    
-                                    let showSeats = roomsArr[k] as! NSDictionary
-                                    
-                                    seatInfo = showSeats["seat"] as! [Any]
-                                    UserDefaults.standard.set(showSeats["name"], forKey: "roomName")
-                                    print(showSeats["name"]!)
-                                    
-                                    rowCount = seatInfo.endIndex
-                                    columnCount = (seatInfo[0] as AnyObject).count
-                                    totalCount = (seatInfo[0] as! [Any]).endIndex * rowCount
-                                    
-                                    UserDefaults.standard.set(seatInfo, forKey: "seatInfo")
-                                    UserDefaults.standard.set(totalCount, forKey: "totalCount")
-                                    UserDefaults.standard.set(rowCount, forKey: "rowCount")
-                                    UserDefaults.standard.set(columnCount, forKey: "columnCount")
-                                    
-                                    print("좌석 호출 성공")
-                                    
-                                    goReserveView((Any).self)
-
-                                }
-                                
-                               
-  
-               
-                                let vc: ReserveViewController = ReserveViewController()
-                               
-                                
-                                let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-                                actionSheetController.addAction(actionCancel)
-                                print(actionCancel.title as Any)
-                                vc.modalPresentationStyle = .fullScreen
-                                present(actionSheetController, animated: true, completion: nil)
-
-
-                                vc.modalPresentationStyle = .fullScreen
-                                self.present(vc, animated: true, completion: nil)
-                                
-                 
-                                
-                            }
-                        }
-                    case .failure(_):
-                        print("error")
-                    }
-                    
+                let roomListAlert = UIAlertController(title: "열람실", message: "이용하실 단과대학의 열람실을 선택해주세요.", preferredStyle: .actionSheet)
+                for i in 0..<rooms.count {
+                    let room = rooms[i] as! NSDictionary
+                    let roomListAction = UIAlertAction(title: room["name"] as? String, style: .default,
+                                       handler: { action in self.showSelectedRoomSeats(index: i, selectedRoom: rooms[i] as! NSDictionary) })
+                    roomListAlert.addAction(roomListAction)
                 }
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                roomListAlert.addAction(cancelAction)
+                self.present(roomListAlert, animated: true, completion: nil)
+            } else {
+                print("실패")
+            }
+        })
+        
+    }
+    func showSelectedRoomSeats(index: Int, selectedRoom: NSDictionary) {
+        // #boni --- userDefault로 세팅되있던거 전부 클래스화 해서 전역변수 사용으로 바꾸꿨어
+        Room.shared = Room.init(room: selectedRoom)
+        self.goReserveView((Any).self)
     }
     @objc func goReserveView(_ sender: Any) {
             

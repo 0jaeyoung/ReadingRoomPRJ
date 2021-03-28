@@ -365,6 +365,7 @@ class ReserveViewController: UIViewController {
     
     
     @objc func reserveBtn(_ sender: UIButton) {
+        // if 선택한 좌석X -> 좌석선택부터 해주세요 alert, else
         btnDatePicker(firstDatePicker: startTime, secondDatePicker: endTime)
         
     }
@@ -439,7 +440,7 @@ class ReserveViewController: UIViewController {
             print("end: \(UserDefaults.standard.integer(forKey: "userEndTime"))")
             let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
             let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
-            let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.back()})
+            let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.confirmReserve()})
             
             firstAlert.addAction(firstAlertActionNo)
             firstAlert.addAction(firstAlertActionOk)
@@ -475,7 +476,7 @@ class ReserveViewController: UIViewController {
     
 
     
-    func back() {
+    func confirmReserve() {
         print("back")
         
         
@@ -489,9 +490,7 @@ class ReserveViewController: UIViewController {
         let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
         let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
         
-      
-        let reservedURL = "http://3.34.174.56:8080/room/reserve"
-        let PARAM: Parameters = [
+        let param = [
             "id": ID,
             "password": PW,
             "studentId": studentId,
@@ -501,68 +500,39 @@ class ReserveViewController: UIViewController {
             "seat": seat,
             "room": room,
             "college": college
-        ]
-        
-        
-        let alamo = AF.request(reservedURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-        alamo.responseJSON() { [self] response in
-            switch response.result {
-            case .success(let value):
-                
-                print(value)
-                if let jsonObj = value as? NSDictionary {
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
-                    print("getresult :: \(getResult!)")
-                    if getResult! {
-                        print("좌석을 예약중입니다.")
-                    
-                        print("좌석이 예약되었습니다.")
-                        
-                       
-                    
-                    }
-                    else {
-                        print(getResult!)
-                        
-                        print("예약이 불가능합니다..")
-                    }
-                    
-                }
-                
-            case .failure(_):
-                print("error")
+        ] as [String : Any]
+        RequestAPI.post(resource: "/room/reserve", param: param, responseData: "reservation", completion: {(result, response) in
+            if (result) {
+                let reservation = response as! NSDictionary
+                print("좌석 예약 완료")
+                // TODO : 토스트메시지 띄우기
+                self.navigationController?.popViewController(animated: true)
+            } else {
+                print("예약 실패")
+                // TODO : 예약실패 후 처리
             }
-            
-            
-            }
-        self.navigationController?.popViewController(animated: true)
-        
+        })
     }
-    
-    
-    
 }
 
 //컬렉션 뷰 확장 관련 코드        / 234~ end
 extension ReserveViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("totalCount가 리턴되는 extension이 호출됩니다.")
-        return UserDefaults.standard.integer(forKey: "totalCount")
+        return Room.shared.totalCount
     }
-
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.identifire, for: indexPath) as! CollectionCell
         UserDefaults.standard.set(indexPath[1], forKey: "indexPath")
         
-        let columnNumber:Int = ((indexPath[1]) / UserDefaults.standard.integer(forKey: "columnCount")) // 열 구하기
+        let columnNumber:Int = ((indexPath[1]) / Room.shared.columnCount)
         UserDefaults.standard.set(columnNumber, forKey: "columnNumber")
         
-        let arrayT: [Any] = UserDefaults.standard.array(forKey: "seatInfo")![columnNumber] as! [Any]
+        let arrayT: [Any] = Room.shared.seat![columnNumber] as! [Any]
         UserDefaults.standard.set(arrayT, forKey: "arrayT")
         
-        let curr:Int = arrayT[indexPath[1]%(UserDefaults.standard.integer(forKey: "columnCount") )] as! Int
+        let curr:Int = arrayT[indexPath[1]%Room.shared.columnCount] as! Int
         UserDefaults.standard.set(curr, forKey: "curr")
        
         
@@ -583,178 +553,46 @@ extension ReserveViewController: UICollectionViewDataSource {
         case SeatType.Empty.rawValue:
             cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "road.png")
-            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width*0.8, height: cell.bounds.size.width)
             break
 
         default:
+            cell.myButton.setTitle(String(curr), for: .normal)
+            cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+            cell.myButton.tintColor = .black
             
-            
-//
-//
-//
-//
-//            
-            let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-
-                    let reserveURL = "http://3.34.174.56:8080/rooms"
-                    let PARAM: Parameters = [
-                        "college": college,
-
-                    ]
-
-
-
-                    let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-                    alamo.responseJSON() {[self] response in
-                        switch response.result {
-                        case.success(let value):
-                            print("success")
-                            if let jsonObj = value as? NSDictionary {
-                                let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                                if getResult! {
-
-                                    //UserDefaults.standard.set(jsonObj.object(forKey: "rooms"), forKey: "qhsdml")
-                                    let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                                    print(type(of: tmp))
-                                    print("tmp 출력 \(tmp)")
-                                    let kkk: NSDictionary = tmp[0] as! NSDictionary
-                                    print("kkk")
-                                    let aaa = kkk["reserved"] as! Array<Any>
-
-
-                                    if (aaa[curr] as AnyObject).count == 0 {
-                                        cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-
-
-                                        cell.myButton.setTitle(String(curr), for: .normal)
-
-                                        cell.myButton.tintColor = .black
-                                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                        cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-                                        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                    } else {
-
-
-//                                        let kkkkk = TimeInterval(ccc["begin"] as! Int) / 1000
-                                        //                                let aaaaa = Date(timeIntervalSince1970: kkkkk)
-                                        //                                print("변환된 시간 값:::::::::::: \(aaaaa)")
-
-                                        let currentDayFomatter = DateFormatter()
-                                        currentDayFomatter.locale = Locale(identifier: "ko")
-                                        currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
-
-                                        let startTimeString = currentDayFomatter.string(from: startTime.date)
-                                        let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
-                                        let startTimeLong = Int(startTimeDate.timeIntervalSince1970) * 1000 //실질적으로 시간 비교에 사용 되는 시간 값
-
-                                        let endTimeString = currentDayFomatter.string(from: endTime.date)
-                                        let endTimeDate:Date = currentDayFomatter.date(from: endTimeString)!
-                                        let endTimeLong = Int(endTimeDate.timeIntervalSince1970) * 1000 //실질적으로 시간 비교에 사용 되는 시간 값
-
-                                        let bbb = aaa[curr] as! Array<Any>
-                                        for i in 0..<(aaa[curr] as AnyObject).count {
-                                            let ccc = bbb[i] as! Dictionary<String, Any>
-                                            let begin = ccc["begin"] as! Int    //예약된 좌석의 시작시간
-                                            let end = ccc["end"] as! Int        //예약된 좌석의 종료시간
-
-
-                                            if startTimeLong < end && endTimeLong > begin {
-                                                if ccc["confirmed"] as! Int == 0 {
-                                                    cell.myImageView.image = UIImage(named: "ingSeat.png")
-                                                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-
-
-                                                    cell.myButton.setTitle(String(curr), for: .normal)
-
-                                                    cell.myButton.tintColor = .black
-                                                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                                    cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                                    cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                    cell.myButton.isEnabled = true
-                                                    cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                                } else {
-                                                    cell.myImageView.image = UIImage(named: "fullSeat.png")
-                                                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-
-
-                                                    cell.myButton.setTitle(String(curr), for: .normal)
-
-                                                    cell.myButton.tintColor = .black
-                                                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                                    cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                                    cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                    cell.myButton.isEnabled = true
-                                                    cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                                }
-                                            } else {
-
-                                                cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-
-
-                                                cell.myButton.setTitle(String(curr), for: .normal)
-
-                                                cell.myButton.tintColor = .black
-                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                cell.myButton.isEnabled = true
-                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                            }
-
-
-                                        }
-
-
-                                    }
-
-
-
-
-
-
-
-
-
-
-                                }
-                            }
-                        case .failure(_):
-                            print("error")
-                        }
-
-                    }
-
-
-
-
-           
+            if (Room.shared.reserved[curr] as AnyObject).count == 0 {
+                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                //cell.myButton.setImage(UIImage(named: "emptySeat.png"), for: .normal)
+                //cell.myButton.setImage(UIImage(named: "ingSeat.png"), for: .selected)
+                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+            } else {
+                cell.myImageView.image = UIImage(named: "fullSeat.png")
+            }
         }
         
         return cell
     }
     
-   
-    
     @objc func tap(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.showSeatCollectionView)
         let indexPath = self.showSeatCollectionView.indexPathForItem(at: location)
         if let index = indexPath {
-        print("Got clicked on index: \(index[1])!")
+            print("Got clicked on index: \(index[1])!")
         }
     }
     
     //좌석 클릭시 선택 좌석을 알려주는 알림창 함수였는데 취소를 눌러서 다시 원래 색상으로 변경을 시킨다면 그때 다시 사용할 예정. 현재는 이미지 변경으로 처리해 놓음.
     @objc func tapBtn(_ sender: UIButton){
-        print(111111)
-        
+//        if sender.isSelected {
+//            UserDefaults.standard.set(sender.title(for: .normal)! as String, forKey: "selectedSeatNumber")
+//        } else {
+//            UserDefaults.standard.removeObject(forKey: "selectedSeatNumber")
+//        }
+//        sender.isSelected.toggle()
 //        let selectSeat = UIAlertController(title: "선택 좌석", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번을 선택하셨습니다.", preferredStyle: UIAlertController.Style.alert)
 //        //let cancelSeat = UIAlertAction(title: "다시 선택", style: UIAlertAction.Style.default, handler: { action in TestCell().qqqq(sender)})
 //        //let confirmSeat = UIAlertAction(title: "자리 선택", style: UIAlertAction.Style.default, handler: { action in TestCell().qwer(sender)})
@@ -787,7 +625,7 @@ extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (Int(collectionView.frame.width)) / (UserDefaults.standard.integer(forKey: "columnCount") + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
+        let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
             
         let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
         return size

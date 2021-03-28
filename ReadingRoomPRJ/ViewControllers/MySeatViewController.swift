@@ -28,7 +28,7 @@ class MySeatViewController: UIViewController {
         super.viewDidLoad()
         
         print("1213")
-        print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
+        //print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
         print("디드 로드뷰")
         self.title = "자리확정"
         

@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  ReadingRoomPRJ
 //
-//  Created by MCNC on 2021/02/18.
+//  Created by 김재영 on 2021/02/18.
 //
 
 
@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
         
         // 저장된 로그인 정보 가져오기
         if let autoLoginValue = UserDefaults.standard.dictionary(forKey: "autoLoginValue") as NSDictionary? {
-            let isAutoLogin: Bool = autoLoginValue.object(forKey: "autoLogin") as! Bool
+            let isAutoLogin: Bool = autoLoginValue["autoLogin"] as! Bool
             print("자동로그인 \(isAutoLogin)")
             if isAutoLogin {
                 // 자동로그인일경우 id,pw,자동로그인 자동으로 세팅
@@ -115,7 +115,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc func dismissKeyboard() {  //키보드 숨김처리
-            view.endEditing(true)
+        view.endEditing(true)
     }
     
     @objc func changeBtnImage(_sender: UIButton) {
@@ -123,106 +123,59 @@ class LoginViewController: UIViewController {
     }
     
     @objc func loginClick(_ sender: Any) {
-        print("Login Click")
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.center = self.view.center
+        activityIndicator.style = .large
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
         
-        //로그인 이벤트 주기
-        //1. 텍스트 변화
-        self.btnLogin.setTitle("로그인 중...", for: .normal)
-        //2. 색깔 변화
-        //self.btnLogin.backgroundColor = .lightGray
+        btnLogin.isEnabled = false
+        self.btnLogin.setTitle("로그인 중...", for: .disabled)
         
-        // 입력값 가져오기
         let inputID: String = id.text ?? ""
         let inputPW: String = password.text ?? ""
-        print(inputID, inputPW)
         
-        // TODO : 입력값 유효 확인 (공백, 특수문자, 한글 검사 등)
-        
-        // REST API 세팅
-        let URL = "http://3.34.174.56:8080/login"
-        let PARAM: Parameters = [
+        let param = [
             "id":inputID,
             "password":inputPW
         ]
+        // TODO : 입력값 유효 확인 (공백, 특수문자, 한글 검사 등)
         
-        // REQUEST 세팅
-        let alamo = AF.request(URL, method: .post, parameters: PARAM).validate(statusCode: 200..<300)
-        
-        // REST API 통신 요청
-        alamo.responseJSON() { response in
-            // response : 통신 결과 응답 확인
-            print("result:\(response)")
-            
-            // REST API 통신 성공/실패 여부에 따라 분기
-            switch response.result {
-            // 통신 성공일 경우
-            case .success(let value):
-                // value : 응답 Data, data를 NSDictionary 타입으로 저장
-                if let jsonObj = value as? NSDictionary {
-                    // 로그인 성공/실패 여부에 따라 분기
-                    let resultMsg: String? = jsonObj.object(forKey: "message") as? String
-                    let result: Bool = jsonObj.object(forKey: "result") as! Bool
-                    print("message:::"+resultMsg!)
+        RequestAPI.post(resource: "/login", param: param, responseData: "account", completion: { (result, response) in
+            let data = response as! NSDictionary
+            if (result) {
+                UserDefaults.standard.set(data, forKey: "studentInfo")
+                var autoLoginValue: NSDictionary
+                if self.btnAutoLogin.isSelected {
+                    autoLoginValue = [ "autoLogin":true,
+                                       "id":inputID,
+                                       "pw":inputPW ]
+                } else {
+                    autoLoginValue = [ "autoLogin":false ]
+                }
+                UserDefaults.standard.setValue(autoLoginValue, forKey: "autoLoginValue")
+                let mainVC: MainViewController = MainViewController()
+                let navVC = UINavigationController(rootViewController: mainVC)
+                navVC.modalPresentationStyle = .fullScreen
+                self.present(navVC, animated: true, completion: nil)
+            } else {
+                if (data["message"] != nil) {
+                    // TODO:토스트메시지 띄우기
+                    print("► 로그인 실패: \(String(describing: data["message"]))")
                     
-                    // message = SUCCESS 일 경우 (=로그인 성공)
-                    if ( result ){
-                        print("로그인성공")
-                        // 학생 데이터 저장
-                        UserDefaults.standard.set(jsonObj.object(forKey: "account"), forKey: "studentInfo")
-                        
-                        // 여기부터 자동로그인
-                        var autoLoginValue: NSDictionary
-                        if self.btnAutoLogin.isSelected { // 자동로그인인경우
-                            print("autoLogin")
-                            // 자동로그인을 위해서 값 세팅
-                            autoLoginValue = ["autoLogin":true,
-                                                  "id":inputID,
-                                                  "pw":inputPW]
-                        } else {
-                            print("자동로그인 아님.")
-                            // 다음번에 자동로그인 안되게 false로 세팅
-                            autoLoginValue = ["autoLogin":false]
-                        }
-                        // 자동로그인 정보 저장
-                        UserDefaults.standard.setValue(autoLoginValue, forKey: "autoLoginValue")
-                        
-                        // 메인화면 이동
-                        let mainVC: MainViewController = MainViewController()
-                        let navVC = UINavigationController(rootViewController: mainVC)
-                        navVC.modalPresentationStyle = .fullScreen
-                        self.present(navVC, animated: true, completion: nil)
-                    } else {
-                        // message != SUCCESS일 경우 (=로그인 실패)
-                        // TODO : 로그인 실패시 처리 (ex. 알림팝업, 입력창 강조처리)
-                        print("로그인실패")
-                        if (resultMsg == "INVALID_ACCOUNT") {
-                            let alert = UIAlertController(title: "로그인 실패", message: "계정 정보 불일치", preferredStyle: UIAlertController.Style.alert)
-                            let okAction = UIAlertAction(title: "OK", style: .default) { (action) in}
-                            alert.addAction(okAction)
-                            self.present(alert, animated: false, completion: nil)
-                        }
+                    if (data["message"] as! String == "INVALID_ACCOUNT") {
+                        let alert = UIAlertController(title: "로그인 실패", message: "계정 정보 불일치", preferredStyle: UIAlertController.Style.alert)
+                        let okAction = UIAlertAction(title: "OK", style: .default) { (action) in}
+                        alert.addAction(okAction)
+                        self.present(alert, animated: false, completion: nil)
                     }
                 } else {
-                    // 서버에서 응답받은 데이터가 JSON 형식이 아닐 경우.
-                    // TODO : 예외처리
+                    print("알수없는 에러 : \(String(describing: data["error"]))")
                 }
-                
-            // 통신 실패일 경우
-            case.failure(let error):
-                // TODO : 실패시 처리 (ex. 팝업, 네트워크상태 확인, 서버상태 확인 등)
-                print("error: \(String(error.errorDescription!))")
-                // 인터넷 오프라인 오류
             }
-            
-            //로그인 이벤트 주기
-            //1. 텍스트 변화
-            self.btnLogin.setTitle("로그인", for: .normal)
-            //2. 색깔 변화
-            //self.btnLogin.backgroundColor = .gray
-        }
-        
+            activityIndicator.stopAnimating()
+            self.btnLogin.isEnabled = true
+        })
     }
-    
-
 }
 

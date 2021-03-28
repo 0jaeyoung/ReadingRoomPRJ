@@ -36,8 +36,8 @@ class OptionViewController: UIViewController {
         if UserDefaults.standard.dictionary(forKey: "tokenDic")?.count == 0{
             print("x")
         }else {
-        print(UserDefaults.standard.dictionary(forKey: "tokenDic")! as Dictionary)
-        print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
+        //print(UserDefaults.standard.dictionary(forKey: "tokenDic")! as Dictionary)
+        //print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
         }
         
         
