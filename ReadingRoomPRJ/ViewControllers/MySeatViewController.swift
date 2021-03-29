@@ -27,9 +27,7 @@ class MySeatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("1213")
-        //print(UserDefaults.standard.dictionary(forKey: "tokenDic")!["201735906"] as! String)
-        print("디드 로드뷰")
+       
         self.title = "자리확정"
         
     }
@@ -348,8 +346,6 @@ class MySeatViewController: UIViewController {
                         let time: Int = mySeatInfo["time"] as! Int
                         let begin: Int = mySeatInfo["begin"] as! Int
                         let end: Int = mySeatInfo["end"] as! Int
-                        //let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-                        //let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
                         let token: String = UserDefaults.standard.dictionary(forKey: "tokenDic")![studentId] as! String
                         let extendURL = "http://3.34.174.56:8080/room/extend"
                         let extendedTime = 1800000

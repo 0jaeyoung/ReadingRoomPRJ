@@ -371,7 +371,26 @@ class ReserveViewController: UIViewController{
     
     
     
-    
+    func showToast(controller: UIViewController, message: String) {
+        let width_variable = 10
+        let toastLabel = UILabel(frame: CGRect(x: width_variable, y: Int(self.view.frame.size.height)-100, width: Int(view.frame.size.width)-2*width_variable, height: 35))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.layer.cornerRadius = 15
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.clipsToBounds = true
+        self.navigationController?.view.addSubview(toastLabel)
+        //self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 4.0, delay: 0.5, options: .curveEaseOut, animations: {
+                        toastLabel.alpha = 0.0}
+                       , completion: {(isCompleted) in
+                                       toastLabel.removeFromSuperview()
+                       })
+        
+        
+    }
     
     
     
@@ -385,24 +404,26 @@ class ReserveViewController: UIViewController{
         let leftDatePickerView = firstDatePicker
         let rightDatePickerView = secondDatePicker
         
-      
+        let currentDayFomatter = DateFormatter()
+        currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
+
         
         //시작시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedLeftTime,showLeftTime)
-        let selectedLeftDate = firstDatePicker.date
-        selectedLeftTime = Int(selectedLeftDate.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
+        let selectedLeftDateString = currentDayFomatter.string(from: firstDatePicker.date)
+        let selectedLeftDateChange: Date = currentDayFomatter.date(from: selectedLeftDateString)!
+        selectedLeftTime = Int(selectedLeftDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
         showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)   //보여지는 날짜 및 시간 값
         
        
         //종료시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedRightTime,showRightTime)
-        let selectedRightDate = secondDatePicker.date
-        selectedRightTime = Int(selectedRightDate.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
+        let selectedRightDateString = currentDayFomatter.string(from: secondDatePicker.date)
+        let selectedRightDateChange: Date = currentDayFomatter.date(from: selectedRightDateString)!
+        selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
         showRightTime = Date(timeIntervalSince1970: TimeInterval(selectedRightTime) / 1000)   //보여지는 날짜 및 시간 값
         
     
         
         //현재 시간을 서버로 보내기 위해서 nowTime 전역 변수로 설정
-        let currentDayFomatter = DateFormatter()
-        currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
         let startTimeString = currentDayFomatter.string(from: Date())
         let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
         nowTime = Int(startTimeDate.timeIntervalSince1970) * 1000 + 32400000
@@ -410,7 +431,7 @@ class ReserveViewController: UIViewController{
        
         
         
-        // <------ Alert에 보여주기 위해서 단순히 숫자값만을 계산하기 위한 시간값들
+        // <------ Alert에 보여주기 위해서 단순히 숫자값만을 계산하기 위한 시간값들 설정------->
         let hourFormatter = DateFormatter()
         hourFormatter.dateFormat = "HH"
         let minFormatter = DateFormatter()
@@ -428,10 +449,11 @@ class ReserveViewController: UIViewController{
         let startk = (end - start) / 60
         let startkk = (end - start) % 60
         
-        if (selectedRightTime - selectedLeftTime) > 600000 &&  (selectedRightTime - selectedLeftTime) <= 14400000 {
+        if (selectedRightTime - selectedLeftTime) >= 600000 &&  (selectedRightTime - selectedLeftTime) <= 14400000 {
             print("이용시간은 \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분")
             print("begin: \(selectedLeftTime!)")
             print("end: \(selectedRightTime!)")
+            print(selectedRightTime - selectedLeftTime)
             let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
             let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
             let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.confirmReserve()})
@@ -448,10 +470,11 @@ class ReserveViewController: UIViewController{
             let secondAlert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
             let secondAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
             secondAlert.addAction(secondAlertAction)
+            print(selectedRightTime - selectedLeftTime)
             present(secondAlert, animated: true, completion: nil)
             
-        } else if (selectedRightTime - selectedLeftTime) >= 0 && (selectedRightTime - selectedLeftTime) < 600000 {
-            print("최소 사용 시간은 15분 이상입니다")
+        } else if (selectedRightTime - selectedLeftTime) >= 0 && (selectedRightTime - selectedLeftTime) <= 599999 {
+            print("최소 사용 시간은 10분 이상입니다")
             let thirdAlert = UIAlertController(title: "예약", message: "최소 사용 시간은 15분 이상입니다", preferredStyle: UIAlertController.Style.alert)
             let thirdAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
             thirdAlert.addAction(thirdAlertAction)
@@ -500,10 +523,15 @@ class ReserveViewController: UIViewController{
                 let reservation = response as! NSDictionary
                 print("좌석 예약 완료")
                 // TODO : 토스트메시지 띄우기
+                self.showToast(controller: self, message: "예약되었습니다. n분 내로 자리를 확정해 주세요.")    //문구 수정 필요
                 self.navigationController?.popViewController(animated: true)
+                
             } else {
                 print("예약 실패")
-                // TODO : 예약실패 후 처리
+                print(result)
+                
+                self.showToast(controller: self, message: "이미 예약이 되어있거나 잘못된 시간 설정입니다")    //문구 수정 필요
+                //어떤 오류인지 확인이 가능한지..? 서버쪽 에러 메세지 확인 후 분기 처리하면 될 듯
             }
         })
     }
@@ -521,6 +549,8 @@ extension ReserveViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.identifire, for: indexPath) as! CollectionCell
         UserDefaults.standard.set(indexPath[1], forKey: "indexPath")
+        
+        print("cell ::: \(cell)")
         
         let columnNumber:Int = ((indexPath[1]) / Room.shared.columnCount)
         UserDefaults.standard.set(columnNumber, forKey: "columnNumber")
@@ -553,15 +583,15 @@ extension ReserveViewController: UICollectionViewDataSource {
             break
 
         default:
+            
+            
             let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
                         
             let reserveURL = "http://3.34.174.56:8080/rooms"
             let PARAM: Parameters = [
                 "college": college
             ]
-    
-                        
-                                
+        
             let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
             alamo.responseJSON() {[self] response in
             switch response.result {
@@ -645,6 +675,11 @@ extension ReserveViewController: UICollectionViewDataSource {
                                         cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
                                         cell.myButton.isEnabled = true
                                         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                    
+                                    
+                                    
+                                    
+                                    
                                         }
                                     }
                                 }
@@ -655,6 +690,8 @@ extension ReserveViewController: UICollectionViewDataSource {
                     }
                 }
             }
+        
+        
                     
         return cell
     }

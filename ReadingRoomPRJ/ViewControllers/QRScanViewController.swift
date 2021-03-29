@@ -138,7 +138,7 @@ extension QRScanViewController: ReaderViewDelegate {
                     if getResult! {
                         let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
                         
-                        print("취소를 위한 나의 정보에 접근했습니다.")
+                        print("확정을 위한 나의 정보에 접근했습니다.")
                         let mySeatInfo = mySeat[0] as! NSDictionary
                         
                         //값 비교를 위해서 myReservation -> cancel 로 진행

@@ -17,7 +17,8 @@ class CollectionCell: UICollectionViewCell {
     @IBOutlet var myImageView: UIImageView!
     @IBOutlet var myLabel: UILabel!
     
-    
+    var userSeat: Int!
+    var k: Array<String>!
     var state = true
     
     //전체 버튼에 대한 클릭 이벤트 함수
@@ -26,12 +27,23 @@ class CollectionCell: UICollectionViewCell {
             
         } else {
             print(myButton.title(for: .normal) as Any)
-            myButton.isSelected.toggle()
-            if myButton.isSelected {
-                UserDefaults.standard.set(myButton.title(for: .normal), forKey: "selectedSeatNumber")
-            } else {
-                UserDefaults.standard.removeObject(forKey: "selectedSeatNumber")
-            }
+            //myButton.isSelected.toggle()
+            
+            
+//            if myButton.isSelected {
+//
+//                //UserDefaults.standard.set(myButton.title(for: .normal), forKey: "selectedSeatNumber")
+//            } else {
+//                //UserDefaults.standard.removeObject(forKey: "selectedSeatNumber")
+//            }
+//
+            
+            
+            
+            
+            
+            
+            
             //좌석번호를 서버로 전달하기 위해서 userdefaults로 좌석 값 저장 -> Nil 값도 저장하기 때문에 확인 필요
             //UserDefaults.standard.set(myButton.title(for: .normal), forKey: "selectedSeatNumber")
 //            if sender.isSelected {
@@ -50,11 +62,15 @@ class CollectionCell: UICollectionViewCell {
 //            } else if myButton.backgroundColor == .green {
 //                myButton.backgroundColor = nil
 //            }
-//            if myImageView.image == UIImage(named: "emptySeat.png") {
-//                myImageView.image = UIImage(named: "userSeat.png")
-//            } else if myImageView.image == UIImage(named: "userSeat.png") {
-//                myImageView.image = UIImage(named: "emptySeat.png")
-//            }
+            if myImageView.image == UIImage(named: "emptySeat.png") {
+                myImageView.image = UIImage(named: "selectedSeat.png")
+                
+                
+                
+            } else if myImageView.image == UIImage(named: "selectedSeat.png") {
+                myImageView.image = UIImage(named: "emptySeat.png")
+                
+            }
 
         }
         
