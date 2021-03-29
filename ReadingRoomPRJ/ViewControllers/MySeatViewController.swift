@@ -291,6 +291,7 @@ class MySeatViewController: UIViewController {
     }
     
     
+    
         
     @objc func clickExtend(_ sender: Any) { //alert 생성
         print("연장 버튼 클릭")
@@ -510,6 +511,9 @@ class MySeatViewController: UIViewController {
             }
         }
     }
+    
+    
+    
     
     func showToast(controller: UIViewController, message: String) { //좌석 반납시 토스트 띄어줌.
         print("토스트 출력")

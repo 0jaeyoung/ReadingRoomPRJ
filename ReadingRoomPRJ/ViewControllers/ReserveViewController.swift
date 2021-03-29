@@ -35,6 +35,7 @@ class ReserveViewController: UIViewController{
     var showRightTime: Date!
     var nowTime: Int!
     
+    var stateArr = Array(repeating: 0, count: Room.shared.totalCount)
     
     enum SeatType: Int {
         case Wall = -1
@@ -224,12 +225,15 @@ class ReserveViewController: UIViewController{
         
         }
     
+    
   
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        print("=-=-=-=-=-=-=")
+        print(stateArr.count)
+        print(Room.shared.totalCount)
         
         
         //시작시간 데이트피커 시간 반올림 세팅 -> ex. 현재시간 36분 -> 설정자체를 40분으로 초기 세팅함.
@@ -550,7 +554,7 @@ extension ReserveViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.identifire, for: indexPath) as! CollectionCell
         UserDefaults.standard.set(indexPath[1], forKey: "indexPath")
         
-        print("cell ::: \(cell)")
+        
         
         let columnNumber:Int = ((indexPath[1]) / Room.shared.columnCount)
         UserDefaults.standard.set(columnNumber, forKey: "columnNumber")
@@ -562,27 +566,51 @@ extension ReserveViewController: UICollectionViewDataSource {
         UserDefaults.standard.set(curr, forKey: "curr")
        
         
+        
+        
+        
         switch curr{
         case SeatType.Wall.rawValue:
            
             cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "wall.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+            
             break
 
         case SeatType.Door.rawValue:
             cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "door.jpeg")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+            
             break
 
         case SeatType.Empty.rawValue:
             cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "road.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width*0.8, height: cell.bounds.size.width)
+            
             break
 
         default:
+            
+            func test(_ sender: Bool) {
+                if cell.myButton.title(for: .normal) == "" {
+                    
+                } else {
+                    print(cell.myButton.title(for: .normal) as Any)
+                    
+                    if cell.myImageView.image == UIImage(named: "emptySeat.png") {
+                        cell.myImageView.image = UIImage(named: "selectedSeat.png")
+                        
+                        
+                        
+                    } else if cell.myImageView.image == UIImage(named: "selectedSeat.png") {
+                        cell.myImageView.image = UIImage(named: "emptySeat.png")
+                        
+                    }
+                }
+            }
             
             
             let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
@@ -651,7 +679,8 @@ extension ReserveViewController: UICollectionViewDataSource {
                                     cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
                                     cell.myButton.isEnabled = true
                                     cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                    } else {
+                                    }
+                                else {
                                         cell.myImageView.image = UIImage(named: "fullSeat.png")
                                         cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
                                         
@@ -663,7 +692,8 @@ extension ReserveViewController: UICollectionViewDataSource {
                                         cell.myButton.isEnabled = true
                                         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
                                         }
-                                } else {
+                                }
+                            else {
                                         cell.myImageView.image = UIImage(named: "emptySeat.png")
                                         cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
                                         
@@ -676,6 +706,7 @@ extension ReserveViewController: UICollectionViewDataSource {
                                         cell.myButton.isEnabled = true
                                         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
                                     
+                                        //cell.myButton.isSelected.toggle()
                                     
                                     
                                     
@@ -691,10 +722,11 @@ extension ReserveViewController: UICollectionViewDataSource {
                 }
             }
         
-        
-                    
+       
         return cell
     }
+    
+ 
                 
     @objc func tap(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.showSeatCollectionView)
@@ -705,7 +737,7 @@ extension ReserveViewController: UICollectionViewDataSource {
     }
                 //좌석 클릭시 선택 좌석을 알려주는 알림창 함수였는데 취소를 눌러서 다시 원래 색상으로 변경을 시킨다면 그때 다시 사용할 예정. 현재는 이미지 변경으로 처리해 놓음.
     @objc func tapBtn(_ sender: UIButton){
-        print(111111)
+        
     }
     
 }
