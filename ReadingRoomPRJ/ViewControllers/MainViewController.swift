@@ -17,8 +17,16 @@ enum userType: String {
     case student = "STUDENT"
 }
 
+
+
+
 class MainViewController: UIViewController {
     // UI 요소 정의
+    
+    
+    static var reservationState = true
+    
+    
     var a = false        //추후 예약 여부에 따라서 bool 값으로 전달 예정
     
     var studentView : UIView!
@@ -173,6 +181,67 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        //메인화면 접근 시 예약 여부에 따라 전체 화면 분기 처리
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
+        let id = accountInfo!["id"]
+        let password = accountInfo!["pw"]
+        
+        let param = [
+            "id": id as! String,
+            "password": password as! String
+        ] as [String : Any]
+        
+        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+            if (result) {
+                print("나의 예약 정보 접근 성공")
+                print(type(of: response))
+                print((response as! Array<Any>).count)
+                if ((response as! Array<Any>).count == 0) {
+                    print("예약된 정보가 존재하지 않습니다.")
+                    MainViewController.reservationState = false
+                } else {
+                    print("예약된 정보가 존재합니다.")
+                    MainViewController.reservationState = true
+                }
+                
+            } else {
+                print("나의 예약 정보 접근 실패")
+            }
+        })
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     
         

@@ -20,12 +20,6 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baP-Oe-6DW">
                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWz-yl-Z8e">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vno-fK-eUB">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                             </imageView>
@@ -38,17 +32,13 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="hWz-yl-Z8e" firstAttribute="top" secondItem="baP-Oe-6DW" secondAttribute="top" id="0T9-Mp-dkz"/>
-                            <constraint firstItem="Vno-fK-eUB" firstAttribute="top" secondItem="hWz-yl-Z8e" secondAttribute="top" id="9DP-P0-UhJ"/>
-                            <constraint firstItem="hWz-yl-Z8e" firstAttribute="leading" secondItem="baP-Oe-6DW" secondAttribute="leading" id="Ac4-pw-olI"/>
-                            <constraint firstAttribute="bottom" secondItem="hWz-yl-Z8e" secondAttribute="bottom" id="ElA-cj-g2J"/>
+                            <constraint firstItem="Vno-fK-eUB" firstAttribute="top" secondItem="NwX-9m-KCS" secondAttribute="top" id="MRn-Kr-5lK"/>
                             <constraint firstItem="NwX-9m-KCS" firstAttribute="leading" secondItem="baP-Oe-6DW" secondAttribute="leading" id="OHE-Zh-E53"/>
                             <constraint firstAttribute="bottom" secondItem="Vno-fK-eUB" secondAttribute="bottom" id="TeB-wI-pIq"/>
                             <constraint firstAttribute="trailing" secondItem="NwX-9m-KCS" secondAttribute="trailing" id="ULK-QE-tCS"/>
                             <constraint firstAttribute="trailing" secondItem="Vno-fK-eUB" secondAttribute="trailing" id="XzG-mU-pSf"/>
                             <constraint firstItem="Vno-fK-eUB" firstAttribute="leading" secondItem="baP-Oe-6DW" secondAttribute="leading" id="hK0-FS-Fhk"/>
                             <constraint firstItem="NwX-9m-KCS" firstAttribute="top" secondItem="baP-Oe-6DW" secondAttribute="top" id="hfX-fl-FBh"/>
-                            <constraint firstAttribute="trailing" secondItem="hWz-yl-Z8e" secondAttribute="trailing" id="pB4-Ml-Qcb"/>
                             <constraint firstAttribute="bottom" secondItem="NwX-9m-KCS" secondAttribute="bottom" id="ygR-yd-aqL"/>
                         </constraints>
                     </view>
@@ -65,7 +55,6 @@
                 <outlet property="backView" destination="baP-Oe-6DW" id="QwD-g3-bWb"/>
                 <outlet property="myButton" destination="NwX-9m-KCS" id="niJ-5f-Uj1"/>
                 <outlet property="myImageView" destination="Vno-fK-eUB" id="dOy-dW-6HO"/>
-                <outlet property="myLabel" destination="hWz-yl-Z8e" id="hvs-e6-378"/>
             </connections>
             <point key="canvasLocation" x="-23.188405797101453" y="18.75"/>
         </collectionViewCell>

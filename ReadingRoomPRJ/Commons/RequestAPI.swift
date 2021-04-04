@@ -29,7 +29,7 @@ class RequestAPI: NSObject {
                     
                     if result && (response=="SUCCESS") {
                         NSLog("►request result success◀︎")
-                        resultData = jsonObj[responseData]!
+                        resultData = jsonObj[responseData] as Any
                         completion(true, resultData)
                     } else {
                         NSLog("►request result failed◀︎")

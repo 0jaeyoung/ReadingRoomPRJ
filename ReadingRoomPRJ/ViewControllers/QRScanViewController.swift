@@ -118,78 +118,33 @@ extension QRScanViewController: ReaderViewDelegate {
     }
     
     func requestConfirm(code: String) {
-        
-        
-        let userID: String = UserDefaults.standard.dictionary(forKey: "accountInfo")!["id"] as! String
-        let userPW: String = UserDefaults.standard.dictionary(forKey: "accountInfo")!["pw"] as! String
-        let userURL = "http://3.34.174.56:8080/room/myReservation"
-        
-        let PARAMETER: Parameters = [
-            "id": userID,
-            "password": userPW
-        ]
-        let myReservationAlamo = AF.request(userURL, method: .post, parameters: PARAMETER).validate(statusCode: 200..<450)
-        
-        myReservationAlamo.responseJSON() { response in
-            switch response.result {
-            case .success(let v):
-                if let jsonObj = v as? NSDictionary {
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    if getResult! {
-                        let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
-                        
-                        print("확정을 위한 나의 정보에 접근했습니다.")
-                        let mySeatInfo = mySeat[0] as! NSDictionary
-                        
-                        //값 비교를 위해서 myReservation -> cancel 로 진행
-                        let URL = "http://3.34.174.56:8080/room/confirm"
-                        let PARAM: Parameters = [
-                            "id": userID,
-                            "password": userPW,
-                            "token":code,
-                            "studentId":UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String,
-                            "end": mySeatInfo["end"] as! Int,
-                            "begin": mySeatInfo["begin"] as! Int,
-                            "time": mySeatInfo["time"] as! Int,
-                            "seat": mySeatInfo["seat"] as! Int,
-                            "room":"2층",
-                            "college":UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]! as! String
-                        ]
-                        
-                        //tokenDic[UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String] = code
-                        //UserDefaults.standard.set(tokenDic, forKey: "tokenDic")
-                        let alamo = AF.request(URL, method: .post, parameters: PARAM).validate()
-                        alamo.responseJSON() { response in
-                            print("===API:REQUEST:CONFIRM:RESULT===")
-                            print(response)
-                            
-                            switch response.result {
-                            case .success(let value):
-                                //성공
-                                self.readerView.stop(isButtonTap: true)
-                                self.showToast(controller: self, message: "예약 확정되었습니다.")
-                                self.navigationController?.popViewController(animated: true)
-                            case .failure(let error):
-                                //실패
-                                print(error)
-                                self.showToast(controller: self, message: "다시 시도 해주세요.")
-                            }
-                
-                        }
-                    }
+            let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
+            let id = accountInfo["id"] as! String
+            let pw = accountInfo["pw"] as! String
+            var reservationId = ""
+            var param = [ "id":id, "password":pw ]
+            RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: { (result, response) in
+                let reservations = response as! NSArray
+                let data = reservations[0] as! NSDictionary
+                if result {
+                    reservationId = data["reservationId"] as! String
+                    let studentInfo = UserDefaults.standard.dictionary(forKey: "studentInfo")! as NSDictionary
+                    let college = studentInfo["college"] as! String
+                    param = [
+                        "id":id,
+                        "password" : pw,
+                        "college" : college,
+                        "reservationId" : reservationId,
+                        "token":code
+                    ]
+                    RequestAPI.post(resource: "/room/reserve/confirm", param: param, responseData: "reservation", completion: { (result, response) in
+                        print(response)
+                    })
+                } else {
+                    print(response)
                 }
-            case .failure(_):
-                print("error")
-            }
-        }
-        
-        
-        
-        
-        
-        
-        
-        
+            })
+            
         }
         
     

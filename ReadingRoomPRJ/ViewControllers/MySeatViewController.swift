@@ -13,7 +13,9 @@ import Alamofire
 
 class MySeatViewController: UIViewController {
     
-    
+    static var reserveID = ""
+    static var college = ""
+    static var room = ""
     var mySeat: UILabel!
     var location: UILabel!
     var seatNum: UILabel!
@@ -60,13 +62,30 @@ class MySeatViewController: UIViewController {
         
         print("유저의 좌석 정보를 보여줍니다.")
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as Dictionary
-        let ID: String = accountInfo["id"] as! String
-        let PW: String = accountInfo["pw"] as! String
+//        let param = [
+//            "id": accountInfo["id"] as! String,
+//            "password": accountInfo["pw"] as! String
+//        ] as [String : Any]
+        
+//        RequestAPI.post(resource: "/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+//            if(result) {
+//
+//            }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         let myReservedURL = "http://3.34.174.56:8080/room/reserve/my"
         let PARAM: Parameters = [
-            "id": ID,
-            "password": PW
+            "id": accountInfo["id"] as! String,
+            "password": accountInfo["pw"] as! String
         ]
         
         let alamo = AF.request(myReservedURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
@@ -84,8 +103,11 @@ class MySeatViewController: UIViewController {
                     if getResult! {
                         let mySeatInfo: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
                         print(getResult!)
-                        
-                        print(mySeatInfo)
+                        print("123456789")
+                        let k = mySeatInfo[0] as! NSDictionary
+                        MySeatViewController.reserveID = k["reservationId"] as! String
+                        MySeatViewController.college = k["college"] as! String
+                        MySeatViewController.room = k["roomName"] as! String
                         
                         //예약을 하지 않은 상태일 경우 배열 크기 비교를 통해서 확인. 추후 텍스트가 아닌 별도 이미지 파일로 교체 예정
                         if mySeatInfo.count == 0 {
@@ -424,95 +446,25 @@ class MySeatViewController: UIViewController {
         spinner.startAnimating()
         
         
-        let userID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let userPW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
-        let userURL = "http://3.34.174.56:8080/room/myReservation"
         
-        let PARAMETER: Parameters = [
-            "id": userID,
-            "password": userPW
-        ]
+        let param = [
+            "id": "starku2249",
+            "password": "ku@@2249",
+            "college": "IT" ,
+            "roomName": "2층" ,
+            "reservationId": "201735906 77 1617530073213"
+        ] as [String : Any]
         
-        let myReservationAlamo = AF.request(userURL, method: .post, parameters: PARAMETER).validate(statusCode: 200..<450)
-        
-        myReservationAlamo.responseJSON() { response in
-            switch response.result {
-            case .success(let v):
-                if let jsonObj = v as? NSDictionary {
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    if getResult! {
-                        let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
-                        
-                        print("취소를 위한 나의 정보에 접근했습니다.")
-                        let mySeatInfo = mySeat[0] as! NSDictionary
-                        
-                        //값 비교를 위해서 myReservation -> cancel 로 진행
-                        
-                        let studentId: String = mySeatInfo["studentId"] as! String
-                        let college: String = mySeatInfo["college"] as! String
-                        let room: String = mySeatInfo["room"] as! String
-                        let seat: Int = mySeatInfo["seat"] as! Int
-                        let time: Int = mySeatInfo["time"] as! Int
-                        let begin: Int = mySeatInfo["begin"] as! Int
-                        let end: Int = mySeatInfo["end"] as! Int
-                        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-                        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
-                        let cancelURL = "http://3.34.174.56:8080/room/cancel"
-                        
-                        let PARAM: Parameters = [
-                            "id": ID,
-                            "password": PW,
-                            "studentId": studentId,
-                            "end": end,
-                            "begin": begin,
-                            "time": time,
-                            "seat": seat,
-                            "room": room,
-                            "college": college
-                        ]
-                        
-                        let alamo = AF.request(cancelURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-                        alamo.responseJSON() { [self] response in
-                            switch response.result {
-                            case .success(let value):
-                                print("좌석을 반납합니다")
-                                print(value)
-                                if let jsonObj = value as? NSDictionary {
-                                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                                    //let getMessage: String? = jsonObj.object(forKey: "message") as? String
-                                    print("getresult :: \(getResult!)")
-                                    if getResult! {
-                                        spinner.stopAnimating()
-                                        let mySeatInfo: NSDictionary = jsonObj.object(forKey: "reservation") as! NSDictionary
-                                        print(mySeatInfo["reserved"] as Any)
-                                        print("좌석을 반납중입니다.")
-                                        
-                                        //여기도 추후 이미지로 변경 예정
-                                        location.text = "장소: 예약을 진행해 주세요."
-                                        seatNum.text = "자리 번호: 예약을 진행해 주세요."
-                                        reserveStartTime.text = "시작시간: 예약을 진행해 주세요."
-                                        reserveEndTime.text = "종료 시간: 예약을 진행해 주세요."
-                                        extend.isEnabled = false
-                                        returned.isEnabled = false
-                                        
-                                        self.showToast(controller: self, message: "좌석이 반납되었습니다.")
-                                    }
-                                    else {
-                                        print(getResult!)
-                                        print("예약된 좌석이 없습니다.")
-                                    }
-                                }
-                                
-                            case .failure(_):
-                                print("error")
-                            }
-                        }
-                    }
-                }
-            case .failure(_):
-                print("error")
+        RequestAPI.post(resource: "/room/reserve/cancel", param: param, responseData: "reservation", completion: {(result, response) in
+            if result {
+                print("성공")
+                print(response)
+            } else {
+                print("실패")
+                print(response)
             }
-        }
+        })
+        
     }
     
     

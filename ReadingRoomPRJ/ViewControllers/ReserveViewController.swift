@@ -417,7 +417,7 @@ class ReserveViewController: UIViewController{
         //시작시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedLeftTime,showLeftTime)
         let selectedLeftDateString = currentDayFomatter.string(from: firstDatePicker.date)
         let selectedLeftDateChange: Date = currentDayFomatter.date(from: selectedLeftDateString)!
-        selectedLeftTime = Int(selectedLeftDateChange.timeIntervalSince1970) * 1000// + 32400000    //서버로 보내는 long값
+        selectedLeftTime = Int(selectedLeftDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
         print(selectedLeftTime!)
         showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)   //보여지는 날짜 및 시간 값
         
@@ -425,7 +425,7 @@ class ReserveViewController: UIViewController{
         //종료시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedRightTime,showRightTime)
         let selectedRightDateString = currentDayFomatter.string(from: secondDatePicker.date)
         let selectedRightDateChange: Date = currentDayFomatter.date(from: selectedRightDateString)!
-        selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000// + 32400000    //서버로 보내는 long값
+        selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
         showRightTime = Date(timeIntervalSince1970: TimeInterval(selectedRightTime) / 1000)   //보여지는 날짜 및 시간 값
         
     
@@ -433,7 +433,8 @@ class ReserveViewController: UIViewController{
         //현재 시간을 서버로 보내기 위해서 nowTime 전역 변수로 설정
         let startTimeString = currentDayFomatter.string(from: Date())
         let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
-        nowTime = Int(startTimeDate.timeIntervalSince1970) * 1000// + 32400000
+        nowTime = Int(startTimeDate.timeIntervalSince1970) * 1000
+        print("나우티임: \(nowTime)")
         
        
         
@@ -526,7 +527,8 @@ class ReserveViewController: UIViewController{
         let time: Int = nowTime
         let begin: Int = selectedLeftTime
         let end: Int = selectedRightTime
-        
+        print(accountInfo["pw"]!)
+        print(time)
         let param = [
             "id": accountInfo["id"] as! String,
             "password": accountInfo["pw"] as! String,
@@ -535,9 +537,11 @@ class ReserveViewController: UIViewController{
             "begin": begin,
             "time": time,
             "seat": seat,
-            "room": Room.shared.name!,
-            "college": studentInfo["college"] as! String
+            "roomName": Room.shared.name!,
+            "college": studentInfo["college"] as! String        //IT
         ] as [String : Any]
+        
+        print(Room.shared.name!)
         RequestAPI.post(resource: "/room/reserve", param: param, responseData: "reservation", completion: {(result, response) in
             if (result) {
                 //let reservation = response as! NSDictionary
@@ -547,7 +551,9 @@ class ReserveViewController: UIViewController{
                 
             } else {
                 print("예약 실패")
-                print(result)
+                print(studentInfo)
+                print()
+                print("result:: \(result)")
                 
                 self.showToast(controller: self, message: "이미 예약이 되어있거나 잘못된 시간 설정입니다")    //문구 수정 필요
                 //어떤 오류인지 확인이 가능한지..? 서버쪽 에러 메세지 확인 후 분기 처리하면 될 듯
@@ -588,158 +594,45 @@ extension ReserveViewController: UICollectionViewDataSource {
         switch curr{
         case SeatType.Wall.rawValue:
            
-            cell.myLabel.text = ""
+            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "wall.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             
             break
 
         case SeatType.Door.rawValue:
-            cell.myLabel.text = ""
+            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "door.jpeg")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             
             break
 
         case SeatType.Empty.rawValue:
-            cell.myLabel.text = ""
+            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "road.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width*0.8, height: cell.bounds.size.width)
             
             break
 
         default:
-            
-            func test(_ sender: Bool) {
-                if cell.myButton.title(for: .normal) == "" {
+                    cell.myButton.setTitle(String(curr), for: .normal)
+                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                    cell.myButton.tintColor = .black
                     
-                } else {
-                    print(cell.myButton.title(for: .normal) as Any)
-                    
-                    if cell.myImageView.image == UIImage(named: "emptySeat.png") {
-                        cell.myImageView.image = UIImage(named: "selectedSeat.png")
-                        
-                        
-                        
-                    } else if cell.myImageView.image == UIImage(named: "selectedSeat.png") {
+                    if (Room.shared.reserved[curr] as AnyObject).count == 0 {
                         cell.myImageView.image = UIImage(named: "emptySeat.png")
-                        
-                    }
-                }
-            }
-            
-            
-            let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-                        
-            let reserveURL = "http://3.34.174.56:8080/rooms"
-            let PARAM: Parameters = [
-                "college": college
-            ]
-        
-            let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-            alamo.responseJSON() {[self] response in
-            switch response.result {
-            case.success(let value):
-            print("success")
-            if let jsonObj = value as? NSDictionary {
-                let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                if getResult! {
-                                                
-                    let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                    print(type(of: tmp))
-                    print("tmp 출력 \(tmp)")
-                    let info: NSDictionary = tmp[0] as! NSDictionary
-                    print("kkk")
-                    let reserveInfo = info["reserved"] as! Array<Any>
-                    if (reserveInfo[curr] as AnyObject).count == 0 {
-                        cell.myImageView.image = UIImage(named: "emptySeat.png")
-                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                        cell.myButton.setTitle(String(curr), for: .normal)
-
-                        cell.myButton.tintColor = .black
-                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                        cell.myButton.setImage(UIImage(named: "emptySeat.png"), for: .normal)
+                        cell.myButton.setImage(UIImage(named: "ingSeat.png"), for: .selected)
+                        //cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
                         cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
                         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                        }
-                    else {
-                        
-                        
-                        let selectedStartTime = startTime.date
-                        let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
-                        //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
-                        
-                        let selectedEndTime = endTime.date
-                        let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
-                        //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
-                        
-                        
-                        
-                                                    
-                        let seatReserveInfo = reserveInfo[curr] as! Array<Any>
-                        for i in 0..<(reserveInfo[curr] as AnyObject).count {
-                            let currSeatInfo = seatReserveInfo[i] as! Dictionary<String, Any>
-                            let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
-                            let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
-                                                        
-                                                        
-                            if userStartTime < end && userEndTime > begin {
-                                if currSeatInfo["confirmed"] as! Int == 0 {
-                                    cell.myImageView.image = UIImage(named: "ingSeat.png")
-                                    cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-                                    cell.myButton.setTitle(String(curr), for: .normal)
-                                    cell.myButton.tintColor = .black
-                                    cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                    cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                    cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                    cell.myButton.isEnabled = true
-                                    cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                    }
-                                else {
-                                        cell.myImageView.image = UIImage(named: "fullSeat.png")
-                                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                        
-                                        cell.myButton.setTitle(String(curr), for: .normal)
-                                        cell.myButton.tintColor = .black
-                                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                        cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                        cell.myButton.isEnabled = true
-                                        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                        }
-                                }
-                            else {
-                                        cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                        cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                        
-                                        cell.myButton.setTitle(String(curr), for: .normal)
-
-                                        cell.myButton.tintColor = .black
-                                        cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                        cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                        cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                        cell.myButton.isEnabled = true
-                                        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                    
-                                        //cell.myButton.isSelected.toggle()
-                                    
-                                    
-                                    
-                                    
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        case .failure(_):
-                            print("error")
+                    } else {
+                        cell.myImageView.image = UIImage(named: "fullSeat.png")
                     }
                 }
-            }
-        
-        cell.viewController = self
-        return cell
+                
+                return cell
     }
     
  

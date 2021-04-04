@@ -18,7 +18,7 @@ class CollectionCell: UICollectionViewCell {
     @IBOutlet var backView: UIView!
     @IBOutlet var myButton: UIButton!
     @IBOutlet var myImageView: UIImageView!
-    @IBOutlet var myLabel: UILabel!
+    //@IBOutlet var myLabel: UILabel!
     
     var userSeat: Int!
     var k: Array<String>!
@@ -142,7 +142,7 @@ class CollectionCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        myLabel.text = ""
+        //myLabel.text = ""
         myImageView.image = nil
         myButton.setTitle("", for: .normal)
         
