@@ -100,8 +100,8 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(tap)
         
         // 저장된 로그인 정보 가져오기
-        if let autoLoginValue = UserDefaults.standard.dictionary(forKey: "autoLoginValue") as NSDictionary? {
-            let isAutoLogin: Bool = autoLoginValue["autoLogin"] as! Bool
+        if let autoLoginValue = UserDefaults.standard.dictionary(forKey: "accountInfo") as NSDictionary? {
+            let isAutoLogin: Bool = autoLoginValue["isAutoLogin"] as! Bool
             print("자동로그인 \(isAutoLogin)")
             if isAutoLogin {
                 // 자동로그인일경우 id,pw,자동로그인 자동으로 세팅
@@ -141,19 +141,26 @@ class LoginViewController: UIViewController {
         ]
         // TODO : 입력값 유효 확인 (공백, 특수문자, 한글 검사 등)
         
-        RequestAPI.post(resource: "/login", param: param, responseData: "account", completion: { (result, response) in
+        RequestAPI.post(resource: "/account/login", param: param, responseData: "account", completion: { (result, response) in
             let data = response as! NSDictionary
             if (result) {
                 UserDefaults.standard.set(data, forKey: "studentInfo")
-                var autoLoginValue: NSDictionary
+                var isAutoLogin: Bool
                 if self.btnAutoLogin.isSelected {
-                    autoLoginValue = [ "autoLogin":true,
-                                       "id":inputID,
-                                       "pw":inputPW ]
+                    isAutoLogin = true
                 } else {
-                    autoLoginValue = [ "autoLogin":false ]
+                    isAutoLogin = false
                 }
-                UserDefaults.standard.setValue(autoLoginValue, forKey: "autoLoginValue")
+                
+                var accountInfo: NSDictionary
+                accountInfo = [ "isAutoLogin" : isAutoLogin,
+                                   "id" : inputID,
+                                   "pw" : inputPW   ]
+                UserDefaults.standard.setValue(accountInfo, forKey: "accountInfo")//autoLoginValue
+//                UserDefaults.standard.set(inputID, forKey: "inputID")
+//                UserDefaults.standard.set(inputPW, forKey: "inputPW")
+                
+                
                 let mainVC: MainViewController = MainViewController()
                 let navVC = UINavigationController(rootViewController: mainVC)
                 navVC.modalPresentationStyle = .fullScreen

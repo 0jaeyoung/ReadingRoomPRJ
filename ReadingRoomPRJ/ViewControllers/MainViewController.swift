@@ -208,7 +208,7 @@ class MainViewController: UIViewController {
             thirdButton.addTarget(self, action: #selector(roomOption(_:)), for: .touchUpInside)
             
         } else {
-            let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["name"]!
+            let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentName"]!
             nameLabel.text = (nameLabelText as! String)
             let subNameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]!
             subNameLabel.text = (subNameLabelText as! String)
@@ -234,6 +234,7 @@ class MainViewController: UIViewController {
     
     @objc func openReserveView(_ sender: Any) {
         let college = UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String //2층
+        //let college = "TEST"      //방 5개
         // #boni --- API 통신 함수뺀걸로 바꿔놨어
         let param = [ "college":college ]
         RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: { (result, response) in
@@ -243,7 +244,7 @@ class MainViewController: UIViewController {
                 let roomListAlert = UIAlertController(title: "열람실", message: "이용하실 단과대학의 열람실을 선택해주세요.", preferredStyle: .actionSheet)
                 for i in 0..<rooms.count {
                     let room = rooms[i] as! NSDictionary
-                    let roomListAction = UIAlertAction(title: room["name"] as? String, style: .default,
+                    let roomListAction = UIAlertAction(title: room["roomName"] as? String, style: .default,
                                        handler: { action in self.showSelectedRoomSeats(index: i, selectedRoom: rooms[i] as! NSDictionary) })
                     roomListAlert.addAction(roomListAction)
                 }

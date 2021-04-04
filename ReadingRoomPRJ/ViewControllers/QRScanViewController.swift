@@ -13,7 +13,7 @@ import UIKit
 import AVFoundation
 import Alamofire
 
-var tokenDic = Dictionary<String, String>()
+//var tokenDic = Dictionary<String, String>()
 
 
 
@@ -120,8 +120,8 @@ extension QRScanViewController: ReaderViewDelegate {
     func requestConfirm(code: String) {
         
         
-        let userID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let userPW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
+        let userID: String = UserDefaults.standard.dictionary(forKey: "accountInfo")!["id"] as! String
+        let userPW: String = UserDefaults.standard.dictionary(forKey: "accountInfo")!["pw"] as! String
         let userURL = "http://3.34.174.56:8080/room/myReservation"
         
         let PARAMETER: Parameters = [
@@ -144,8 +144,8 @@ extension QRScanViewController: ReaderViewDelegate {
                         //값 비교를 위해서 myReservation -> cancel 로 진행
                         let URL = "http://3.34.174.56:8080/room/confirm"
                         let PARAM: Parameters = [
-                            "id":UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String,
-                            "password":UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String,
+                            "id": userID,
+                            "password": userPW,
                             "token":code,
                             "studentId":UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String,
                             "end": mySeatInfo["end"] as! Int,
@@ -156,8 +156,8 @@ extension QRScanViewController: ReaderViewDelegate {
                             "college":UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]! as! String
                         ]
                         
-                        tokenDic[UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String] = code
-                        UserDefaults.standard.set(tokenDic, forKey: "tokenDic")
+                        //tokenDic[UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String] = code
+                        //UserDefaults.standard.set(tokenDic, forKey: "tokenDic")
                         let alamo = AF.request(URL, method: .post, parameters: PARAM).validate()
                         alamo.responseJSON() { response in
                             print("===API:REQUEST:CONFIRM:RESULT===")

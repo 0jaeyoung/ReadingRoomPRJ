@@ -21,13 +21,13 @@ class RequestAPI: NSObject {
         
         sendRequest.responseJSON() { response in
             switch response.result {
-            case .success(let value):
+            case .success(let value): //통신만 확인
                 NSLog("►request success◀︎")
                 if let jsonObj = value as? NSDictionary {
-                    let message = jsonObj["message"] as! String
+                    let response = jsonObj["response"] as! String
                     let result = jsonObj["result"] as! Bool
                     
-                    if result && (message=="Success") {
+                    if result && (response=="SUCCESS") {
                         NSLog("►request result success◀︎")
                         resultData = jsonObj[responseData]!
                         completion(true, resultData)

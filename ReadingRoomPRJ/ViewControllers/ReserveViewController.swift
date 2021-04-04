@@ -410,19 +410,22 @@ class ReserveViewController: UIViewController{
         
         let currentDayFomatter = DateFormatter()
         currentDayFomatter.dateFormat = "yyyy-MM-dd HH:mm"
+        currentDayFomatter.locale = Locale(identifier: "ko_kr")
+        currentDayFomatter.timeZone = TimeZone(abbreviation: "KST")
 
         
         //시작시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedLeftTime,showLeftTime)
         let selectedLeftDateString = currentDayFomatter.string(from: firstDatePicker.date)
         let selectedLeftDateChange: Date = currentDayFomatter.date(from: selectedLeftDateString)!
-        selectedLeftTime = Int(selectedLeftDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
+        selectedLeftTime = Int(selectedLeftDateChange.timeIntervalSince1970) * 1000// + 32400000    //서버로 보내는 long값
+        print(selectedLeftTime!)
         showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)   //보여지는 날짜 및 시간 값
         
        
         //종료시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedRightTime,showRightTime)
         let selectedRightDateString = currentDayFomatter.string(from: secondDatePicker.date)
         let selectedRightDateChange: Date = currentDayFomatter.date(from: selectedRightDateString)!
-        selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000 + 32400000    //서버로 보내는 long값
+        selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000// + 32400000    //서버로 보내는 long값
         showRightTime = Date(timeIntervalSince1970: TimeInterval(selectedRightTime) / 1000)   //보여지는 날짜 및 시간 값
         
     
@@ -430,7 +433,7 @@ class ReserveViewController: UIViewController{
         //현재 시간을 서버로 보내기 위해서 nowTime 전역 변수로 설정
         let startTimeString = currentDayFomatter.string(from: Date())
         let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
-        nowTime = Int(startTimeDate.timeIntervalSince1970) * 1000 + 32400000
+        nowTime = Int(startTimeDate.timeIntervalSince1970) * 1000// + 32400000
         
        
         
@@ -457,6 +460,18 @@ class ReserveViewController: UIViewController{
             print("이용시간은 \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분")
             print("begin: \(selectedLeftTime!)")
             print("end: \(selectedRightTime!)")
+            
+            let a = TimeInterval(selectedLeftTime) / 1000
+            let aa = Date(timeIntervalSince1970: a)
+            print("변환된 시간 값:::::::::::: \(aa)")
+            
+            let b = TimeInterval(selectedRightTime) / 1000
+            let bb = Date(timeIntervalSince1970: b)
+            print("변환된 시간 값:::::::::::: \(bb)")
+            
+            
+            
+            
             print(selectedRightTime - selectedLeftTime)
             let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
             let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
@@ -495,38 +510,38 @@ class ReserveViewController: UIViewController{
         
     }
     
+    
+    
+    
 
     
     func confirmReserve() {
         print("back")
         
         
-        let studentId: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["studentId"]! as! String
-        let college: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]! as! String
-        let room: String = UserDefaults.standard.string(forKey: "roomName")!
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as Dictionary
+        let studentInfo = UserDefaults.standard.dictionary(forKey: "studentInfo")! as Dictionary
+        
         let seat: Int = UserDefaults.standard.integer(forKey: "selectedSeatNumber")
         let time: Int = nowTime
         let begin: Int = selectedLeftTime
         let end: Int = selectedRightTime
-        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
         
         let param = [
-            "id": ID,
-            "password": PW,
-            "studentId": studentId,
+            "id": accountInfo["id"] as! String,
+            "password": accountInfo["pw"] as! String,
+            "studentId": studentInfo["studentId"] as! String,
             "end": end,
             "begin": begin,
             "time": time,
             "seat": seat,
-            "room": room,
-            "college": college
+            "room": Room.shared.name!,
+            "college": studentInfo["college"] as! String
         ] as [String : Any]
         RequestAPI.post(resource: "/room/reserve", param: param, responseData: "reservation", completion: {(result, response) in
             if (result) {
-                let reservation = response as! NSDictionary
+                //let reservation = response as! NSDictionary
                 print("좌석 예약 완료")
-                // TODO : 토스트메시지 띄우기
                 self.showToast(controller: self, message: "예약되었습니다. n분 내로 자리를 확정해 주세요.")    //문구 수정 필요
                 self.navigationController?.popViewController(animated: true)
                 
@@ -538,6 +553,7 @@ class ReserveViewController: UIViewController{
                 //어떤 오류인지 확인이 가능한지..? 서버쪽 에러 메세지 확인 후 분기 처리하면 될 듯
             }
         })
+        
     }
 }
 
@@ -722,7 +738,7 @@ extension ReserveViewController: UICollectionViewDataSource {
                 }
             }
         
-       
+        cell.viewController = self
         return cell
     }
     

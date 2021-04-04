@@ -56,13 +56,14 @@ class MySeatViewController: UIViewController {
     //myReservation API 통해서 예약한 유저의 정보 가져오는 함수
     func myInfo() {
         
-        
+        print((UserDefaults.standard.dictionary(forKey: "studentInfo") as Any) as! Dictionary<String, Any>)
         
         print("유저의 좌석 정보를 보여줍니다.")
-        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
-    
-        let myReservedURL = "http://3.34.174.56:8080/room/myReservation"
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as Dictionary
+        let ID: String = accountInfo["id"] as! String
+        let PW: String = accountInfo["pw"] as! String
+        
+        let myReservedURL = "http://3.34.174.56:8080/room/reserve/my"
         let PARAM: Parameters = [
             "id": ID,
             "password": PW
@@ -75,8 +76,10 @@ class MySeatViewController: UIViewController {
             case .success(let value):
                 spinner.stopAnimating()
                 print(value)
+                print(type(of: value))
                 if let jsonObj = value as? NSDictionary {
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                    print(jsonObj["result"]!)
+                    let getResult: Bool! = (jsonObj.object(forKey: "result") as! Bool)
                     print("getresult :: \(getResult!)")
                     if getResult! {
                         let mySeatInfo: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
@@ -273,7 +276,7 @@ class MySeatViewController: UIViewController {
                     else {
                         print(getResult!)
                         
-                        print("예약이 불가능합니다..")
+                        print("좌석정보를 불러올 수 없습니다.")
                     }
                     
                 }

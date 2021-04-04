@@ -16,13 +16,15 @@ class Room: NSObject {
     var available: NSArray!
     var reserved: [Any]!
     var confirmTimeLimit: Any!
+    var maximumReservationTime: Any!
+    var maximumReservationCount: Any!
     var totalCount: Int!
     var rowCount: Int!
     var columnCount: Int!
     
     init(room: NSDictionary) {
         self.college = room["college"] as? String
-        self.name = room["name"] as? String
+        self.name = room["roomName"] as? String
         self.seat = room["seat"] as? [Any]
         self.available = room["available"] as? NSArray
         self.reserved = room["reserved"] as? [Any]
