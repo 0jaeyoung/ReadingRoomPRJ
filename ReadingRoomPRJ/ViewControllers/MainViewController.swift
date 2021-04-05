@@ -182,8 +182,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        //메인화면 접근 시 예약 여부에 따라 전체 화면 분기 처리
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
         let id = accountInfo!["id"]
         let password = accountInfo!["pw"]
@@ -195,59 +193,16 @@ class MainViewController: UIViewController {
         
         RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
             if (result) {
-                print("나의 예약 정보 접근 성공")
-                print(type(of: response))
-                print((response as! Array<Any>).count)
-                if ((response as! Array<Any>).count == 0) {
-                    print("예약된 정보가 존재하지 않습니다.")
+                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                if (response as! NSArray).isEqual(to: []) {
                     MainViewController.reservationState = false
                 } else {
-                    print("예약된 정보가 존재합니다.")
                     MainViewController.reservationState = true
                 }
-                
             } else {
-                print("나의 예약 정보 접근 실패")
+                print(response)
             }
         })
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        print("I'm test")
-        //print(tokenDic)
-        
         
         view.backgroundColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
         
@@ -298,7 +253,28 @@ class MainViewController: UIViewController {
     }
     
     @objc func showMySeat(_ sender: Any) {
-        self.presentPanModal(MySeatViewController())
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
+        let id = accountInfo!["id"]
+        let password = accountInfo!["pw"]
+        
+        let param = [
+            "id": id as! String,
+            "password": password as! String
+        ] as [String : Any]
+        
+        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+            if (result) {
+                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                if (response as! NSArray).isEqual(to: []) {
+                    print("예약정보 없음")
+                    Toast.showToast(vc: self, message: "예약정보 없음")
+                } else {
+                    self.presentPanModal(MySeatViewController())
+                }
+            } else {
+                print(response)
+            }
+        })
     }
     
     @objc func openReserveView(_ sender: Any) {
@@ -349,8 +325,37 @@ class MainViewController: UIViewController {
     
     @objc func optionView(_ sender: Any) {
         print("option")
-        let vc: OptionViewController = OptionViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        // test -> QR코드 찍기위해서 토큰 받아오게 바꿔놓음 잠시
+        let isTestMode = true
+        if isTestMode {
+            let param = [
+                "id" : "#IT_ADMIN",
+                "password" : "123123",
+                "college" : "IT",
+                "roomName" : "2층"
+            ]
+            RequestAPI.post(resource: "/room/token", param: param, responseData: "token", completion: { (result, response) in
+                if (result) { // API 요청 성공
+                   print("▶︎response data◀︎")
+                   print(response)
+                   // response 데이터에 접근하여 이후 로직 처리
+                    let token = response as! String
+                    print(token)
+                } else {
+                    let data = response as! NSDictionary
+                    if (data["response"] != nil) {
+                       let errorMessage = data["response"] as! String
+                       print(errorMessage)
+                       // 에러 메시지 alert or toast
+                    } else {
+                        print("알수없는 에러 : \(String(describing: data["error"]))")
+                    }
+                }
+            })
+        } else {
+            let vc: OptionViewController = OptionViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @objc func showQr(_ sender: Any) {

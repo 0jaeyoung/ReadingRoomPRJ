@@ -445,23 +445,29 @@ class MySeatViewController: UIViewController {
         print("반납 버튼이 눌렸습니다.")
         spinner.startAnimating()
         
-        
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
+        let id = accountInfo["id"] as! String
+        let password = accountInfo["pw"] as! String
         
         let param = [
-            "id": "starku2249",
-            "password": "ku@@2249",
-            "college": "IT" ,
-            "roomName": "2층" ,
-            "reservationId": "201735906 77 1617530073213"
+            "id": id,
+            "password": password,
+            "college": MySeatViewController.college,
+            "roomName": MySeatViewController.room,
+            "reservationId": MySeatViewController.reserveID
         ] as [String : Any]
         
         RequestAPI.post(resource: "/room/reserve/cancel", param: param, responseData: "reservation", completion: {(result, response) in
             if result {
                 print("성공")
                 print(response)
+                self.spinner.stopAnimating()
+                Toast.showToast(vc: self.presentingViewController!, message: "좌석 반납이 완료되었습니다.")
+                self.dismiss(animated: true, completion: nil)
             } else {
                 print("실패")
                 print(response)
+                self.spinner.stopAnimating()
             }
         })
         

@@ -102,7 +102,6 @@ class LoginViewController: UIViewController {
         // 저장된 로그인 정보 가져오기
         if let autoLoginValue = UserDefaults.standard.dictionary(forKey: "accountInfo") as NSDictionary? {
             let isAutoLogin: Bool = autoLoginValue["isAutoLogin"] as! Bool
-            print("자동로그인 \(isAutoLogin)")
             if isAutoLogin {
                 // 자동로그인일경우 id,pw,자동로그인 자동으로 세팅
                 id.text = autoLoginValue.object(forKey: "id") as? String
@@ -156,10 +155,7 @@ class LoginViewController: UIViewController {
                 accountInfo = [ "isAutoLogin" : isAutoLogin,
                                    "id" : inputID,
                                    "pw" : inputPW   ]
-                UserDefaults.standard.setValue(accountInfo, forKey: "accountInfo")//autoLoginValue
-//                UserDefaults.standard.set(inputID, forKey: "inputID")
-//                UserDefaults.standard.set(inputPW, forKey: "inputPW")
-                
+                UserDefaults.standard.setValue(accountInfo, forKey: "accountInfo")
                 
                 let mainVC: MainViewController = MainViewController()
                 let navVC = UINavigationController(rootViewController: mainVC)
