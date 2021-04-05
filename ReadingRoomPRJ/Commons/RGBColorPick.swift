@@ -7,6 +7,13 @@
 
 import UIKit
 
+/*
+ * desc : Make Color using RGB
+ * date : 2021. 03. ??
+ * author : jaeyoung
+ * usage
+    {Object}.backgroundColor = UIColor.appColor(.mainColor)
+ */
 class RGBColorPick: NSObject {
     
 }
