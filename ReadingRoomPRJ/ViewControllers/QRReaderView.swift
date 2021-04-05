@@ -38,7 +38,7 @@ class QRReaderView: UIView {
     }
 
     let metadataObjectTypes: [AVMetadataObject.ObjectType] = [.qr]
-    // 리더기로 인식가능한 코드 타입.
+    // 리더기로 인식가능한 코드 타입 -> 현재는 QR만 인식하도록
     // .upce, .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .aztec, .pdf417, .itf14, .dataMatrix, .interleaved2of5
     
     override init(frame: CGRect) {
@@ -113,7 +113,7 @@ class QRReaderView: UIView {
     private func setCenterGuideLineView() {
         let centerGuideLineView = UIView()
         centerGuideLineView.translatesAutoresizingMaskIntoConstraints = false
-        centerGuideLineView.backgroundColor = #colorLiteral(red: 1, green: 0.5411764706, blue: 0.2392156863, alpha: 1)
+        centerGuideLineView.backgroundColor = UIColor.appColor(.mainColor)
         self.addSubview(centerGuideLineView)
         self.bringSubviewToFront(centerGuideLineView)
 
@@ -131,10 +131,10 @@ extension QRReaderView {
         self.captureSession?.startRunning()
     }
     
-    func stop(isButtonTap: Bool) {
+    func stop(isStatusStop: Bool) {
         self.captureSession?.stopRunning()
         
-        self.delegate?.readerComplete(status: .stop(isButtonTap))
+        self.delegate?.readerComplete(status: .stop(isStatusStop))
     }
     
     func fail() {
@@ -150,7 +150,7 @@ extension QRReaderView {
 extension QRReaderView: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
-        stop(isButtonTap: false)
+        stop(isStatusStop: false)
         
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,

@@ -20,31 +20,20 @@ import Alamofire
 class QRScanViewController: UIViewController {
     
     var readerView: QRReaderView!
-    var readButton: UIButton!
     
     override func loadView() {
         super.loadView()
         view.backgroundColor = .white
         readerView = QRReaderView.init(frame: view.frame)
-        readButton = UIButton()
         
         readerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(readerView)
-        
-        readButton.translatesAutoresizingMaskIntoConstraints = false
-        readButton.addTarget(self, action: #selector(scanButtonAction), for: .touchUpInside)
-        view.addSubview(readButton)
         
         NSLayoutConstraint.activate([
             readerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             readerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             readerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             readerView.heightAnchor.constraint(equalTo: readerView.widthAnchor),
-            
-            readButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            readButton.topAnchor.constraint(equalTo: readerView.bottomAnchor, constant: 20),
-            readButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-            readButton.heightAnchor.constraint(equalTo: readButton.widthAnchor, multiplier: 0.5)
         ])
     }
     
@@ -58,13 +47,13 @@ class QRScanViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         if !self.readerView.isRunning {
-            self.readerView.stop(isButtonTap: false)
+            self.readerView.stop(isStatusStop: false)
         }
     }
     
     @objc func scanButtonAction(_ sender: UIButton) {
         if self.readerView.isRunning {
-            self.readerView.stop(isButtonTap: true)
+            self.readerView.stop(isStatusStop: true)
         } else {
             self.readerView.start()
         }
@@ -98,16 +87,14 @@ extension QRScanViewController: ReaderViewDelegate {
             title = "에러"
             message = "QR코드 or 바코드를 인식하지 못했습니다.\n다시 시도해주세요."
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: "확인", style: .default, handler: {(alert: UIAlertAction!) in self.readerView.start()})
             alert.addAction(okAction)
             self.present(alert, animated: true, completion: nil)
         case let .stop(isButtonTap):
             if isButtonTap {
                 title = "알림"
                 message = "바코드 읽기를 멈추었습니다."
-                self.readButton.isSelected = readerView.isRunning
             } else {
-                self.readButton.isSelected = readerView.isRunning
                 return
             }
         }
@@ -121,24 +108,29 @@ extension QRScanViewController: ReaderViewDelegate {
             let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
             let id = accountInfo["id"] as! String
             let pw = accountInfo["pw"] as! String
-            var reservationId = ""
             var param = [ "id":id, "password":pw ]
             RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: { (result, response) in
                 let reservations = response as! NSArray
                 let data = reservations[0] as! NSDictionary
                 if result {
-                    reservationId = data["reservationId"] as! String
+                    let reservationId = data["reservationId"] as! String
+                    let roomName = data["roomName"] as! String
                     let studentInfo = UserDefaults.standard.dictionary(forKey: "studentInfo")! as NSDictionary
                     let college = studentInfo["college"] as! String
                     param = [
                         "id":id,
                         "password" : pw,
                         "college" : college,
+                        "roomName" : roomName,
                         "reservationId" : reservationId,
                         "token":code
                     ]
                     RequestAPI.post(resource: "/room/reserve/confirm", param: param, responseData: "reservation", completion: { (result, response) in
-                        print(response)
+                        if result {
+                            
+                        } else {
+                            
+                        }
                     })
                 } else {
                     print(response)
