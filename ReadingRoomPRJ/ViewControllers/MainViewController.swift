@@ -62,7 +62,7 @@ class MainViewController: UIViewController {
         super.loadView()
         print("view load")
         
-        
+      
         studentView = UIView()
         studentView.layer.cornerRadius = 10
         studentView.translatesAutoresizingMaskIntoConstraints = false
@@ -264,7 +264,7 @@ class MainViewController: UIViewController {
         
         RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
             if (result) {
-                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                
                 if (response as! NSArray).isEqual(to: []) {
                     print("예약정보 없음")
                     Toast.showToast(vc: self, message: "예약정보 없음")
@@ -319,8 +319,48 @@ class MainViewController: UIViewController {
     
     
     @objc func qrReader(_ sender: Any) {
-        let vc: QRScanViewController = QRScanViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        
+        
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
+        let id = accountInfo!["id"]
+        let password = accountInfo!["pw"]
+        
+        let param = [
+            "id": id as! String,
+            "password": password as! String
+        ] as [String : Any]
+        
+       
+        
+        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+            if (result) {
+                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                if (response as! NSArray).isEqual(to: []) {
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    print("예약정보 없음")
+                    
+                    Toast.showToast(vc: self, message: "예약정보 없음")
+                } else {
+                    let vc: QRScanViewController = QRScanViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            } else {
+                print(response)
+            }
+        })
+        
+        
+        
+        
+        
+        
+        
     }
     
     @objc func optionView(_ sender: Any) {

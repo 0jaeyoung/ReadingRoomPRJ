@@ -12,7 +12,7 @@ enum ReaderStatus {
     // QR코드 읽음 상태, 성공/실패/멈춤
     case success(_ code: String?)
     case fail
-    case stop(_ isButtonTap: Bool)
+    case stop
 }
 
 protocol ReaderViewDelegate: class {
@@ -131,10 +131,8 @@ extension QRReaderView {
         self.captureSession?.startRunning()
     }
     
-    func stop(isStatusStop: Bool) {
+    func stop() {
         self.captureSession?.stopRunning()
-        
-        self.delegate?.readerComplete(status: .stop(isStatusStop))
     }
     
     func fail() {
@@ -150,7 +148,7 @@ extension QRReaderView {
 extension QRReaderView: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
-        stop(isStatusStop: false)
+        stop()
         
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,

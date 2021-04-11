@@ -16,6 +16,8 @@ class MySeatViewController: UIViewController {
     static var reserveID = ""
     static var college = ""
     static var room = ""
+    static var confirmed = false
+    static var endTimeForExtend = 0
     var mySeat: UILabel!
     var location: UILabel!
     var seatNum: UILabel!
@@ -62,25 +64,7 @@ class MySeatViewController: UIViewController {
         
         print("유저의 좌석 정보를 보여줍니다.")
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as Dictionary
-//        let param = [
-//            "id": accountInfo["id"] as! String,
-//            "password": accountInfo["pw"] as! String
-//        ] as [String : Any]
-        
-//        RequestAPI.post(resource: "/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
-//            if(result) {
-//
-//            }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         
         let myReservedURL = "http://3.34.174.56:8080/room/reserve/my"
         let PARAM: Parameters = [
@@ -108,96 +92,97 @@ class MySeatViewController: UIViewController {
                         MySeatViewController.reserveID = k["reservationId"] as! String
                         MySeatViewController.college = k["college"] as! String
                         MySeatViewController.room = k["roomName"] as! String
-                        
+                        MySeatViewController.confirmed = k["confirmed"] as! Bool
+                        MySeatViewController.endTimeForExtend = k["end"] as! Int
                         //예약을 하지 않은 상태일 경우 배열 크기 비교를 통해서 확인. 추후 텍스트가 아닌 별도 이미지 파일로 교체 예정
                         if mySeatInfo.count == 0 {
                             print("사용자의 예약 내역이 없습니다.")
-                            mySeat = UILabel()
-                            mySeat.translatesAutoresizingMaskIntoConstraints = false
-                            mySeat.textAlignment = .center
-                            mySeat.text = "나의 자리"
-                            mySeat.font = UIFont.systemFont(ofSize: 30)
-                            mySeat.textColor = .black
-                            mySeat.backgroundColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
-                            view.addSubview(mySeat)
-                            
-                            location = UILabel()
-                            location.translatesAutoresizingMaskIntoConstraints = false
-                            location.text = "장소: " + "예약을 진행해 주세요."
-                            location.font = UIFont.systemFont(ofSize: 20)
-                            view.addSubview(location)
-                            
-                            seatNum = UILabel()
-                            seatNum.translatesAutoresizingMaskIntoConstraints = false
-                            seatNum.text = "자리 번호: 예약을 진행해 주세요."
-                            seatNum.font = UIFont.systemFont(ofSize: 20)
-                            view.addSubview(seatNum)
-                            
-                            reserveStartTime = UILabel()
-                            reserveStartTime.translatesAutoresizingMaskIntoConstraints = false
-                            reserveStartTime.text = "시작 시간: " + "예약을 진행해 주세요."
-                            reserveStartTime.font = UIFont.systemFont(ofSize: 20)
-                            view.addSubview(reserveStartTime)
-                            
-                            
-                            reserveEndTime = UILabel()
-                            reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
-                            reserveEndTime.text = "종료 시간: " + "예약을 진행해 주세요."
-                            reserveEndTime.font = UIFont.systemFont(ofSize: 20)
-                            view.addSubview(reserveEndTime)
-                            
-                            extend = UIButton(type: .system)
-                            extend.translatesAutoresizingMaskIntoConstraints = false
-                            extend.setTitle("연장", for: .normal)
-                            extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
-                            extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-                            extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
-                            extend.isEnabled = false    //예약된 내역이 없기 때문에 연장 버튼 비활성화
-                            view.addSubview(extend)
-                            
-                            
-                            returned = UIButton(type: .system)
-                            returned.translatesAutoresizingMaskIntoConstraints = false
-                            returned.setTitle("반납", for: .normal)
-                            returned.addTarget(self, action: #selector(self.clickReturn(_:)), for: .touchUpInside)
-                            returned.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-                            returned.backgroundColor = #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)
-                            returned.isEnabled = false   //예약된 내역이 없기 때문에 반납 버튼 비활성화
-                            view.addSubview(returned)
-                            
-
-                            
-                            NSLayoutConstraint.activate([
-                                mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                                mySeat.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-                                mySeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
-
-                                location.topAnchor.constraint(equalTo: mySeat.bottomAnchor, constant: 25),
-                                location.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                seatNum.topAnchor.constraint(equalTo: location.bottomAnchor, constant: 10),
-                                seatNum.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                reserveStartTime.topAnchor.constraint(equalTo: seatNum.bottomAnchor, constant: 10),
-                                reserveStartTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                reserveEndTime.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 10),
-                                reserveEndTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                extend.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
-                                extend.trailingAnchor.constraint(equalTo: view.centerXAnchor),
-                                extend.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-                                extend.heightAnchor.constraint(equalToConstant: 45),
-                                
-                                returned.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
-                                returned.leadingAnchor.constraint(equalTo: view.centerXAnchor),
-                                returned.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-                                returned.heightAnchor.constraint(equalToConstant: 45)
-                                
-                                
-                                
-                            ])
-                            
+//                            mySeat = UILabel()
+//                            mySeat.translatesAutoresizingMaskIntoConstraints = false
+//                            mySeat.textAlignment = .center
+//                            mySeat.text = "나의 자리"
+//                            mySeat.font = UIFont.systemFont(ofSize: 30)
+//                            mySeat.textColor = .black
+//                            mySeat.backgroundColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
+//                            view.addSubview(mySeat)
+//
+//                            location = UILabel()
+//                            location.translatesAutoresizingMaskIntoConstraints = false
+//                            location.text = "장소: " + "예약을 진행해 주세요."
+//                            location.font = UIFont.systemFont(ofSize: 20)
+//                            view.addSubview(location)
+//
+//                            seatNum = UILabel()
+//                            seatNum.translatesAutoresizingMaskIntoConstraints = false
+//                            seatNum.text = "자리 번호: 예약을 진행해 주세요."
+//                            seatNum.font = UIFont.systemFont(ofSize: 20)
+//                            view.addSubview(seatNum)
+//
+//                            reserveStartTime = UILabel()
+//                            reserveStartTime.translatesAutoresizingMaskIntoConstraints = false
+//                            reserveStartTime.text = "시작 시간: " + "예약을 진행해 주세요."
+//                            reserveStartTime.font = UIFont.systemFont(ofSize: 20)
+//                            view.addSubview(reserveStartTime)
+//
+//
+//                            reserveEndTime = UILabel()
+//                            reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
+//                            reserveEndTime.text = "종료 시간: " + "예약을 진행해 주세요."
+//                            reserveEndTime.font = UIFont.systemFont(ofSize: 20)
+//                            view.addSubview(reserveEndTime)
+//
+//                            extend = UIButton(type: .system)
+//                            extend.translatesAutoresizingMaskIntoConstraints = false
+//                            extend.setTitle("연장", for: .normal)
+//                            extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
+//                            extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+//                            extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
+//                            extend.isEnabled = false    //예약된 내역이 없기 때문에 연장 버튼 비활성화
+//                            view.addSubview(extend)
+//
+//
+//                            returned = UIButton(type: .system)
+//                            returned.translatesAutoresizingMaskIntoConstraints = false
+//                            returned.setTitle("반납", for: .normal)
+//                            returned.addTarget(self, action: #selector(self.clickReturn(_:)), for: .touchUpInside)
+//                            returned.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+//                            returned.backgroundColor = #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)
+//                            returned.isEnabled = false   //예약된 내역이 없기 때문에 반납 버튼 비활성화
+//                            view.addSubview(returned)
+//
+//
+//
+//                            NSLayoutConstraint.activate([
+//                                mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//                                mySeat.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+//                                mySeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
+//
+//                                location.topAnchor.constraint(equalTo: mySeat.bottomAnchor, constant: 25),
+//                                location.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+//
+//                                seatNum.topAnchor.constraint(equalTo: location.bottomAnchor, constant: 10),
+//                                seatNum.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+//
+//                                reserveStartTime.topAnchor.constraint(equalTo: seatNum.bottomAnchor, constant: 10),
+//                                reserveStartTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+//
+//                                reserveEndTime.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 10),
+//                                reserveEndTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+//
+//                                extend.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+//                                extend.trailingAnchor.constraint(equalTo: view.centerXAnchor),
+//                                extend.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+//                                extend.heightAnchor.constraint(equalToConstant: 45),
+//
+//                                returned.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+//                                returned.leadingAnchor.constraint(equalTo: view.centerXAnchor),
+//                                returned.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+//                                returned.heightAnchor.constraint(equalToConstant: 45)
+//
+//
+//
+//                            ])
+//
                             
                         } else {    //예약된 내역이 있을 경우(확정여부와는 상관 x) = 길이 != 0
                             let length = mySeatInfo.count
@@ -214,7 +199,7 @@ class MySeatViewController: UIViewController {
                             
                             location = UILabel()
                             location.translatesAutoresizingMaskIntoConstraints = false
-                            location.text = "장소: \(String(describing: userCurrentInfo["college"]!))"
+                            location.text = "장소: \(MySeatViewController.college) \(MySeatViewController.room) "
                             location.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(location)
                             
@@ -227,30 +212,56 @@ class MySeatViewController: UIViewController {
                             
                             let beginTime = userCurrentInfo["begin"] as! Int
                             let endTime = userCurrentInfo["end"] as! Int
-                            let beginTimeInterval = TimeInterval(beginTime) / 1000       //9시간 시차 때문에 32,400,000 더해줌
-                            let endTimeInterval = TimeInterval(endTime) / 1000
-                            let insertBeginTime = Date(timeIntervalSince1970: beginTimeInterval)    //long값으로 된 시간값을 바꿔줌
+                            let beginTimeInterval = (TimeInterval(beginTime)) / 1000     //9시간 시차 때문에 32,400,000 더해줌
+                            let endTimeInterval = (TimeInterval(endTime)) / 1000
+                            var insertBeginTime = Date(timeIntervalSince1970: beginTimeInterval)    //long값으로 된 시간값을 바꿔줌
                             let insertEndTime = Date(timeIntervalSince1970: endTimeInterval)
+                            
+                            
+                            
+                            let timeFormatter = DateFormatter()
+                            timeFormatter.dateFormat = "HH시 mm분"
+                            var finalStart = timeFormatter.string(from: insertBeginTime)
+                            var finalEnd = timeFormatter.string(from: insertEndTime)
                             
                             reserveStartTime = UILabel()
                             reserveStartTime.translatesAutoresizingMaskIntoConstraints = false
-                            reserveStartTime.text = "시작시간: \(insertBeginTime)"
+                            reserveStartTime.text = "이용시간: \(finalStart) ~ \(finalEnd)"
                             reserveStartTime.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(reserveStartTime)
                             
-                            reserveEndTime = UILabel()
-                            reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
-                            reserveEndTime.text = "종료시간: \(insertEndTime)"
-                            reserveEndTime.font = UIFont.systemFont(ofSize: 20)
-                            view.addSubview(reserveEndTime)
+//                            reserveEndTime = UILabel()
+//                            reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
+//                            reserveEndTime.text = "종료시간: \(finalEnd)"
+//                            reserveEndTime.font = UIFont.systemFont(ofSize: 20)
+//                            view.addSubview(reserveEndTime)
                             
-                            extend = UIButton(type: .system)
-                            extend.translatesAutoresizingMaskIntoConstraints = false
-                            extend.setTitle("연장", for: .normal)
-                            extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
-                            extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-                            extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
-                            view.addSubview(extend)
+                            
+
+                            
+                            //확정 여부를 나눠서 연장버튼 클릭 이벤트 조절
+                            if MySeatViewController.confirmed {
+                                extend = UIButton(type: .system)
+                                extend.translatesAutoresizingMaskIntoConstraints = false
+                                extend.setTitle("연장", for: .normal)
+                                extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
+                                extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+                                extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
+                                view.addSubview(extend)
+                                
+                            } else {
+                                extend = UIButton(type: .system)
+                                extend.translatesAutoresizingMaskIntoConstraints = false
+                                extend.setTitle("확정", for: .normal)
+                                extend.addTarget(self, action: #selector(self.text(_:)), for: .touchUpInside)
+                                extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+                                extend.backgroundColor = #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1)
+                                //extend.isEnabled = false
+                                view.addSubview(extend)
+                                
+                            }
+                            
+                            
                             
                             
                             returned = UIButton(type: .system)
@@ -262,6 +273,12 @@ class MySeatViewController: UIViewController {
                             view.addSubview(returned)
                             
                             NSLayoutConstraint.activate([
+                                
+                                
+                                
+                                
+                                
+                                
                                 mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                                 mySeat.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
                                 mySeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
@@ -269,24 +286,21 @@ class MySeatViewController: UIViewController {
                                 location.topAnchor.constraint(equalTo: mySeat.bottomAnchor, constant: 25),
                                 location.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
                                 
-                                seatNum.topAnchor.constraint(equalTo: location.bottomAnchor, constant: 10),
+                                seatNum.topAnchor.constraint(equalTo: location.bottomAnchor, constant: 15),
                                 seatNum.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                reserveStartTime.topAnchor.constraint(equalTo: seatNum.bottomAnchor, constant: 10),
+                                            
+                                reserveStartTime.topAnchor.constraint(equalTo: seatNum.bottomAnchor, constant: 15),
                                 reserveStartTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                reserveEndTime.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 10),
-                                reserveEndTime.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                                
-                                extend.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+                                            
+                                extend.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 25),
                                 extend.trailingAnchor.constraint(equalTo: view.centerXAnchor),
                                 extend.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-                                extend.heightAnchor.constraint(equalToConstant: 45),
+                                extend.heightAnchor.constraint(equalToConstant: 50),
                                 
-                                returned.topAnchor.constraint(equalTo: reserveEndTime.bottomAnchor, constant: 20),
+                                returned.topAnchor.constraint(equalTo: reserveStartTime.bottomAnchor, constant: 25),
                                 returned.leadingAnchor.constraint(equalTo: view.centerXAnchor),
                                 returned.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
-                                returned.heightAnchor.constraint(equalToConstant: 45)
+                                returned.heightAnchor.constraint(equalToConstant: 50)
                                 
                             ])
                             
@@ -316,15 +330,24 @@ class MySeatViewController: UIViewController {
     }
     
     
+    @objc func text(_ sender: Any) {
+        //self.navigationController?.pushViewController(QRScanViewController, animated: true)
+    }
+    
     
         
     @objc func clickExtend(_ sender: Any) { //alert 생성
         print("연장 버튼 클릭")
+        
+        let addTime: [Int : Int] = [30: 1800000, 60: 3600000, 90: 5400000, 120: 7200000]    //tlrks duswkd qoduf todtjd
+        
+       
+        
         let extend = UIAlertController(title: "연장", message: "얼마나 더 공부하실 껀가요?", preferredStyle: UIAlertController.Style.alert)
-        let time30 = UIAlertAction(title: "30분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend()})
-        let time60 = UIAlertAction(title: "60분", style: UIAlertAction.Style.default, handler: nil)
-        let time90 = UIAlertAction(title: "90분", style: UIAlertAction.Style.default, handler: nil)
-        let time120 = UIAlertAction(title: "120분", style: UIAlertAction.Style.default, handler: nil)
+        let time30 = UIAlertAction(title: "30분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[30]!)})
+        let time60 = UIAlertAction(title: "60분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[60]!)})
+        let time90 = UIAlertAction(title: "90분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[90]!)})
+        let time120 = UIAlertAction(title: "120분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[120]!)})
         let cancel = UIAlertAction(title: "취소", style: UIAlertAction.Style.destructive, handler: nil)
         extend.addAction(time30)
         extend.addAction(time60)
@@ -336,86 +359,38 @@ class MySeatViewController: UIViewController {
     }
     
     
-    func seatExtend() { //연장 api 사용 방법 확인되면 구현 예정 현재는 예약된 좌석 확인용으로 사용중
+    
+    func seatExtend(key: Int) {
         print("시간을 연장을 위해 세팅합니다")
     
-        //myreservation -> token -> extend api 순으로 넘어감
-        let ID: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["id"]! as! String
-        let PW: String = UserDefaults.standard.dictionary(forKey: "studentInfo")?["password"]! as! String
-        let myReservedURL = "http://3.34.174.56:8080/room/myReservation"
-        let myReservePARAM: Parameters = [
-            "id": ID,
-            "password": PW
-        ]
+        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
+        let id = accountInfo["id"] as! String
+        let password = accountInfo["pw"] as! String
         
-        let myReserveAlamo = AF.request(myReservedURL, method: .post, parameters: myReservePARAM).validate(statusCode: 200..<450)
-        myReserveAlamo.responseJSON() { response in
-            switch response.result {
-            case .success(let value):
-                if let jsonObj = value as? NSDictionary {
-                    let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                    if getResult! {
-                        let mySeat: NSArray = jsonObj.object(forKey: "reservations") as! NSArray
-                        
-                        
-                        let mySeatInfo = mySeat[0] as! NSDictionary
-                        
-                        //값 비교를 위해서 myReservation -> cancel 로 진행
-                        
-                        print("898989")
-                        print(mySeatInfo)
-                        
-                        let studentId: String = mySeatInfo["studentId"] as! String
-                        let college: String = mySeatInfo["college"] as! String
-                        let room: String = mySeatInfo["room"] as! String
-                        let seat: Int = mySeatInfo["seat"] as! Int
-                        let time: Int = mySeatInfo["time"] as! Int
-                        let begin: Int = mySeatInfo["begin"] as! Int
-                        let end: Int = mySeatInfo["end"] as! Int
-                        let token: String = UserDefaults.standard.dictionary(forKey: "tokenDic")![studentId] as! String
-                        let extendURL = "http://3.34.174.56:8080/room/extend"
-                        let extendedTime = 1800000
-                        
-                        print(token)
-                        //토큰을 가져오기 위한 파라미터 설정
-                        let extendPARAM: Parameters = [
-                            "id": ID,
-                            "password": PW,
-                            "token": token,
-                            "studentId": studentId,
-                            "room": room,
-                            "college": college,
-                            "seat": seat,
-                            "time": time,
-                            "begin": begin,
-                            "end": end,
-                            "extendedTime": extendedTime
-                        ]
-                        
-                        
-                        //print(QRScanViewController.requestConfirm().code)
-                        
-                        let extendAlamo = AF.request(extendURL, method: .post, parameters: extendPARAM).validate(statusCode: 200..<450)
-                        extendAlamo.responseJSON() { [self] response in
-                            switch response.result {
-                            
-                            case .success(let extendValue):
-                                print("시간을 연장합니다.")
-                                print(extendValue)
-                                print("시간이 연장되었습니다.")
-                            case .failure(_):
-                                print("err")
-                            }
-                            
-                        }
-                        
-
-                    }
-                }
-            case .failure(_):
-                print("error")
+        let param = [
+            "id": id,
+            "password": password,
+            "college": MySeatViewController.college,
+            "roomName": MySeatViewController.room,
+            "token": QRScanViewController.token,
+            "extendedTime": MySeatViewController.endTimeForExtend + key,
+            "reservationId": MySeatViewController.reserveID
+        
+        ] as [String : Any]
+        
+        print(MySeatViewController.endTimeForExtend + key)
+        
+        RequestAPI.post(resource: "/room/reserve/extend", param: param, responseData: "reservation", completion: {(result, response) in
+            print(result)
+            if result {
+                print("성공")
+                print(response)
+                
+            } else {
+                print("실패")
+               
             }
-        }
+        })
         
         
         
@@ -438,7 +413,7 @@ class MySeatViewController: UIViewController {
     }
     
     
-
+    
     
     
     func seatReturn() { //myReservation 에서 예약 여부 확인 후 cancel api 호출함 -> 서버 통신 2번 이루어지게 됌

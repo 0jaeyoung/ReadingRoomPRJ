@@ -18,7 +18,7 @@ import Alamofire
 
 
 class QRScanViewController: UIViewController {
-    
+    static var token = ""
     var readerView: QRReaderView!
     
     override func loadView() {
@@ -47,13 +47,13 @@ class QRScanViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         if !self.readerView.isRunning {
-            self.readerView.stop(isStatusStop: false)
+            self.readerView.stop()
         }
     }
     
     @objc func scanButtonAction(_ sender: UIButton) {
         if self.readerView.isRunning {
-            self.readerView.stop(isStatusStop: true)
+            self.readerView.stop()
         } else {
             self.readerView.start()
         }
@@ -67,7 +67,7 @@ extension QRScanViewController: ReaderViewDelegate {
 
         var title = ""
         var message = ""
-        var scanedQRCode = ""
+        //var scanedQRCode = ""
         
         switch status {
         case let .success(code):
@@ -79,8 +79,10 @@ extension QRScanViewController: ReaderViewDelegate {
 
             title = "알림"
             message = "인식성공\n\(code)"
-            scanedQRCode = code
+            //scanedQRCode = code
             
+            //token값 전역변수로 저장
+            QRScanViewController.token = code
             requestConfirm(code: code)
             
         case .fail:
@@ -90,13 +92,9 @@ extension QRScanViewController: ReaderViewDelegate {
             let okAction = UIAlertAction(title: "확인", style: .default, handler: {(alert: UIAlertAction!) in self.readerView.start()})
             alert.addAction(okAction)
             self.present(alert, animated: true, completion: nil)
-        case let .stop(isButtonTap):
-            if isButtonTap {
-                title = "알림"
-                message = "바코드 읽기를 멈추었습니다."
-            } else {
-                return
-            }
+        case .stop:
+            title = "알림"
+            message = "바코드 읽기를 멈추었습니다."
         }
         
         
@@ -127,7 +125,9 @@ extension QRScanViewController: ReaderViewDelegate {
                     ]
                     RequestAPI.post(resource: "/room/reserve/confirm", param: param, responseData: "reservation", completion: { (result, response) in
                         if result {
-                            
+                            self.readerView.stop()
+                            self.showToast(controller: self, message: "예약 확정되었습니다.")
+                            self.navigationController?.popViewController(animated: true)
                         } else {
                             
                         }
