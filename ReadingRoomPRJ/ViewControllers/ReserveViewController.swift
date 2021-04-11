@@ -20,6 +20,7 @@ class ReserveViewController: UIViewController{
     var refreshBtn: UIButton!
     var completeBtn: UIButton!
     
+    
     var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
     var columnCount: Int!
     var totalCount:Int! // 전체 셀 개수. 2차원 배열 가로 * 세로
@@ -62,6 +63,8 @@ class ReserveViewController: UIViewController{
     
     override func loadView() {
         super.loadView()
+        
+        navigationController?.navigationBar.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         
         print("ReserveViewController의 loadView가 출력됩니다.")
         
@@ -132,19 +135,94 @@ class ReserveViewController: UIViewController{
         refreshBtn = UIButton(type: .system)
         refreshBtn.translatesAutoresizingMaskIntoConstraints = false
         refreshBtn.setTitle("재설정", for: .normal)
-        refreshBtn.backgroundColor = .purple
-        refreshBtn.tintColor = .black
+        refreshBtn.backgroundColor = UIColor.appColor(.mainColor)
+        refreshBtn.tintColor = .white
+        refreshBtn.layer.cornerRadius = 5
         refreshBtn.addTarget(self, action: #selector(self.openReload(_:)), for: .touchUpInside)
         self.view.addSubview(refreshBtn)
         
         completeBtn = UIButton(type: .system)
         completeBtn.translatesAutoresizingMaskIntoConstraints = false
         completeBtn.setTitle("예약하기", for: .normal)
-        completeBtn.backgroundColor =  #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
+        completeBtn.tintColor = .white
+        completeBtn.layer.cornerRadius = 5
+        completeBtn.backgroundColor = UIColor.appColor(.mainColor)
         //completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
         completeBtn.addTarget(self, action: #selector(self.reserveBtn(_:)), for: .touchUpInside)
         
         self.view.addSubview(completeBtn)
+        
+        
+        let firstStackView = UIStackView()
+        firstStackView.axis = .vertical
+        firstStackView.alignment = .fill
+        firstStackView.spacing = 0
+        firstStackView.distribution = .fill
+        
+        let empty = UIImageView(frame: .zero)
+        empty.contentMode = .scaleAspectFit
+        let emptyImg = UIImage(named: "emptySeat.png")
+        empty.image = emptyImg
+        firstStackView.addArrangedSubview(empty)
+        
+        let notUse = UILabel()
+        notUse.text = "빈좌석"
+        notUse.textAlignment = .center
+        notUse.contentMode = .scaleAspectFit
+        firstStackView.addArrangedSubview(notUse)
+        
+        
+        let secondStackView = UIStackView()
+        secondStackView.axis = .vertical
+        secondStackView.alignment = .fill
+        secondStackView.distribution = .fill
+
+        let ing = UIImageView(frame: .zero)
+        ing.contentMode = .scaleAspectFit
+        let ingImg = UIImage(named: "ingSeat.png")
+        ing.image = ingImg
+        secondStackView.addArrangedSubview(ing)
+
+        let ingUse = UILabel()
+        ingUse.text = "예약중"
+        ingUse.textAlignment = .center
+        ingUse.contentMode = .scaleAspectFit
+        secondStackView.addArrangedSubview(ingUse)
+
+        //====================
+
+        let thirdStackView = UIStackView()
+        thirdStackView.axis = .vertical
+        thirdStackView.alignment = .fill
+        thirdStackView.distribution = .fill
+
+        let full = UIImageView(frame: .zero)
+        full.contentMode = .scaleAspectFit
+        let fullImg = UIImage(named: "fullSeat.png")
+        full.image = fullImg
+        thirdStackView.addArrangedSubview(full)
+
+        let realUse = UILabel()
+        realUse.text = "사용중"
+        realUse.textAlignment = .center
+        realUse.contentMode = .scaleAspectFit
+        thirdStackView.addArrangedSubview(realUse)
+
+
+        let totalStackView = UIStackView()
+        totalStackView.axis = .horizontal
+        totalStackView.spacing = 10
+        totalStackView.alignment = .fill
+        totalStackView.distribution = .fillProportionally
+        
+        totalStackView.addArrangedSubview(firstStackView)
+        totalStackView.addArrangedSubview(secondStackView)
+        totalStackView.addArrangedSubview(thirdStackView)
+        
+        
+        totalStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(totalStackView)
+        
         
         NSLayoutConstraint.activate([
             
@@ -162,11 +240,21 @@ class ReserveViewController: UIViewController{
 //
             
             
+            totalStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            totalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            totalStackView.heightAnchor.constraint(equalToConstant: 40),
+            
+            
+            
+            
+            
+            
+            
             //컬렉션뷰 레이아웃 주기 / 추가 라인 96 ~ 100
-            showSeatCollectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            showSeatCollectionView.topAnchor.constraint(equalTo: totalStackView.bottomAnchor, constant: 5),  //컬렉션뷰 상단
             showSeatCollectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             showSeatCollectionView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-            showSeatCollectionView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor),
+            showSeatCollectionView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor, constant: -70),
             
             
             currentDay.topAnchor.constraint(equalTo: showSeatCollectionView.bottomAnchor, constant: 10),
@@ -177,12 +265,12 @@ class ReserveViewController: UIViewController{
             
                 
             // startLb, endLb, startTime, endTime, completeBtn
-            startLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor),
+            startLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor, constant: 5),
             startLb.leadingAnchor.constraint(equalTo: currentDay.leadingAnchor),
             startLb.widthAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.5),
             startLb.heightAnchor.constraint(equalTo: currentDay.heightAnchor, multiplier: 0.5),
             
-            endLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor),
+            endLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor, constant: 5),
             endLb.trailingAnchor.constraint(equalTo: currentDay.trailingAnchor),
             endLb.widthAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.5),
             endLb.heightAnchor.constraint(equalTo: currentDay.heightAnchor, multiplier: 0.5),
@@ -191,13 +279,14 @@ class ReserveViewController: UIViewController{
             refreshBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
             //refreshBtn.widthAnchor.constraint(equalTo: currentDay.widthAnchor),
             refreshBtn.leadingAnchor.constraint(equalTo: startLb.leadingAnchor),
-            refreshBtn.trailingAnchor.constraint(equalTo: view.centerXAnchor),
+            refreshBtn.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -5),
             refreshBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
             
             completeBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             completeBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
            
-            completeBtn.leadingAnchor.constraint(equalTo: view.centerXAnchor),
+            completeBtn.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 5),
+            
             completeBtn.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
             completeBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
             
@@ -232,6 +321,8 @@ class ReserveViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        stateArr = Array(repeating: 0, count: Room.shared.totalCount)
+        CollectionCell.countOne = 0
         print("=-=-=-=-=-=-=")
         print(stateArr.count)
         print(Room.shared.totalCount)
@@ -314,81 +405,11 @@ class ReserveViewController: UIViewController{
         
         
         
-       
-        //좌석 샘플 표시 스택뷰 생성 (네비게이션 바 위에 생성)
-        let firstStackView = UIStackView()
-        firstStackView.axis = .vertical
-        firstStackView.alignment = .fill
-        firstStackView.spacing = 0
-        firstStackView.distribution = .fill
-        
-        let empty = UIImageView(frame: .zero)
-        empty.contentMode = .scaleAspectFit
-        let emptyImg = UIImage(named: "emptySeat.png")
-        empty.image = emptyImg
-        firstStackView.addArrangedSubview(empty)
-        
-        let notUse = UILabel()
-        notUse.text = "빈좌석"
-        notUse.textAlignment = .center
-        notUse.contentMode = .scaleAspectFit
-        firstStackView.addArrangedSubview(notUse)
-        
-        
-        let secondStackView = UIStackView()
-        secondStackView.axis = .vertical
-        secondStackView.alignment = .fill
-        secondStackView.distribution = .fill
-
-        let ing = UIImageView(frame: .zero)
-        ing.contentMode = .scaleAspectFit
-        let ingImg = UIImage(named: "ingSeat.png")
-        ing.image = ingImg
-        secondStackView.addArrangedSubview(ing)
-
-        let ingUse = UILabel()
-        ingUse.text = "예약중"
-        ingUse.textAlignment = .center
-        ingUse.contentMode = .scaleAspectFit
-        secondStackView.addArrangedSubview(ingUse)
-
-        //====================
-
-        let thirdStackView = UIStackView()
-        thirdStackView.axis = .vertical
-        thirdStackView.alignment = .fill
-        thirdStackView.distribution = .fill
-
-        let full = UIImageView(frame: .zero)
-        full.contentMode = .scaleAspectFit
-        let fullImg = UIImage(named: "fullSeat.png")
-        full.image = fullImg
-        thirdStackView.addArrangedSubview(full)
-
-        let realUse = UILabel()
-        realUse.text = "사용중"
-        realUse.textAlignment = .center
-        realUse.contentMode = .scaleAspectFit
-        thirdStackView.addArrangedSubview(realUse)
-
-
-        let totalStackView = UIStackView()
-        totalStackView.axis = .horizontal
-        totalStackView.spacing = 10
-        totalStackView.alignment = .fill
-        totalStackView.distribution = .fillProportionally
-        
-        totalStackView.addArrangedSubview(firstStackView)
-        totalStackView.addArrangedSubview(secondStackView)
-        totalStackView.addArrangedSubview(thirdStackView)
-      
-        navigationItem.titleView = totalStackView
-     
         showSeatCollectionView.minimumZoomScale = 1.0
         showSeatCollectionView.maximumZoomScale = 5
         
         print("ReserveViewController의 viewDidLoad가 출력됩니다")
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
         
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
@@ -589,7 +610,9 @@ class ReserveViewController: UIViewController{
             
             
             print(selectedRightTime - selectedLeftTime)
-            let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
+            //let firstAlert = UIAlertController(title: "예약", message: "\(UserDefaults.standard.string(forKey: "selectedSeatNumber")!)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
+            
+            let firstAlert = UIAlertController(title: "예약", message: "\(CollectionCell.userSelectedSeat)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
             let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
             let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.confirmReserve()})
             
@@ -744,7 +767,7 @@ extension ReserveViewController: UICollectionViewDataSource {
         case SeatType.Wall.rawValue:
            
             //cell.myLabel.text = ""
-            cell.myImageView.image = UIImage(named: "wall.png")
+            cell.myImageView.image = UIImage(named: "road.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             
             break
@@ -764,24 +787,137 @@ extension ReserveViewController: UICollectionViewDataSource {
             break
 
         default:
-            cell.myButton.setTitle(String(curr), for: .normal)
-            cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-            cell.myButton.tintColor = .black
-            
-            if (Room.shared.reserved[curr] as AnyObject).count == 0 {
-                cell.myImageView.image = UIImage(named: "emptySeat.png")
-                cell.myButton.setImage(UIImage(named: "emptySeat.png"), for: .normal)
-                cell.myButton.setImage(UIImage(named: "ingSeat.png"), for: .selected)
-                //cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-            } else {
-                cell.myImageView.image = UIImage(named: "fullSeat.png")
-            }
-        }
-        
-        return cell
+                    
+                    func test(_ sender: Bool) {
+                        if cell.myButton.title(for: .normal) == "" {
+                            
+                        } else {
+                            print(cell.myButton.title(for: .normal) as Any)
+                            
+                            if cell.myImageView.image == UIImage(named: "emptySeat.png") {
+                                cell.myImageView.image = UIImage(named: "selectedSeat.png")
+                                
+                                
+                                
+                            } else if cell.myImageView.image == UIImage(named: "selectedSeat.png") {
+                                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                
+                            }
+                        }
+                    }
+                    
+                    
+                    let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
+                                
+                    let reserveURL = "http://3.34.174.56:8080/rooms"
+                    let PARAM: Parameters = [
+                        "college": college
+                    ]
+                
+                    let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
+                    alamo.responseJSON() {[self] response in
+                    switch response.result {
+                    case.success(let value):
+                    print("success")
+                    if let jsonObj = value as? NSDictionary {
+                        let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
+                        if getResult! {
+                                                        
+                            let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
+                            print(type(of: tmp))
+                            print("tmp 출력 \(tmp)")
+                            let info: NSDictionary = tmp[0] as! NSDictionary
+                            print("kkk")
+                            let reserveInfo = info["reserved"] as! Array<Any>
+                            if (reserveInfo[curr] as AnyObject).count == 0 {
+                                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                cell.myButton.setTitle(String(curr), for: .normal)
+
+                                cell.myButton.tintColor = .black
+                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                }
+                            else {
+                                
+                                
+                                let selectedStartTime = startTime.date
+                                let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
+                                //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
+                                
+                                let selectedEndTime = endTime.date
+                                let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
+                                //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
+                                
+                                
+                                
+                                                            
+                                let seatReserveInfo = reserveInfo[curr] as! Array<Any>
+                                for i in 0..<(reserveInfo[curr] as AnyObject).count {
+                                    let currSeatInfo = seatReserveInfo[i] as! Dictionary<String, Any>
+                                    let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
+                                    let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
+                                                                
+                                                                
+                                    if userStartTime < end && userEndTime > begin {
+                                        if currSeatInfo["confirmed"] as! Int == 0 {
+                                            cell.myImageView.image = UIImage(named: "ingSeat.png")
+                                            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+                                            cell.myButton.setTitle(String(curr), for: .normal)
+                                            cell.myButton.tintColor = .black
+                                            cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                            cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                            cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                            cell.myButton.isEnabled = true
+                                            cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                            }
+                                        else {
+                                                cell.myImageView.image = UIImage(named: "fullSeat.png")
+                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                
+                                                cell.myButton.setTitle(String(curr), for: .normal)
+                                                cell.myButton.tintColor = .black
+                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                cell.myButton.isEnabled = true
+                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                                }
+                                        }
+                                    else {
+                                                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                
+                                                cell.myButton.setTitle(String(curr), for: .normal)
+
+                                                cell.myButton.tintColor = .black
+                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
+                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                                cell.myButton.isEnabled = true
+                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                                            
+                                                //cell.myButton.isSelected.toggle()
+                                            
+                                            
+                                            
+                                            
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                case .failure(_):
+                                    print("error")
+                            }
+                        }
+                    }
+                
+                cell.viewController = self
+                return cell
     }
     
  
@@ -810,16 +946,18 @@ extension ReserveViewController: UICollectionViewDelegate {
 
 extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt seection: Int) -> CGFloat {
-        return 10
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        //return 1
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
-            
+        //let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
+        let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount ) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
+
         let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
         return size
     }

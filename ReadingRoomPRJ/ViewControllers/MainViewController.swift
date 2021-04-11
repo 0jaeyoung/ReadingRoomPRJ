@@ -110,6 +110,7 @@ class MainViewController: UIViewController {
         firstButton = UIButton(type: .system)
         firstButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
         firstButton.layer.cornerRadius = 20
+        firstButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         firstButton.translatesAutoresizingMaskIntoConstraints = false
         firstButton.backgroundColor = .white
         view.addSubview(firstButton)
@@ -117,6 +118,7 @@ class MainViewController: UIViewController {
         secondButton = UIButton(type: .system)
         secondButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
         secondButton.layer.cornerRadius = 20
+        secondButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         secondButton.translatesAutoresizingMaskIntoConstraints = false
         secondButton.backgroundColor = .white
         view.addSubview(secondButton)
@@ -124,6 +126,7 @@ class MainViewController: UIViewController {
         thirdButton = UIButton(type: .system)
         thirdButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
         thirdButton.layer.cornerRadius = 20
+        thirdButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
         thirdButton.backgroundColor = .white
         view.addSubview(thirdButton)
