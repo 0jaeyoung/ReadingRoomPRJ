@@ -29,6 +29,9 @@
 		2C59B3AC260CEA9F003AB505 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AB260CEA9F003AB505 /* line.png */; };
 		2C59B3AF260CEAA7003AB505 /* imgOption.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AE260CEAA7003AB505 /* imgOption.jpg */; };
 		2C59B3B2260CEB25003AB505 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3B1260CEB25003AB505 /* Assets.xcassets */; };
+		2CBA2F692623526B000369FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F682623526B000369FC /* Toast.swift */; };
+		2CBA2F6C26235273000369FC /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6B26235273000369FC /* Room.swift */; };
+		2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6E262359A6000369FC /* OptionViewController.swift */; };
 		440220F1F69E5135B49233B7 /* Pods_ReadingRoomPRJ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */; };
 		79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8A25DE44BE00B5C24E /* MainViewController.swift */; };
 		79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */; };
@@ -66,6 +69,9 @@
 		2C59B3AB260CEA9F003AB505 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		2C59B3AE260CEAA7003AB505 /* imgOption.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = imgOption.jpg; sourceTree = "<group>"; };
 		2C59B3B1260CEB25003AB505 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2CBA2F682623526B000369FC /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		2CBA2F6B26235273000369FC /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
+		2CBA2F6E262359A6000369FC /* OptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionViewController.swift; path = ReadingRoomPRJ/ViewControllers/OptionViewController.swift; sourceTree = SOURCE_ROOT; };
 		79A61F8A25DE44BE00B5C24E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySeatViewController.swift; sourceTree = "<group>"; };
 		79A61F9025DE47A400B5C24E /* ReserveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserveViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +122,7 @@
 				2C59B36D260CC4D6003AB505 /* logo_jungsook.png */,
 				2C59B36F260CC4D6003AB505 /* logo_white.png */,
 				2C59B370260CC4D6003AB505 /* splash_background.png */,
+				2CBA2F6E262359A6000369FC /* OptionViewController.swift */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -123,7 +130,9 @@
 		2C59B378260CC522003AB505 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				2CBA2F682623526B000369FC /* Toast.swift */,
 				2C59B37B260CC575003AB505 /* RGBColorPick.swift */,
+				2CBA2F6B26235273000369FC /* Room.swift */,
 				2C59B37F260CC599003AB505 /* RequestAPI.swift */,
 			);
 			path = Commons;
@@ -328,7 +337,9 @@
 			files = (
 				79B6A1B725DE347500666EAE /* LoginViewController.swift in Sources */,
 				79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */,
+				2CBA2F692623526B000369FC /* Toast.swift in Sources */,
 				79A61F9125DE47A400B5C24E /* ReserveViewController.swift in Sources */,
+				2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */,
 				79B6A1B325DE347500666EAE /* AppDelegate.swift in Sources */,
 				2C59B37C260CC575003AB505 /* RGBColorPick.swift in Sources */,
 				79B6A1BD25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld in Sources */,
@@ -339,6 +350,7 @@
 				79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */,
 				2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */,
 				2C59B398260CE961003AB505 /* QRScanViewController.swift in Sources */,
+				2CBA2F6C26235273000369FC /* Room.swift in Sources */,
 				2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */,
 				2C59B38E260CE90E003AB505 /* OptionViewController.swift in Sources */,
 				2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */,

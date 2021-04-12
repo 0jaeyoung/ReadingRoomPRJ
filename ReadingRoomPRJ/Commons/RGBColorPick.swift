@@ -25,6 +25,7 @@ enum AssetsColor {
     case mainBackgroundColor
 
     // 자주 쓰는 색 정의
+    case textColor
 }
 
 extension UIColor {
@@ -42,6 +43,8 @@ extension UIColor {
           return UIColor(displayP3Red: 12/255, green: 205/255, blue: 163/255, alpha: 1)
         case .mainBackgroundColor:
           return UIColor(displayP3Red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        case .textColor:
+            return UIColor(displayP3Red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
         }
     }
 }

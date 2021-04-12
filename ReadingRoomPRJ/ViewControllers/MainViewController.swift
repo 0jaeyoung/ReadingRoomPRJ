@@ -17,16 +17,9 @@ enum userType: String {
     case student = "STUDENT"
 }
 
-
-
-
 class MainViewController: UIViewController {
     // UI 요소 정의
-    
-    
     static var reservationState = true
-    
-    
     var a = false        //추후 예약 여부에 따라서 bool 값으로 전달 예정
     
     var studentView : UIView!
@@ -62,7 +55,6 @@ class MainViewController: UIViewController {
         super.loadView()
         print("view load")
         
-      
         studentView = UIView()
         studentView.layer.cornerRadius = 10
         studentView.translatesAutoresizingMaskIntoConstraints = false
@@ -185,6 +177,10 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
+        
+        
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
         let id = accountInfo!["id"]
         let password = accountInfo!["pw"]
@@ -294,9 +290,11 @@ class MainViewController: UIViewController {
                     let room = rooms[i] as! NSDictionary
                     let roomListAction = UIAlertAction(title: room["roomName"] as? String, style: .default,
                                        handler: { action in self.showSelectedRoomSeats(index: i, selectedRoom: rooms[i] as! NSDictionary) })
+                    roomListAlert.view.tintColor = UIColor.appColor(.textColor)
                     roomListAlert.addAction(roomListAction)
                 }
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+                
                 roomListAlert.addAction(cancelAction)
                 self.present(roomListAlert, animated: true, completion: nil)
             } else {
@@ -339,13 +337,6 @@ class MainViewController: UIViewController {
             if (result) {
                 //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
                 if (response as! NSArray).isEqual(to: []) {
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     print("예약정보 없음")
                     
                     Toast.showToast(vc: self, message: "예약정보 없음")
@@ -357,52 +348,48 @@ class MainViewController: UIViewController {
                 print(response)
             }
         })
-        
-        
-        
-        
-        
-        
-        
     }
-    
     @objc func optionView(_ sender: Any) {
-        print("option")
-        // test -> QR코드 찍기위해서 토큰 받아오게 바꿔놓음 잠시
-        let isTestMode = true
-        if isTestMode {
-            let param = [
-                "id" : "#IT_ADMIN",
-                "password" : "123123",
-                "college" : "IT",
-                "roomName" : "2층"
-            ]
-            RequestAPI.post(resource: "/room/token", param: param, responseData: "token", completion: { (result, response) in
-                if (result) { // API 요청 성공
-                   print("▶︎response data◀︎")
-                   print(response)
-                   // response 데이터에 접근하여 이후 로직 처리
-                    let token = response as! String
-                    print(token)
-                } else {
-                    let data = response as! NSDictionary
-                    if (data["response"] != nil) {
-                       let errorMessage = data["response"] as! String
-                       print(errorMessage)
-                       // 에러 메시지 alert or toast
+            print("option")
+            // test -> QR코드 찍기위해서 토큰 받아오게 바꿔놓음 잠시
+            let isTestMode = true
+            if isTestMode {
+                let param = [
+                    "id" : "#IT_ADMIN",
+                    "password" : "123123",
+                    "college" : "IT",
+                    "roomName" : "2층"
+                ]
+                RequestAPI.post(resource: "/room/token", param: param, responseData: "token", completion: { (result, response) in
+                    if (result) { // API 요청 성공
+                       print("▶︎response data◀︎")
+                       print(response)
+                       // response 데이터에 접근하여 이후 로직 처리
+                        let token = response as! String
+                        print(token)
+                        let vc: OptionViewController = OptionViewController()
+                        self.navigationController?.pushViewController(vc, animated: true)
                     } else {
-                        print("알수없는 에러 : \(String(describing: data["error"]))")
+                        let data = response as! NSDictionary
+                        if (data["response"] != nil) {
+                           let errorMessage = data["response"] as! String
+                           print(errorMessage)
+                           // 에러 메시지 alert or toast
+                        } else {
+                            print("알수없는 에러 : \(String(describing: data["error"]))")
+                        }
                     }
-                }
-            })
-        } else {
-            let vc: OptionViewController = OptionViewController()
-            navigationController?.pushViewController(vc, animated: true)
+                })
+            } else {
+                print("옵션뷰 통신 실패")
+//                let vc: OptionViewController = OptionViewController()
+//                navigationController?.pushViewController(vc, animated: true)
+            }
         }
-    }
     
     @objc func showQr(_ sender: Any) {
         let vc: QRCodeViewController = QRCodeViewController()
+       
         navigationController?.pushViewController(vc, animated: true)
     }
     

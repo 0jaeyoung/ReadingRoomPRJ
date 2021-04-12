@@ -4,17 +4,9 @@
 //
 //  Created by MCNC on 2021/03/07.
 //
-
 import UIKit
 import AVFoundation
 import Alamofire
-
-import UIKit
-import AVFoundation
-import Alamofire
-
-//var tokenDic = Dictionary<String, String>()
-
 
 
 class QRScanViewController: UIViewController {
@@ -97,9 +89,6 @@ extension QRScanViewController: ReaderViewDelegate {
             message = "바코드 읽기를 멈추었습니다."
         }
         
-        
-        
-
     }
     
     func requestConfirm(code: String) {
@@ -159,16 +148,6 @@ extension QRScanViewController: ReaderViewDelegate {
                                        toastLabel.removeFromSuperview()
                        })
         
-        /*
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.view.backgroundColor = .lightGray
-        alert.view.alpha = 0.6
-        alert.view.layer.cornerRadius = 15
-        controller.present(alert, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
-            alert.dismiss(animated: true)
-            self.navigationController?.popViewController(animated: true)
-        }
-        */
+       
     }
 }

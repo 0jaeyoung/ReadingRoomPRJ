@@ -26,6 +26,10 @@ class MySeatViewController: UIViewController {
     var reserveEndTime: UILabel!
     var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large) //서버 통신 대기를 위한 스피너 생성
     
+    
+    var testPickerView: UIDatePicker!
+    
+    
     var extend: UIButton!
     var returned: UIButton!
     
@@ -145,16 +149,7 @@ class MySeatViewController: UIViewController {
                             reserveStartTime.text = "이용시간: \(finalStart) ~ \(finalEnd)"
                             reserveStartTime.font = UIFont.systemFont(ofSize: 20)
                             view.addSubview(reserveStartTime)
-                            
-//                            reserveEndTime = UILabel()
-//                            reserveEndTime.translatesAutoresizingMaskIntoConstraints = false
-//                            reserveEndTime.text = "종료시간: \(finalEnd)"
-//                            reserveEndTime.font = UIFont.systemFont(ofSize: 20)
-//                            view.addSubview(reserveEndTime)
-                            
-                            
-
-                            
+                       
                             //확정 여부를 나눠서 연장버튼 클릭 이벤트 조절
                             if MySeatViewController.confirmed {
                                 extend = UIButton(type: .system)
@@ -202,11 +197,6 @@ class MySeatViewController: UIViewController {
                             
                             NSLayoutConstraint.activate([
                                 
-                                
-                                
-                                
-                                
-                                
                                 mySeat.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                                 mySeat.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
                                 mySeat.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
@@ -231,30 +221,19 @@ class MySeatViewController: UIViewController {
                                 returned.heightAnchor.constraint(equalToConstant: 50)
                                 
                             ])
-                            
-                            
                         }
-                        
-                  
                     }
                     else {
                         print(getResult!)
                         
                         print("좌석정보를 불러올 수 없습니다.")
                     }
-                    
                 }
                 
             case .failure(_):
                 print("통신 실패")
             }
-            
-            
-            }
-    
-    
-    
-    
+        }
     }
     
     
@@ -266,7 +245,6 @@ class MySeatViewController: UIViewController {
         
     @objc func clickExtend(_ sender: Any) { //alert 생성
         print("연장 버튼 클릭")
-        
         let college = MySeatViewController.college, roomName = MySeatViewController.room // 내자리에서 가져오는 정보
         let param = [ "college":college, "roomName":roomName]
         
@@ -318,6 +296,8 @@ class MySeatViewController: UIViewController {
         let id = accountInfo["id"] as! String
         let password = accountInfo["pw"] as! String
         
+        
+        
         let param = [
             "id": id,
             "password": password,
@@ -344,11 +324,6 @@ class MySeatViewController: UIViewController {
                
             }
         })
-        
-        
-        
-        
-        
     }
     
     
