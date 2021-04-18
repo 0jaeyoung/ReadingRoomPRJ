@@ -15,6 +15,8 @@
 		212EDC48B68107BEA9247F3464CE696E /* StringEncoding+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A51515830AB9FE94E01DF6F48146153 /* StringEncoding+Alamofire.swift */; };
 		218C14EAE5AA31C30314AE0289B732A0 /* Protected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D45A2AF061C99B2355F19EC47243D9 /* Protected.swift */; };
 		27E59A11A2743B0595CDE3A08675EAE1 /* DispatchQueue+Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABD9F54297FF27309F1F8A34F99417C /* DispatchQueue+Alamofire.swift */; };
+		2C1304572628A046006470C3 /* NVActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1304562628A046006470C3 /* NVActivityIndicatorView */; };
+		2C1304592628A046006470C3 /* NVActivityIndicatorViewExtended in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1304582628A046006470C3 /* NVActivityIndicatorViewExtended */; };
 		2C181FDB25DE95280075ACC6 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2C181FDA25DE95280075ACC6 /* PanModal */; };
 		381FF05F8B4F611EE9C2FDBE4457BB89 /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF72312136F76CCB5AC50BCDD37ED4A2 /* SessionDelegate.swift */; };
 		45B8CC1C61E7A0BB28CFA8CE7C12FEBC /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0440F4381D065FED6264EFBCDB7960 /* MultipartFormData.swift */; };
@@ -134,9 +136,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C1304572628A046006470C3 /* NVActivityIndicatorView in Frameworks */,
 				A9C7B29D4878F1690BBE3F8195CF0313 /* CFNetwork.framework in Frameworks */,
 				476D5F33E25386C60D6BD75C4FA97C67 /* Foundation.framework in Frameworks */,
 				2C181FDB25DE95280075ACC6 /* PanModal in Frameworks */,
+				2C1304592628A046006470C3 /* NVActivityIndicatorViewExtended in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +332,8 @@
 			name = Alamofire;
 			packageProductDependencies = (
 				2C181FDA25DE95280075ACC6 /* PanModal */,
+				2C1304562628A046006470C3 /* NVActivityIndicatorView */,
+				2C1304582628A046006470C3 /* NVActivityIndicatorViewExtended */,
 			);
 			productName = Alamofire;
 			productReference = 5D797E9A5C5782CE845840781FA1CC81 /* Alamofire.framework */;
@@ -353,6 +359,7 @@
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			packageReferences = (
 				2C181FD925DE95280075ACC6 /* XCRemoteSwiftPackageReference "PanModal" */,
+				2C1304552628A046006470C3 /* XCRemoteSwiftPackageReference "NVActivityIndicatorView" */,
 			);
 			productRefGroup = FBA546A1F747E37BED313C4ED20B8190 /* Products */;
 			projectDirPath = "";
@@ -752,6 +759,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2C1304552628A046006470C3 /* XCRemoteSwiftPackageReference "NVActivityIndicatorView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ninjaprox/NVActivityIndicatorView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 		2C181FD925DE95280075ACC6 /* XCRemoteSwiftPackageReference "PanModal" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/slackhq/PanModal.git";
@@ -763,6 +778,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2C1304562628A046006470C3 /* NVActivityIndicatorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C1304552628A046006470C3 /* XCRemoteSwiftPackageReference "NVActivityIndicatorView" */;
+			productName = NVActivityIndicatorView;
+		};
+		2C1304582628A046006470C3 /* NVActivityIndicatorViewExtended */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C1304552628A046006470C3 /* XCRemoteSwiftPackageReference "NVActivityIndicatorView" */;
+			productName = NVActivityIndicatorViewExtended;
+		};
 		2C181FDA25DE95280075ACC6 /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2C181FD925DE95280075ACC6 /* XCRemoteSwiftPackageReference "PanModal" */;

@@ -8,21 +8,21 @@
 import UIKit
 import AVFoundation
 
-enum ReaderStatus {
+enum extendReaderStatus {
     // QR코드 읽음 상태, 성공/실패/멈춤
     case success(_ code: String?)
     case fail
     case stop
 }
 
-protocol ReaderViewDelegate: class {
+protocol ExtendReaderViewDelegate: class {
     // QR코드 읽기 완료시 실행될 함수
-    func readerComplete(status: ReaderStatus)
+    func readerComplete(status: extendReaderStatus)
 }
 
-class QRReaderView: UIView {
+class ExtendQRReaderView: UIView {
 
-    weak var delegate: ReaderViewDelegate?
+    weak var delegate: ExtendReaderViewDelegate?
     
     var previewLayer: AVCaptureVideoPreviewLayer?
     var centerGuideLineView: UIView?
@@ -126,13 +126,16 @@ class QRReaderView: UIView {
     }
 }
 
-extension QRReaderView {
+extension ExtendQRReaderView {
     func start() {
         self.captureSession?.startRunning()
     }
     
     func stop() {
+        
+        print(ExtendQRScanViewController.extendToken)
         self.captureSession?.stopRunning()
+        
     }
     
     func fail() {
@@ -145,7 +148,7 @@ extension QRReaderView {
     }
 }
 
-extension QRReaderView: AVCaptureMetadataOutputObjectsDelegate {
+extension ExtendQRReaderView: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
         stop()

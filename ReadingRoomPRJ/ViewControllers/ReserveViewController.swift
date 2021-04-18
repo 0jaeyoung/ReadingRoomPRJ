@@ -64,6 +64,10 @@ class ReserveViewController: UIViewController{
     override func loadView() {
         super.loadView()
         
+        
+        
+        
+        
         navigationController?.navigationBar.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         
         print("ReserveViewController의 loadView가 출력됩니다.")
@@ -94,6 +98,7 @@ class ReserveViewController: UIViewController{
         currentDayFomatter.dateFormat = "yyyy년 MM월 dd일 EEE요일"
         let currentDayText = currentDayFomatter.string(from: Date())
         currentDay.text = currentDayText
+        currentDay.font = UIFont.boldSystemFont(ofSize: 15)
         self.view.addSubview(currentDay)
         
         startLb = UILabel()
@@ -103,6 +108,7 @@ class ReserveViewController: UIViewController{
         self.view.addSubview(startLb)
         
         startTime = UIDatePicker()
+        
         startTime.translatesAutoresizingMaskIntoConstraints = false
         startTime.preferredDatePickerStyle = .wheels
         startTime.datePickerMode = .time
@@ -117,6 +123,8 @@ class ReserveViewController: UIViewController{
         self.view.addSubview(endLb)
         
         endTime = UIDatePicker()
+        
+        //endTime.maximumDate = Calendar.current.date(byAdding: .min, value: 10, to: startTime.date)
         endTime.translatesAutoresizingMaskIntoConstraints = false
         endTime.preferredDatePickerStyle = .wheels
         endTime.datePickerMode = .time
@@ -132,7 +140,7 @@ class ReserveViewController: UIViewController{
         refreshBtn.backgroundColor = UIColor.appColor(.mainColor)
         refreshBtn.tintColor = .white
         refreshBtn.layer.cornerRadius = 5
-        refreshBtn.addTarget(self, action: #selector(self.openReload(_:)), for: .touchUpInside)
+        refreshBtn.addTarget(self, action: #selector(self.clickReloadBtn(_:)), for: .touchUpInside)
         self.view.addSubview(refreshBtn)
         
         completeBtn = UIButton(type: .system)
@@ -218,6 +226,11 @@ class ReserveViewController: UIViewController{
         self.view.addSubview(totalStackView)
         
         
+        //시작시간 데이트피커 시간 반올림 세팅 -> ex. 현재시간 36분 -> 설정자체를 40분으로 초기 세팅함.
+        
+        
+        
+        
         NSLayoutConstraint.activate([
             
             //스크롤뷰 컬렉션뷰랑 동일하게 레이아웃 주기. //컬렉션뷰 줌 사용하기 위해서 테스트 중인 코드
@@ -237,12 +250,6 @@ class ReserveViewController: UIViewController{
             totalStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             totalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             totalStackView.heightAnchor.constraint(equalToConstant: 40),
-            
-            
-            
-            
-            
-            
             
             //컬렉션뷰 레이아웃 주기 / 추가 라인 96 ~ 100
             showSeatCollectionView.topAnchor.constraint(equalTo: totalStackView.bottomAnchor, constant: 5),  //컬렉션뷰 상단
@@ -316,12 +323,15 @@ class ReserveViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        startTime.minimumDate = Date()
+        endTime.minimumDate = Date()
+        
         stateArr = Array(repeating: 0, count: Room.shared.totalCount)
         CollectionCell.countOne = 0
         
         
         
-        //시작시간 데이트피커 시간 반올림 세팅 -> ex. 현재시간 36분 -> 설정자체를 40분으로 초기 세팅함.
+        
         let calendar = Calendar.current
             var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
             guard var hour = startDateComponents.hour, var minute = startDateComponents.minute else {
@@ -383,6 +393,11 @@ class ReserveViewController: UIViewController{
         
         
         
+        startTime.addTarget(self, action: #selector(addTargetDatePicker), for: .allEvents)
+        
+        
+        
+        
         print("데이트피커 시간 표시 : \(startTime.date)")
         
         
@@ -423,15 +438,57 @@ class ReserveViewController: UIViewController{
     }
     
     
-    @objc func openReload(_ sender: Any){
+    @objc func addTargetDatePicker(_ sender: Any) {
         
+        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
+        
+        
+    }
+    
+    
+    @objc func clickReloadBtn(_ sender: Any){
+        
+        let hourFormatter = DateFormatter()
+        hourFormatter.dateFormat = "HH"
+        let minFormatter = DateFormatter()
+        minFormatter.dateFormat = "mm"
+        
+        let startHour = hourFormatter.string(from: startTime.date)
+        let startMin = minFormatter.string(from: startTime.date)
+        
+        let endHour = hourFormatter.string(from: endTime.date)
+        let endMin = minFormatter.string(from: endTime.date)
+        
+        let reFreshAlert = UIAlertController(title: "재설정", message: "\(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 좌석을 보시겠나요?", preferredStyle: UIAlertController.Style.alert)
+        let reFreshAlertNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
+        //let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
+        let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.openReload()})
+        
+        reFreshAlert.addAction(reFreshAlertNo)
+        reFreshAlert.addAction(reFreshAlertYes)
+        reFreshAlert.view.tintColor = UIColor.appColor(.textColor)
+        present(reFreshAlert, animated: true, completion: nil)
+        
+//        showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
+//        CollectionCell.userSelectedSeat = ""
+//        CollectionCell.userSeatInfo = -1
+//        CollectionCell.checkArr = ReserveViewController().stateArr
+//        CollectionCell.countOne = 0
+        
+    }
+    
+    func openReload() {
         showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
         CollectionCell.userSelectedSeat = ""
         CollectionCell.userSeatInfo = -1
         CollectionCell.checkArr = ReserveViewController().stateArr
-        CollectionCell.countOne = 0
-        
+           
     }
+    
+    
+    
+    
+    
         
     @objc func reserveBtn(_ sender: UIButton) {
         // if 선택한 좌석X -> 좌석선택부터 해주세요 alert, else
@@ -488,6 +545,14 @@ class ReserveViewController: UIViewController{
         let startkk = (end - start) % 60
         
         
+        if CollectionCell.userSelectedSeat == "" {
+            let emptySeatAlert = UIAlertController(title: "예약", message: "좌석을 먼저 선택해 주세요!", preferredStyle: UIAlertController.Style.alert)
+            let emptySeatOK = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
+            emptySeatAlert.addAction(emptySeatOK)
+            present(emptySeatAlert, animated: true, completion: nil)
+        }
+        
+        
         if(Int(nowTime) > Int(selectedLeftTime)) {
             print("현재 시간 이후로 예약이 가능합니다.")
             let thirdAlert = UIAlertController(title: "예약", message: "현재 시간 이후로 예약 가능합니다.", preferredStyle: UIAlertController.Style.alert)
@@ -499,7 +564,9 @@ class ReserveViewController: UIViewController{
             if (selectedRightTime - selectedLeftTime) >= 600000 &&  (selectedRightTime - selectedLeftTime) <= 14400000 {
                 print("이용시간은 \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분")
                 print("begin: \(selectedLeftTime!)")
+                print(showLeftTime)
                 print("end: \(selectedRightTime!)")
+                print(showRightTime)
             
                 let firstAlert = UIAlertController(title: "예약", message: "\(CollectionCell.userSelectedSeat)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
                 let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
@@ -512,6 +579,12 @@ class ReserveViewController: UIViewController{
                 present(firstAlert, animated: true, completion: nil)
             } else if (selectedRightTime - selectedLeftTime) > 14400000 {
                 print("최대 예약 시간은 4시간 입니다")
+                
+                print("1245678765678")
+                print(selectedRightTime)
+                print(selectedLeftTime)
+                
+                
                 let secondAlert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
                 let secondAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
                 secondAlert.view.tintColor = UIColor.appColor(.textColor)
@@ -555,9 +628,9 @@ class ReserveViewController: UIViewController{
             "id": accountInfo["id"] as! String,
             "password": accountInfo["pw"] as! String,
             "studentId": studentInfo["studentId"] as! String,
-            "end": selectedRightTime,
-            "begin": selectedLeftTime,
-            "time": nowTime,
+            "end": selectedRightTime!,
+            "begin": selectedLeftTime!,
+            "time": nowTime!,
             "seat": seat,
             "roomName": Room.shared.name!,
             "college": studentInfo["college"] as! String        //IT

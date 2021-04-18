@@ -22,6 +22,7 @@ class MainViewController: UIViewController {
     static var reservationState = true
     var a = false        //추후 예약 여부에 따라서 bool 값으로 전달 예정
     
+    
     var studentView : UIView!
     var studentImage: UIImage!
     var nameLabel: UILabel!
@@ -49,13 +50,18 @@ class MainViewController: UIViewController {
     }
     
     
+      
     
     // 뷰 그려줌
     override func loadView() {
         super.loadView()
         print("view load")
         
+        
         studentView = UIView()
+        studentView.layer.shadowRadius = 5
+        //studentView.layer.shadowColor = UIColor.black
+        studentView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         studentView.layer.cornerRadius = 10
         studentView.translatesAutoresizingMaskIntoConstraints = false
         studentView.backgroundColor = .white
@@ -101,26 +107,29 @@ class MainViewController: UIViewController {
         
         firstButton = UIButton(type: .system)
         firstButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
-        firstButton.layer.cornerRadius = 20
+        firstButton.layer.cornerRadius = 10
         firstButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         firstButton.translatesAutoresizingMaskIntoConstraints = false
-        firstButton.backgroundColor = .white
+        firstButton.backgroundColor = #colorLiteral(red: 0.5495242476, green: 0.6662512422, blue: 0.8802964091, alpha: 1)
+        firstButton.tintColor = .white
         view.addSubview(firstButton)
         
         secondButton = UIButton(type: .system)
         secondButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
-        secondButton.layer.cornerRadius = 20
+        secondButton.layer.cornerRadius = 10
         secondButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         secondButton.translatesAutoresizingMaskIntoConstraints = false
-        secondButton.backgroundColor = .white
+        secondButton.backgroundColor = #colorLiteral(red: 0.6231330633, green: 0.7811078429, blue: 0.8977957368, alpha: 1)
+        secondButton.tintColor = .white
         view.addSubview(secondButton)
         
         thirdButton = UIButton(type: .system)
         thirdButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
-        thirdButton.layer.cornerRadius = 20
+        thirdButton.layer.cornerRadius = 10
         thirdButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
-        thirdButton.backgroundColor = .white
+        thirdButton.backgroundColor = #colorLiteral(red: 0.7016992569, green: 0.8958221078, blue: 0.9183934331, alpha: 1)
+        thirdButton.tintColor = .white
         view.addSubview(thirdButton)
         
         NSLayoutConstraint.activate([
@@ -192,7 +201,7 @@ class MainViewController: UIViewController {
         
         RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
             if (result) {
-                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                
                 if (response as! NSArray).isEqual(to: []) {
                     MainViewController.reservationState = false
                 } else {
@@ -203,7 +212,7 @@ class MainViewController: UIViewController {
             }
         })
         
-        view.backgroundColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
+        view.backgroundColor = .white
         
         let logoView = UIImageView(frame: .zero)
         logoView.contentMode = .scaleAspectFit
@@ -266,7 +275,13 @@ class MainViewController: UIViewController {
                 
                 if (response as! NSArray).isEqual(to: []) {
                     print("예약정보 없음")
-                    Toast.showToast(vc: self, message: "예약정보 없음")
+                    //Toast.showToast(vc: self, message: "예약정보 없음")
+                    let userNotReserve = UIAlertController(title: "오류", message: "예약 정보가 없습니다.", preferredStyle: .alert)
+                    let userNotReserveOK = UIAlertAction(title: "확인", style: .default, handler: nil)
+                    userNotReserve.addAction(userNotReserveOK)
+                    self.present(userNotReserve, animated: true)
+                    
+                    
                 } else {
                     self.presentPanModal(MySeatViewController())
                 }
@@ -318,6 +333,7 @@ class MainViewController: UIViewController {
        }
 
     
+   
     
     @objc func qrReader(_ sender: Any) {
         
@@ -338,8 +354,11 @@ class MainViewController: UIViewController {
                 //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
                 if (response as! NSArray).isEqual(to: []) {
                     print("예약정보 없음")
-                    
-                    Toast.showToast(vc: self, message: "예약정보 없음")
+                    let userNotReserve = UIAlertController(title: "오류", message: "예약 정보가 없습니다.", preferredStyle: .alert)
+                    let userNotReserveOK = UIAlertAction(title: "확인", style: .default, handler: nil)
+                    userNotReserve.addAction(userNotReserveOK)
+                    self.present(userNotReserve, animated: true)
+                    //Toast.showToast(vc: self, message: "예약정보 없음")
                 } else {
                     let vc: QRScanViewController = QRScanViewController()
                     self.navigationController?.pushViewController(vc, animated: true)
@@ -369,6 +388,9 @@ class MainViewController: UIViewController {
                         print(token)
                         let vc: OptionViewController = OptionViewController()
                         self.navigationController?.pushViewController(vc, animated: true)
+                    
+                        //let vc: TestPicker = TestPicker()
+                        //self.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         let data = response as! NSDictionary
                         if (data["response"] != nil) {

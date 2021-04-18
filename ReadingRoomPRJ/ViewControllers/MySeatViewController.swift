@@ -13,9 +13,13 @@ import Alamofire
 
 class MySeatViewController: UIViewController {
     
+    
+    
+    static var newEndTime = 0
     static var reserveID = ""
     static var college = ""
     static var room = ""
+    
     static var confirmed = false
     static var endTimeForExtend = 0
     var _seat = 0
@@ -25,6 +29,7 @@ class MySeatViewController: UIViewController {
     var reserveStartTime: UILabel!
     var reserveEndTime: UILabel!
     var spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large) //서버 통신 대기를 위한 스피너 생성
+    
     
     
     var testPickerView: UIDatePicker!
@@ -47,6 +52,7 @@ class MySeatViewController: UIViewController {
     override func loadView() {
         print("로드뷰 출력")
         super.loadView()
+       
         view = UIView()
         view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
         
@@ -57,9 +63,16 @@ class MySeatViewController: UIViewController {
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        self.myInfo()
+        
    
     }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.myInfo()
+    }
+    
     
     
     //myReservation API 통해서 예약한 유저의 정보 가져오는 함수
@@ -159,7 +172,7 @@ class MySeatViewController: UIViewController {
                                 extend.tintColor = .white
                                 extend.layer.cornerRadius = 5
                                 
-                                extend.addTarget(self, action: #selector(self.clickExtend(_:)), for: .touchUpInside)
+                                extend.addTarget(self, action: #selector(self.extendDatePicker(_:)), for: .touchUpInside)
                                 extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
                                 
                                 view.addSubview(extend)
@@ -167,14 +180,14 @@ class MySeatViewController: UIViewController {
                             } else {
                                 extend = UIButton(type: .system)
                                 extend.translatesAutoresizingMaskIntoConstraints = false
-                                extend.setTitle("확정", for: .normal)
+                                extend.setTitle("연장", for: .normal)
                                 extend.backgroundColor = UIColor.appColor(.mainColor)
                                 extend.tintColor = .white
                                 extend.layer.cornerRadius = 5
-                                extend.addTarget(self, action: #selector(self.text(_:)), for: .touchUpInside)
+                                extend.isEnabled = false
+                                extend.addTarget(self, action: #selector(self.extendDatePicker(_:)), for: .touchUpInside)
                                 extend.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
                                 
-                                //extend.isEnabled = false
                                 view.addSubview(extend)
                                 
                             }
@@ -237,98 +250,118 @@ class MySeatViewController: UIViewController {
     }
     
     
-    @objc func text(_ sender: Any) {
-        //self.navigationController?.pushViewController(QRScanViewController, animated: true)
-    }
     
-    
+    @objc func extendDatePicker(_ sender: Any) {
+        let myDatePicker: UIDatePicker = UIDatePicker()
+        myDatePicker.preferredDatePickerStyle = .wheels
+        myDatePicker.datePickerMode = .time
+        myDatePicker.minuteInterval = 5
+        myDatePicker.frame = CGRect(x: 0, y: 35, width: 270, height: 200)
         
-    @objc func clickExtend(_ sender: Any) { //alert 생성
-        print("연장 버튼 클릭")
-        let college = MySeatViewController.college, roomName = MySeatViewController.room // 내자리에서 가져오는 정보
-        let param = [ "college":college, "roomName":roomName]
         
-        let mySeatNumber = _seat // 내자리에서 가져오는 정보
+        let userEndTime = TimeInterval(MySeatViewController.endTimeForExtend) / 1000
+        let minExtendTime = Date(timeIntervalSince1970: userEndTime)
+        print("변환된 시간 값:::::::::::: \(minExtendTime)")
         
-        RequestAPI.post(resource: "/room", param: param, responseData: "room", completion: {(result, response) in
-            if (result) {
-                let reservedSeat = (response as! NSDictionary)["reserved"] as! NSArray
-                let reservedList = reservedSeat[mySeatNumber] as! NSArray
-                print(reservedList)
-                for item in reservedList {
-                    let res = item as! NSDictionary
-                    print("==예약 찬 시간==")
-                    print(res["begin"]!)
-                    print("~")
-                    print(res["end"]!)
-                }
-            } else {
-                print(response)
-            }
-        })
-
         
-        let addTime: [Int : Int] = [30: 1800000, 60: 3600000, 90: 5400000, 120: 7200000]    //tlrks duswkd qoduf todtjd
+        myDatePicker.minimumDate = minExtendTime
+        myDatePicker.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: minExtendTime)
+        
+        
+        let alertController = UIAlertController(title: "연장 시간\n\n\n\n\n\n\n\n", message: nil, preferredStyle: .alert)
         
        
+        alertController.view.addSubview(myDatePicker)
         
-        let extend = UIAlertController(title: "연장", message: "얼마나 더 공부하실 껀가요?", preferredStyle: UIAlertController.Style.alert)
-        let time30 = UIAlertAction(title: "30분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[30]!)})
-        let time60 = UIAlertAction(title: "60분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[60]!)})
-        let time90 = UIAlertAction(title: "90분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[90]!)})
-        let time120 = UIAlertAction(title: "120분", style: UIAlertAction.Style.default, handler: { [self]action in self.seatExtend(key: addTime[120]!)})
-        let cancel = UIAlertAction(title: "취소", style: UIAlertAction.Style.destructive, handler: nil)
-        extend.addAction(time30)
-        extend.addAction(time60)
-        extend.addAction(time90)
-        extend.addAction(time120)
-        extend.addAction(cancel)
-        
-        present(extend, animated: true, completion: nil)
-    }
-    
-    
-    
-    func seatExtend(key: Int) {
-        print("시간을 연장을 위해 세팅합니다")
-    
-        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
-        let id = accountInfo["id"] as! String
-        let password = accountInfo["pw"] as! String
-        
-        
-        
-        let param = [
-            "id": id,
-            "password": password,
-            "college": MySeatViewController.college,
-            "roomName": MySeatViewController.room,
-            "token": QRScanViewController.token,
-            "extendedTime": MySeatViewController.endTimeForExtend + key,
-            "reservationId": MySeatViewController.reserveID
-        
-        ] as [String : Any]
-        
-        print(MySeatViewController.endTimeForExtend + key)
-        
-        
-        
-        RequestAPI.post(resource: "/room/reserve/extend", param: param, responseData: "reservation", completion: {(result, response) in
-            print(result)
-            if result {
-                print("성공")
-                print(response)
-                
-            } else {
-                print("실패")
-               
-            }
+        let selectAction = UIAlertAction(title: "Ok", style: .default, handler: { _ in
+            self.k(extendTime: myDatePicker)
         })
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(selectAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
+      
+    
     }
     
     
     
     
+    func k(extendTime: UIDatePicker) {
+        
+        
+        let extendDateFormatter = DateFormatter()
+        extendDateFormatter.dateFormat = "yyyy-MM-dd HH시 mm분"
+        extendDateFormatter.locale = Locale(identifier: "ko_kr")
+        extendDateFormatter.timeZone = TimeZone(abbreviation: "KST")
+
+        
+        //시작시간 데이트 피커에 해당하는 시간 값 & 유저디폴트 삭제를 위해서 전역변수로 선언한 값들 존재(selectedLeftTime,showLeftTime)
+        let extendTimeString = extendDateFormatter.string(from: extendTime.date)
+        let extendTimeChange: Date = extendDateFormatter.date(from: extendTimeString)!
+        let extendLongTime: Int = Int(extendTimeChange.timeIntervalSince1970) * 1000
+        
+        
+       
+        print(extendTimeString) //피커값 그대로 보여줌
+        print(extendTimeChange)
+        print(extendLongTime)
+        
+        
+        let kkkkk = TimeInterval(MySeatViewController.endTimeForExtend) / 1000
+        let aaaaa = Date(timeIntervalSince1970: kkkkk)
+        let oldEndTime = extendDateFormatter.string(from: aaaaa)
+        print("변환된 시간 값:::::::::::: \(aaaaa)")
+        
+        
+        MySeatViewController.newEndTime = extendLongTime    //연장 시 서버로 보내지는 값
+        let alertController = UIAlertController(title: "연장시간", message: "기존: \(oldEndTime)\n변경: \(extendTimeString)\n연장하시겠어요?", preferredStyle: UIAlertController.Style.alert)
+        let selectAction = UIAlertAction(title: "Ok", style: .default, handler:{ _ in
+            self.openExtendQR()
+        })
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(selectAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
+        
+        
+        
+    }
+    
+    
+    //alert 통해서 QR진행할려 했지만 데이터 전달에 실패
+//    func extendQRReaderView() {
+//        let alertController = UIAlertController(title: "연장 확정 \n\n\n\n\n\n\n\n", message: nil, preferredStyle: .alert)
+//
+//
+//        let vc = ExtendQRScanViewController()
+//
+//
+//
+//        vc.view.frame = CGRect(x: 0, y: 0, width: alertController.view.frame.width, height: alertController.view.frame.height - 45)
+//
+//        alertController.view.addSubview(vc.view)
+//
+//
+//
+//        let cancelAction = UIAlertAction(title: "취소", style: .destructive, handler: {_ in self.extendDatePicker((Any).self)})
+//        //alertController.addAction(selectAction)
+//        alertController.addAction(cancelAction)
+//
+//        present(alertController, animated: true)
+//
+//
+//    }
+//
+    
+    
+    
+    
+    func openExtendQR() {
+        present(ExtendQRScanViewController(), animated: true, completion: nil)
+    }
     
     @objc func clickReturn(_ sender: Any) {
         print("반납 버튼 클릭")

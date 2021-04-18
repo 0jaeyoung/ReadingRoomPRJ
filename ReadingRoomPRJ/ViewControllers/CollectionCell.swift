@@ -25,7 +25,7 @@ class CollectionCell: UICollectionViewCell {
         var k: Array<String>!
         var state = true
         static var userSelectedSeat = ""
-        static var userSeatInfo = -1
+        static var userSeatInfo = 0
         static var checkArr = ReserveViewController().stateArr
         static var countOne = 0
 
@@ -58,7 +58,7 @@ class CollectionCell: UICollectionViewCell {
                     CollectionCell.userSelectedSeat = myButton.title(for: .normal)!
                     
                     
-                    
+                  //오류 발생
                 } else if CollectionCell.checkArr[CollectionCell.userSeatInfo] == 1 && CollectionCell.checkArr[btnNum!] == 0 && myImageView.image == UIImage(named: "emptySeat.png") && CollectionCell.countOne >= 1 {
                     print("하나의 좌석만 선택할 수 있습니다.")
                     print(CollectionCell.countOne)
@@ -80,6 +80,7 @@ class CollectionCell: UICollectionViewCell {
                     myImageView.image = UIImage(named: "emptySeat.png")
                     print(CollectionCell.countOne)
                     print("같은 좌석 다시 클릭")
+                    CollectionCell.userSelectedSeat = ""
                 } else if myImageView.image == UIImage(named: "wall.png") || myImageView.image == UIImage(named: "door.jpeg") || myImageView.image == UIImage(named: "road.png") {
                     print("좌석인 곳을 선택해 주세요")
                     print(CollectionCell.countOne)
@@ -87,6 +88,7 @@ class CollectionCell: UICollectionViewCell {
             }
         }
     }
+    
             override func awakeFromNib() {
                 super.awakeFromNib()
                 

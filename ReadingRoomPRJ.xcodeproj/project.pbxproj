@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C13045E262AD361006470C3 /* ExtendQRReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C13045D262AD360006470C3 /* ExtendQRReaderView.swift */; };
+		2C130462262AD3F6006470C3 /* ExtendQRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */; };
 		2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */; };
 		2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */; };
 		2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B357260CC326003AB505 /* CollectionCell.swift */; };
@@ -46,6 +48,8 @@
 
 /* Begin PBXFileReference section */
 		24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReadingRoomPRJ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C13045D262AD360006470C3 /* ExtendQRReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendQRReaderView.swift; sourceTree = "<group>"; };
+		2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendQRScanViewController.swift; sourceTree = "<group>"; };
 		2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeat.swift; sourceTree = "<group>"; };
 		2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeatCell.swift; sourceTree = "<group>"; };
 		2C59B357260CC326003AB505 /* CollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
@@ -170,6 +174,8 @@
 				2C59B391260CE92E003AB505 /* QRReaderView.swift */,
 				2C59B394260CE949003AB505 /* QRCodeViewController.swift */,
 				2C59B397260CE961003AB505 /* QRScanViewController.swift */,
+				2C13045D262AD360006470C3 /* ExtendQRReaderView.swift */,
+				2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -335,6 +341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C130462262AD3F6006470C3 /* ExtendQRScanViewController.swift in Sources */,
 				79B6A1B725DE347500666EAE /* LoginViewController.swift in Sources */,
 				79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */,
 				2CBA2F692623526B000369FC /* Toast.swift in Sources */,
@@ -354,6 +361,7 @@
 				2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */,
 				2C59B38E260CE90E003AB505 /* OptionViewController.swift in Sources */,
 				2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */,
+				2C13045E262AD361006470C3 /* ExtendQRReaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
