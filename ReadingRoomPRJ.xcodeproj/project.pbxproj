@@ -31,6 +31,11 @@
 		2C59B3AC260CEA9F003AB505 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AB260CEA9F003AB505 /* line.png */; };
 		2C59B3AF260CEAA7003AB505 /* imgOption.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AE260CEAA7003AB505 /* imgOption.jpg */; };
 		2C59B3B2260CEB25003AB505 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3B1260CEB25003AB505 /* Assets.xcassets */; };
+		2CA0C11A263301840077E327 /* g300.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C118263301840077E327 /* g300.ttf */; };
+		2CA0C11B263301840077E327 /* g600.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C119263301840077E327 /* g600.ttf */; };
+		2CA0C1202633067C0077E327 /* btn_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C11F2633067C0077E327 /* btn_1.png */; };
+		2CA0C123263306830077E327 /* btn_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C122263306830077E327 /* btn_2.png */; };
+		2CA0C126263306890077E327 /* btn_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C125263306890077E327 /* btn_3.png */; };
 		2CBA2F692623526B000369FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F682623526B000369FC /* Toast.swift */; };
 		2CBA2F6C26235273000369FC /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6B26235273000369FC /* Room.swift */; };
 		2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6E262359A6000369FC /* OptionViewController.swift */; };
@@ -73,6 +78,11 @@
 		2C59B3AB260CEA9F003AB505 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		2C59B3AE260CEAA7003AB505 /* imgOption.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = imgOption.jpg; sourceTree = "<group>"; };
 		2C59B3B1260CEB25003AB505 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2CA0C118263301840077E327 /* g300.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g300.ttf; sourceTree = "<group>"; };
+		2CA0C119263301840077E327 /* g600.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g600.ttf; sourceTree = "<group>"; };
+		2CA0C11F2633067C0077E327 /* btn_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_1.png; sourceTree = "<group>"; };
+		2CA0C122263306830077E327 /* btn_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_2.png; sourceTree = "<group>"; };
+		2CA0C125263306890077E327 /* btn_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_3.png; sourceTree = "<group>"; };
 		2CBA2F682623526B000369FC /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		2CBA2F6B26235273000369FC /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
 		2CBA2F6E262359A6000369FC /* OptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionViewController.swift; path = ReadingRoomPRJ/ViewControllers/OptionViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -106,6 +116,8 @@
 		2C59B36B260CC450003AB505 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2CA0C118263301840077E327 /* g300.ttf */,
+				2CA0C119263301840077E327 /* g600.ttf */,
 				2C59B376260CC4EA003AB505 /* RobotoMono-Regular.ttf */,
 				2C59B36C260CC488003AB505 /* images */,
 			);
@@ -115,6 +127,9 @@
 		2C59B36C260CC488003AB505 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				2CA0C11F2633067C0077E327 /* btn_1.png */,
+				2CA0C122263306830077E327 /* btn_2.png */,
+				2CA0C125263306890077E327 /* btn_3.png */,
 				2C59B3A8260CEA95003AB505 /* stdEx.png */,
 				2C59B3AE260CEAA7003AB505 /* imgOption.jpg */,
 				2C59B3AB260CEA9F003AB505 /* line.png */,
@@ -276,7 +291,11 @@
 			files = (
 				2C59B372260CC4D6003AB505 /* logo_green.png in Resources */,
 				2C59B373260CC4D6003AB505 /* logo_white.png in Resources */,
+				2CA0C1202633067C0077E327 /* btn_1.png in Resources */,
 				2C59B3AF260CEAA7003AB505 /* imgOption.jpg in Resources */,
+				2CA0C11B263301840077E327 /* g600.ttf in Resources */,
+				2CA0C11A263301840077E327 /* g300.ttf in Resources */,
+				2CA0C126263306890077E327 /* btn_3.png in Resources */,
 				2C59B3A0260CEA36003AB505 /* fullSeat.png in Resources */,
 				2C59B3B2260CEB25003AB505 /* Assets.xcassets in Resources */,
 				2C59B374260CC4D6003AB505 /* splash_background.png in Resources */,
@@ -284,6 +303,7 @@
 				2C59B3A9260CEA95003AB505 /* stdEx.png in Resources */,
 				2C59B371260CC4D6003AB505 /* logo_jungsook.png in Resources */,
 				2C59B39D260CEA30003AB505 /* emptySeat.png in Resources */,
+				2CA0C123263306830077E327 /* btn_2.png in Resources */,
 				79B6A1C225DE347800666EAE /* LaunchScreen.storyboard in Resources */,
 				79B6A1BA25DE347500666EAE /* Main.storyboard in Resources */,
 				2C59B3A6260CEA42003AB505 /* selectedSeat.png in Resources */,

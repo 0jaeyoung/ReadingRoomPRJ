@@ -453,27 +453,39 @@ class ReserveViewController: UIViewController{
         let minFormatter = DateFormatter()
         minFormatter.dateFormat = "mm"
         
-        let startHour = hourFormatter.string(from: startTime.date)
-        let startMin = minFormatter.string(from: startTime.date)
         
-        let endHour = hourFormatter.string(from: endTime.date)
-        let endMin = minFormatter.string(from: endTime.date)
+        print(startTime.date)
+        print(endTime.date)
         
-        let reFreshAlert = UIAlertController(title: "재설정", message: "\(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 좌석을 보시겠나요?", preferredStyle: UIAlertController.Style.alert)
-        let reFreshAlertNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
-        //let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
-        let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.openReload()})
         
-        reFreshAlert.addAction(reFreshAlertNo)
-        reFreshAlert.addAction(reFreshAlertYes)
-        reFreshAlert.view.tintColor = UIColor.appColor(.textColor)
-        present(reFreshAlert, animated: true, completion: nil)
+        if startTime.date > endTime.date {
+            let alert = UIAlertController(title: "경고", message: "종료 시간이 시작 시간보다 늦으야 합니다.", preferredStyle: .alert)
+            let okButton = UIAlertAction(title: "확인", style: .default, handler: nil)
+            alert.addAction(okButton)
+            present(alert, animated: true, completion: nil)
+            
+        } else {
+            let startHour = hourFormatter.string(from: startTime.date)
+            let startMin = minFormatter.string(from: startTime.date)
+            
+            let endHour = hourFormatter.string(from: endTime.date)
+            let endMin = minFormatter.string(from: endTime.date)
+            
+            let reFreshAlert = UIAlertController(title: "재설정", message: "\(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 좌석을 보시겠나요?", preferredStyle: UIAlertController.Style.alert)
+            let reFreshAlertNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
+            //let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
+            let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.openReload()})
+            
+            reFreshAlert.addAction(reFreshAlertNo)
+            reFreshAlert.addAction(reFreshAlertYes)
+            reFreshAlert.view.tintColor = UIColor.appColor(.textColor)
+            present(reFreshAlert, animated: true, completion: nil)
+        }
         
-//        showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
-//        CollectionCell.userSelectedSeat = ""
-//        CollectionCell.userSeatInfo = -1
-//        CollectionCell.checkArr = ReserveViewController().stateArr
-//        CollectionCell.countOne = 0
+        
+        
+        
+
         
     }
     

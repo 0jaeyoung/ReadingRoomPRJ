@@ -98,37 +98,37 @@ class MainViewController: UIViewController {
         studentDepartment.font = UIFont.systemFont(ofSize: 20)
         studentView.addSubview(studentDepartment)
         
-        studentOption = UIImage(named: "imgOption.jpg")
+        studentOption = UIImage(named: "setting.png")
         let studentOptionButton = UIButton()
         studentOptionButton.setImage(studentOption, for: .normal)
         studentOptionButton.translatesAutoresizingMaskIntoConstraints = false
         studentOptionButton.addTarget(self, action: #selector(self.optionView(_:)), for: .touchUpInside)
         studentView.addSubview(studentOptionButton)
         
-        firstButton = UIButton(type: .system)
+        firstButton = UIButton(type: .custom)
         firstButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        firstButton.setBackgroundImage(UIImage(named: "btn_1.png"), for: .normal)
+        firstButton.layer.masksToBounds = true
         firstButton.layer.cornerRadius = 10
-        firstButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         firstButton.translatesAutoresizingMaskIntoConstraints = false
-        firstButton.backgroundColor = #colorLiteral(red: 0.5495242476, green: 0.6662512422, blue: 0.8802964091, alpha: 1)
         firstButton.tintColor = .white
         view.addSubview(firstButton)
         
-        secondButton = UIButton(type: .system)
+        secondButton = UIButton(type: .custom)
         secondButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        secondButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
+        secondButton.layer.masksToBounds = true
         secondButton.layer.cornerRadius = 10
-        secondButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         secondButton.translatesAutoresizingMaskIntoConstraints = false
-        secondButton.backgroundColor = #colorLiteral(red: 0.6231330633, green: 0.7811078429, blue: 0.8977957368, alpha: 1)
         secondButton.tintColor = .white
         view.addSubview(secondButton)
         
-        thirdButton = UIButton(type: .system)
+        thirdButton = UIButton(type: .custom)
         thirdButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        thirdButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
+        thirdButton.layer.masksToBounds = true
         thirdButton.layer.cornerRadius = 10
-        thirdButton.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
-        thirdButton.backgroundColor = #colorLiteral(red: 0.7016992569, green: 0.8958221078, blue: 0.9183934331, alpha: 1)
         thirdButton.tintColor = .white
         view.addSubview(thirdButton)
         
@@ -187,7 +187,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         
         
-        
+        view.backgroundColor = #colorLiteral(red: 0.9294117647, green: 0.9333333333, blue: 0.9450980392, alpha: 1)
         
         
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
@@ -292,8 +292,8 @@ class MainViewController: UIViewController {
     }
     
     @objc func openReserveView(_ sender: Any) {
-        let college = UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String //2층
-        //let college = "TEST"      //방 5개
+        //let college = UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String //2층
+        let college = "TEST"      //방 5개
         // #boni --- API 통신 함수뺀걸로 바꿔놨어
         let param = [ "college":college ]
         RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: { (result, response) in

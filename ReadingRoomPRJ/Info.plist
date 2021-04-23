@@ -24,7 +24,8 @@
 	<string>카메라 접근 허용</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>RobotoMono-Regular.ttf</string>
+		<string>g300.ttf</string>
+		<string>g600.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

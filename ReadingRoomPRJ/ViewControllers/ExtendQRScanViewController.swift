@@ -117,6 +117,7 @@ extension ExtendQRScanViewController: ExtendReaderViewDelegate {
                 print(response)
                 MySeatViewController.newEndTime = 0
                 self.dismiss(animated: true, completion: nil)
+                MySeatViewController().dismiss(animated: true, completion: nil)
                 
             } else {
                 print("실패")
