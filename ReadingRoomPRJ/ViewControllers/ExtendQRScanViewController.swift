@@ -99,25 +99,39 @@ extension ExtendQRScanViewController: ExtendReaderViewDelegate {
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as NSDictionary
         let id = accountInfo["id"] as! String
         let password = accountInfo["pw"] as! String
-    
+        UserDefaults.standard.set(MainViewController.userEndTime, forKey: "baseUserBeginTime")
         let param = [
             "id": id,
             "password": password,
-            "college": MySeatViewController.college,
-            "roomName": MySeatViewController.room,
+            "college": MainViewController.college,
+            "roomName": MainViewController.room,
             "token": ExtendQRScanViewController.extendToken,
-            "extendedTime": MySeatViewController.newEndTime,
-            "reservationId": MySeatViewController.reserveID
+            "extendedTime": MainViewController.newEndTime,
+            "reservationId": MainViewController.reserveID
         ] as [String : Any]
-
+        
+        
+        
         RequestAPI.post(resource: "/room/reserve/extend", param: param, responseData: "reservation", completion: {(result, response) in
             print(result)
             if result {
                 print("성공")
                 print(response)
-                MySeatViewController.newEndTime = 0
+                UserDefaults.standard.set(MainViewController.newEndTime, forKey: "baseUserEndTime")
+                MainViewController.newEndTime = 0
                 self.dismiss(animated: true, completion: nil)
+//                print(self)
+//                MySeatViewController().dismiss(animated: true, completion: nil)
+                
+                
+                DispatchQueue.global().sync {
+                    self.dismiss(animated: true, completion: nil)
+                    
+                }
+                
                 MySeatViewController().dismiss(animated: true, completion: nil)
+                
+                
                 
             } else {
                 print("실패")

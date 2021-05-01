@@ -14,12 +14,18 @@ class ReserveViewController: UIViewController{
     var showCurrentSeat: UILabel!
     var currentDay: UILabel!
     var startLb: UILabel!
-    var startTime: UIDatePicker!
     var endLb: UILabel!
+    
+    var startTime: UIDatePicker!
     var endTime: UIDatePicker!
+    
     var refreshBtn: UIButton!
     var completeBtn: UIButton!
     
+    //셀 관련
+    var cellTitle: UILabel!
+    var cellImg: UIImageView!
+    var cellBtn: UIButton!
     
     var rowCount:Int! // 가로 몇칸? -> it대학 기준 16
     var columnCount: Int!
@@ -27,9 +33,6 @@ class ReserveViewController: UIViewController{
     var seatInfo: [Any] = []
     var seats = [Int:Int]()
   
-    var cellTitle: UILabel!
-    var cellImg: UIImageView!
-    var cellBtn: UIButton!
     
     var selectedLeftTime: Int!
     var showLeftTime: Date!
@@ -47,7 +50,6 @@ class ReserveViewController: UIViewController{
     }
     
     
-    
     //현재 좌석을 보여주는 컬렉션뷰 생성
     let showSeatCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -58,34 +60,12 @@ class ReserveViewController: UIViewController{
         return collectionView
     }()
     
-    let scrollView = UIScrollView()
-    let stackView = UIStackView()
-    
     override func loadView() {
         super.loadView()
-        
-        
-        
-        
-        
         navigationController?.navigationBar.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
-        
+        navigationItem.title = "좌석 예약"
         print("ReserveViewController의 loadView가 출력됩니다.")
         
-        //컬렉션뷰 줌 사용하기 위해서 테스트 중인 코드
-//        self.navigationController?.navigationBar.topItem?.title = ""
-//        self.navigationController?.setNavigationBarHidden(false, animated: true)
-//
-//        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addSubview(self.scrollView)
-//        self.scrollView.addSubview(self.stackView)
-//        self.stackView.translatesAutoresizingMaskIntoConstraints = false
-//        self.stackView.axis = .vertical
-//        self.stackView.spacing = 1
-//
-//        self.stackView.addArrangedSubview(showSeatCollectionView)
-
-
         //컬렉션뷰 생성 라인
         self.view.addSubview(showSeatCollectionView)
 
@@ -131,9 +111,6 @@ class ReserveViewController: UIViewController{
         endTime.minuteInterval = 10
         self.view.addSubview(endTime)
         
-        
-        
-        
         refreshBtn = UIButton(type: .system)
         refreshBtn.translatesAutoresizingMaskIntoConstraints = false
         refreshBtn.setTitle("재설정", for: .normal)
@@ -149,11 +126,8 @@ class ReserveViewController: UIViewController{
         completeBtn.tintColor = .white
         completeBtn.layer.cornerRadius = 5
         completeBtn.backgroundColor = UIColor.appColor(.mainColor)
-        //completeBtn.addTarget(self, action: #selector(self.test(_:)), for: .touchUpInside)
         completeBtn.addTarget(self, action: #selector(self.reserveBtn(_:)), for: .touchUpInside)
-        
         self.view.addSubview(completeBtn)
-        
         
         let firstStackView = UIStackView()
         firstStackView.axis = .vertical
@@ -210,7 +184,6 @@ class ReserveViewController: UIViewController{
         realUse.contentMode = .scaleAspectFit
         thirdStackView.addArrangedSubview(realUse)
 
-
         let totalStackView = UIStackView()
         totalStackView.axis = .horizontal
         totalStackView.spacing = 10
@@ -221,31 +194,10 @@ class ReserveViewController: UIViewController{
         totalStackView.addArrangedSubview(secondStackView)
         totalStackView.addArrangedSubview(thirdStackView)
         
-        
         totalStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(totalStackView)
         
-        
-        //시작시간 데이트피커 시간 반올림 세팅 -> ex. 현재시간 36분 -> 설정자체를 40분으로 초기 세팅함.
-        
-        
-        
-        
         NSLayoutConstraint.activate([
-            
-            //스크롤뷰 컬렉션뷰랑 동일하게 레이아웃 주기. //컬렉션뷰 줌 사용하기 위해서 테스트 중인 코드
-//            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-//            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            scrollView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-//            scrollView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor),
-//
-//
-//            stackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-//            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            stackView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-//            stackView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor),
-//
-            
             
             totalStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             totalStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -263,8 +215,6 @@ class ReserveViewController: UIViewController{
             currentDay.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             currentDay.heightAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.15),
             
-            
-                
             // startLb, endLb, startTime, endTime, completeBtn
             startLb.topAnchor.constraint(equalTo: currentDay.bottomAnchor, constant: 5),
             startLb.leadingAnchor.constraint(equalTo: currentDay.leadingAnchor),
@@ -285,9 +235,7 @@ class ReserveViewController: UIViewController{
             
             completeBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             completeBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
-           
             completeBtn.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 5),
-            
             completeBtn.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
             completeBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
             
@@ -305,62 +253,98 @@ class ReserveViewController: UIViewController{
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {    //뷰 로드 전 알림창 띄우기 위해서 willAppear사용
-        super.viewWillAppear(animated)
-        
-        let nextPage = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
-        let nextPageAction = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
-        nextPage.view.tintColor = UIColor.appColor(.textColor)
-        nextPage.addAction(nextPageAction)
-        ReserveViewController().modalPresentationStyle = .fullScreen
-        present(nextPage, animated: true, completion: nil)
-        
-        }
-    
-    
-  
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("ReserveViewController의 viewDidLoad가 출력됩니다")
+        view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
+
+        alertMaxTime()
+        ReserveViewController().modalPresentationStyle = .fullScreen
         
         startTime.minimumDate = Date()
         endTime.minimumDate = Date()
         
+        
+        baseTimeRule()
+        print("데이트피커 시간 표시 : \(startTime.date)")
+        
+        
+        //  <-- 컬렉션뷰 --> //
         stateArr = Array(repeating: 0, count: Room.shared.totalCount)
         CollectionCell.countOne = 0
         
+        //컬렉션뷰 delegate, datasource 호출 및 register주기
+        showSeatCollectionView.dataSource = self
+        showSeatCollectionView.delegate = self
+        showSeatCollectionView.register(UINib(nibName: "CollectionCell", bundle: nil), forCellWithReuseIdentifier: CollectionCell.identifire)
         
-        
-        
+    }
+    
+    
+    
+    func showToast(controller: UIViewController, message: String) {
+        let width_variable = 10
+        let toastLabel = UILabel(frame: CGRect(x: width_variable, y: Int(self.view.frame.size.height)-100, width: Int(view.frame.size.width)-2*width_variable, height: 35))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.layer.cornerRadius = 15
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.clipsToBounds = true
+        self.navigationController?.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 4.0, delay: 0.5, options: .curveEaseOut, animations: {
+            toastLabel.alpha = 0.0}, completion: {(isCompleted) in
+                toastLabel.removeFromSuperview()
+           })
+        }
+    
+    
+    @objc func addTargetDatePicker(_ sender: Any) {
+        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
+    }
+    
+    func alertMaxTime() {
+        let alert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: .alert)
+        let okButton = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alert.view.tintColor = UIColor.appColor(.textColor)
+        alert.addAction(okButton)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func baseTimeRule() {
         let calendar = Calendar.current
-            var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
-            guard var hour = startDateComponents.hour, var minute = startDateComponents.minute else {
+        var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
+        guard var hour = startDateComponents.hour, var minute = startDateComponents.minute else {
+            print("something went wrong")
+            return
+        }
+
+        let intervalRemainder = minute % startTime.minuteInterval
+        if intervalRemainder > 0 {
+            // need to correct the date
+            minute += startTime.minuteInterval - intervalRemainder
+            if minute >= 60 {
+                hour += 1
+                minute -= 60
+            }
+
+            // update datecomponents
+            startDateComponents.hour = hour
+            startDateComponents.minute = minute
+            
+            // get the corrected date
+            guard let roundedDate = calendar.date(from: startDateComponents) else {
                 print("something went wrong")
                 return
             }
 
-            let intervalRemainder = minute % startTime.minuteInterval
-            if intervalRemainder > 0 {
-                // need to correct the date
-                minute += startTime.minuteInterval - intervalRemainder
-                if minute >= 60 {
-                    hour += 1
-                    minute -= 60
-                }
-
-                // update datecomponents
-                startDateComponents.hour = hour
-                startDateComponents.minute = minute
-                
-                // get the corrected date
-                guard let roundedDate = calendar.date(from: startDateComponents) else {
-                    print("something went wrong")
-                    return
-                }
-
-                // update the datepicker
-                startTime.date = roundedDate
-            }
+            // update the datepicker
+            startTime.date = roundedDate
+        }
         
         //종류 데이트피커를 시작시간 +2시간으로 세팅
         var endDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: endTime.date)
@@ -390,59 +374,7 @@ class ReserveViewController: UIViewController{
         }
         
         endTime.date = addHour
-        
-        
-        
         startTime.addTarget(self, action: #selector(addTargetDatePicker), for: .allEvents)
-        
-        
-        
-        
-        print("데이트피커 시간 표시 : \(startTime.date)")
-        
-        
-        
-        showSeatCollectionView.minimumZoomScale = 1.0
-        showSeatCollectionView.maximumZoomScale = 5
-        
-        print("ReserveViewController의 viewDidLoad가 출력됩니다")
-        view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
-        
-        //컬렉션뷰 delegate, datasource 호출 및 register주기
-        showSeatCollectionView.dataSource = self
-        showSeatCollectionView.delegate = self
-        showSeatCollectionView.register(UINib(nibName: "CollectionCell", bundle: nil), forCellWithReuseIdentifier: CollectionCell.identifire)
-        
-    }
-    
-    
-    
-    func showToast(controller: UIViewController, message: String) {
-        let width_variable = 10
-        let toastLabel = UILabel(frame: CGRect(x: width_variable, y: Int(self.view.frame.size.height)-100, width: Int(view.frame.size.width)-2*width_variable, height: 35))
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        toastLabel.textColor = .white
-        toastLabel.textAlignment = .center
-        toastLabel.layer.cornerRadius = 15
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.clipsToBounds = true
-        self.navigationController?.view.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.5, options: .curveEaseOut, animations: {
-                        toastLabel.alpha = 0.0}
-                       , completion: {(isCompleted) in
-                                       toastLabel.removeFromSuperview()
-                       })
-        
-        
-    }
-    
-    
-    @objc func addTargetDatePicker(_ sender: Any) {
-        
-        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
-        
-        
     }
     
     
@@ -452,10 +384,6 @@ class ReserveViewController: UIViewController{
         hourFormatter.dateFormat = "HH"
         let minFormatter = DateFormatter()
         minFormatter.dateFormat = "mm"
-        
-        
-        print(startTime.date)
-        print(endTime.date)
         
         
         if startTime.date > endTime.date {
@@ -474,7 +402,7 @@ class ReserveViewController: UIViewController{
             let reFreshAlert = UIAlertController(title: "재설정", message: "\(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 좌석을 보시겠나요?", preferredStyle: UIAlertController.Style.alert)
             let reFreshAlertNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
             //let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
-            let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.openReload()})
+            let reFreshAlertYes = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.collectionViewReload()})
             
             reFreshAlert.addAction(reFreshAlertNo)
             reFreshAlert.addAction(reFreshAlertYes)
@@ -482,14 +410,10 @@ class ReserveViewController: UIViewController{
             present(reFreshAlert, animated: true, completion: nil)
         }
         
-        
-        
-        
-
-        
     }
     
-    func openReload() {
+    
+    func collectionViewReload() {
         showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
         CollectionCell.userSelectedSeat = ""
         CollectionCell.userSeatInfo = -1
@@ -498,14 +422,16 @@ class ReserveViewController: UIViewController{
     }
     
     
-    
-    
-    
-        
     @objc func reserveBtn(_ sender: UIButton) {
         // if 선택한 좌석X -> 좌석선택부터 해주세요 alert, else
-        btnDatePicker(firstDatePicker: startTime, secondDatePicker: endTime)
+        if CollectionCell.userSelectedSeat == "" {
+            let emptySeatAlert = UIAlertController(title: "예약", message: "좌석을 먼저 선택해 주세요!", preferredStyle: UIAlertController.Style.alert)
+            let emptySeatOK = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
+            emptySeatAlert.addAction(emptySeatOK)
+            present(emptySeatAlert, animated: true, completion: nil)
+        }
         
+        btnDatePicker(firstDatePicker: startTime, secondDatePicker: endTime)
     }
     
     func btnDatePicker(firstDatePicker: UIDatePicker, secondDatePicker: UIDatePicker){
@@ -530,9 +456,7 @@ class ReserveViewController: UIViewController{
         let selectedRightDateChange: Date = currentDayFomatter.date(from: selectedRightDateString)!
         selectedRightTime = Int(selectedRightDateChange.timeIntervalSince1970) * 1000     //서버로 보내는 long값
         showRightTime = Date(timeIntervalSince1970: TimeInterval(selectedRightTime) / 1000)   //보여지는 날짜 및 시간 값
-        
     
-        
         //현재 시간을 서버로 보내기 위해서 nowTime 전역 변수로 설정
         let startTimeString = currentDayFomatter.string(from: Date())
         let startTimeDate:Date = currentDayFomatter.date(from: startTimeString)!
@@ -553,16 +477,9 @@ class ReserveViewController: UIViewController{
         
         let start = (Int(startHour)! * 60) + Int(startMin)!
         let end = (Int(endHour)! * 60) + Int(endMin)!
-        let startk = (end - start) / 60
-        let startkk = (end - start) % 60
+        let totalHour = (end - start) / 60
+        let totalMin = (end - start) % 60
         
-        
-        if CollectionCell.userSelectedSeat == "" {
-            let emptySeatAlert = UIAlertController(title: "예약", message: "좌석을 먼저 선택해 주세요!", preferredStyle: UIAlertController.Style.alert)
-            let emptySeatOK = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
-            emptySeatAlert.addAction(emptySeatOK)
-            present(emptySeatAlert, animated: true, completion: nil)
-        }
         
         
         if(Int(nowTime) > Int(selectedLeftTime)) {
@@ -572,15 +489,16 @@ class ReserveViewController: UIViewController{
             thirdAlert.view.tintColor = UIColor.appColor(.textColor)
             thirdAlert.addAction(thirdAlertAction)
             present(thirdAlert, animated: true, completion: nil)
-        } else {
+        }
+        else {
             if (selectedRightTime - selectedLeftTime) >= 600000 &&  (selectedRightTime - selectedLeftTime) <= 14400000 {
                 print("이용시간은 \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분")
                 print("begin: \(selectedLeftTime!)")
-                print(showLeftTime)
+                print(showLeftTime as Any)
                 print("end: \(selectedRightTime!)")
-                print(showRightTime)
+                print(showRightTime as Any)
             
-                let firstAlert = UIAlertController(title: "예약", message: "\(CollectionCell.userSelectedSeat)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(startk)시간 \(startkk)분", preferredStyle: UIAlertController.Style.alert)
+                let firstAlert = UIAlertController(title: "예약", message: "\(CollectionCell.userSelectedSeat)번 \n \(startHour)시 \(startMin)분 ~ \(endHour)시 \(endMin)분 \n 총 이용시간: \(totalHour)시간 \(totalMin)분", preferredStyle: UIAlertController.Style.alert)
                 let firstAlertActionNo = UIAlertAction(title: "수정", style: UIAlertAction.Style.default, handler: nil)
                 let firstAlertActionOk = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: {(alert: UIAlertAction!) in self.confirmReserve()})
                 
@@ -590,26 +508,12 @@ class ReserveViewController: UIViewController{
                 
                 present(firstAlert, animated: true, completion: nil)
             } else if (selectedRightTime - selectedLeftTime) > 14400000 {
-                print("최대 예약 시간은 4시간 입니다")
-                
-                print("1245678765678")
-                print(selectedRightTime)
-                print(selectedLeftTime)
-                
                 
                 let secondAlert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
                 let secondAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
                 secondAlert.view.tintColor = UIColor.appColor(.textColor)
                 secondAlert.addAction(secondAlertAction)
                 present(secondAlert, animated: true, completion: nil)
-                
-            } else if (selectedRightTime - selectedLeftTime) >= 0 && (selectedRightTime - selectedLeftTime) <= 599999 {
-                print("최소 사용 시간은 10분 이상입니다")
-                let thirdAlert = UIAlertController(title: "예약", message: "최소 사용 시간은 10분 이상입니다", preferredStyle: UIAlertController.Style.alert)
-                let thirdAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
-                thirdAlert.view.tintColor = UIColor.appColor(.textColor)
-                thirdAlert.addAction(thirdAlertAction)
-                present(thirdAlert, animated: true, completion: nil)
                 
             }
             else {
@@ -632,6 +536,10 @@ class ReserveViewController: UIViewController{
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")! as Dictionary
         let studentInfo = UserDefaults.standard.dictionary(forKey: "studentInfo")! as Dictionary
         
+        print("총 이용시간 Long 값 계산")
+        print(selectedRightTime! - selectedLeftTime)
+        print(nowTime)
+        
         let seat: Int = Int(CollectionCell.userSelectedSeat)!
         let time: Int = nowTime
         print(accountInfo["pw"]!)
@@ -651,6 +559,10 @@ class ReserveViewController: UIViewController{
         print(Room.shared.name!)
         RequestAPI.post(resource: "/room/reserve", param: param, responseData: "reservation", completion: {(result, response) in
             if (result) {
+                
+                UserDefaults.standard.set(self.selectedLeftTime, forKey: "baseUserBeginTime")
+                UserDefaults.standard.set(self.selectedRightTime, forKey: "baseUserEndTime")
+                
                 //let reservation = response as! NSDictionary
                 print("좌석 예약 완료")
                 self.showToast(controller: self, message: "예약되었습니다. n분 내로 자리를 확정해 주세요.")    //문구 수정 필요
@@ -671,6 +583,9 @@ class ReserveViewController: UIViewController{
     }
 }
 
+
+
+
 //컬렉션 뷰 확장 관련 코드        / 234~ end
 extension ReserveViewController: UICollectionViewDataSource {
     
@@ -683,9 +598,7 @@ extension ReserveViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.identifire, for: indexPath) as! CollectionCell
         UserDefaults.standard.set(indexPath[1], forKey: "indexPath")
-        
-        
-        
+                
         let columnNumber:Int = ((indexPath[1]) / Room.shared.columnCount)
         UserDefaults.standard.set(columnNumber, forKey: "columnNumber")
         
@@ -695,155 +608,86 @@ extension ReserveViewController: UICollectionViewDataSource {
         let curr:Int = arrayT[indexPath[1]%Room.shared.columnCount] as! Int
         UserDefaults.standard.set(curr, forKey: "curr")
        
-        
-        
+        func cellState() {
+            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+
+            cell.myButton.setTitle(String(curr), for: .normal)
+            cell.myButton.tintColor = .black
+            cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
+            cell.myButton.addTarget(self, action: #selector(self.tapBtn(_:)), for: .touchUpInside)
+            cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+            cell.myButton.isEnabled = true
+            cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tap(_:))))
+        }
         
         
         switch curr{
         case SeatType.Wall.rawValue:
-           
-            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "road.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-            
             break
 
         case SeatType.Door.rawValue:
-            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "door.jpeg")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-            
             break
 
         case SeatType.Empty.rawValue:
-            //cell.myLabel.text = ""
             cell.myImageView.image = UIImage(named: "road.png")
             cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width*0.8, height: cell.bounds.size.width)
-            
             break
 
         default:
-                      
+            let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
+            let param = ["college": college] as [String : Any]
+            
+            RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: {(result, response) in
+                if (result) {
+                    let reserveInfo = ((response as! NSArray)[0] as! NSDictionary)["reserved"] as! NSArray
+                    if (reserveInfo[curr] as AnyObject).count == 0 {
+                        cell.myImageView.image = UIImage(named: "emptySeat.png")
+                        cellState()
+                    } else {
+                        let selectedStartTime = self.startTime.date
+                        let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
+                   
+                        let selectedEndTime = self.endTime.date
+                        let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
                     
-                    let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-                                
-                    let reserveURL = "http://3.34.174.56:8080/rooms"
-                    let PARAM: Parameters = [
-                        "college": college
-                    ]
-                
-                    let alamo = AF.request(reserveURL, method: .post, parameters: PARAM).validate(statusCode: 200..<450)
-                    alamo.responseJSON() {[self] response in
-                    switch response.result {
-                    case.success(let value):
-                    //print("success")
-                    if let jsonObj = value as? NSDictionary {
-                        let getResult: Bool? = jsonObj.object(forKey: "result") as? Bool
-                        if getResult! {
-                                                        
-                            let tmp: NSArray = jsonObj.object(forKey: "rooms") as! NSArray
-                            //print(type(of: tmp))
-                            //print("tmp 출력 \(tmp)")
-                            let info: NSDictionary = tmp[0] as! NSDictionary
-                            //print("cell default 통과")
-                            let reserveInfo = info["reserved"] as! Array<Any>
-//                            print(curr)
-//                            print((reserveInfo[curr] as AnyObject).count)
-                            if (reserveInfo[curr] as AnyObject).count == 0 {
-                                cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                cell.myButton.setTitle(String(curr), for: .normal)
-
-                                cell.myButton.tintColor = .black
-                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
+                        let seatReserveInfo = reserveInfo[curr] as! NSArray
+                        for currNum in 0..<seatReserveInfo.count {
+                            print("i:::: \(currNum)")
+                            let currSeatInfo = seatReserveInfo[currNum] as! NSDictionary
+                            let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
+                            let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
+                                                    
+                                                    
+                            if userStartTime < end && userEndTime > begin {
+                                if currSeatInfo["confirmed"] as! Int == 0 {
+                                    cell.myImageView.image = UIImage(named: "ingSeat.png")
+                                    cellState()
+                                    break
+                                    }
+                                else {
+                                        cell.myImageView.image = UIImage(named: "fullSeat.png")
+                                        cellState()
+                                        break
+                                        }
                                 }
                             else {
-                                
-                                
-                                let selectedStartTime = startTime.date
-                                let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
-                                //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
-                                
-                                let selectedEndTime = endTime.date
-                                let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
-                                //showLeftTime = Date(timeIntervalSince1970: TimeInterval(selectedLeftTime) / 1000)
-                                
-                                
-                                
-                                                            
-                                let seatReserveInfo = reserveInfo[curr] as! Array<Any>
-                                for i in 0..<(reserveInfo[curr] as AnyObject).count {
-                                    print("i:::: \(i)")
-                                    let currSeatInfo = seatReserveInfo[i] as! Dictionary<String, Any>
-                                    let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
-                                    let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
-                                                                
-                                                                
-                                    if userStartTime < end && userEndTime > begin {
-                                        if currSeatInfo["confirmed"] as! Int == 0 {
-                                            cell.myImageView.image = UIImage(named: "ingSeat.png")
-                                            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
+                                    cell.myImageView.image = UIImage(named: "emptySeat.png")
+                                    cellState()
 
-                                            cell.myButton.setTitle(String(curr), for: .normal)
-                                            cell.myButton.tintColor = .black
-                                            cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                            cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                            cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                            cell.myButton.isEnabled = true
-                                            cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                            break
-                                            } else {
-                                                cell.myImageView.image = UIImage(named: "fullSeat.png")
-                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                
-                                                cell.myButton.setTitle(String(curr), for: .normal)
-                                                cell.myButton.tintColor = .black
-                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                cell.myButton.isEnabled = true
-                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-                                                break
-                                                }
-                                            }
-                                        else {
-                                                cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                                cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-
-                                                cell.myButton.setTitle(String(curr), for: .normal)
-
-                                                cell.myButton.tintColor = .black
-                                                cell.myButton.titleLabel?.font = UIFont(name: "AvenirNext-Bold", size: 7)
-                                                cell.myButton.addTarget(self, action: #selector(tapBtn(_:)), for: .touchUpInside)
-                                                cell.myButton.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
-                                                cell.myButton.isEnabled = true
-                                                cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tap(_:))))
-
-                                                //cell.myButton.isSelected.toggle()
-
-
-
-
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
-                                case .failure(_):
-                                    print("error")
                             }
                         }
                     }
-                
-                cell.viewController = self
-                return cell
+                })
+            }
+        cell.viewController = self
+        return cell
     }
     
- 
-                
     @objc func tap(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: self.showSeatCollectionView)
         let indexPath = self.showSeatCollectionView.indexPathForItem(at: location)
@@ -877,9 +721,7 @@ extension ReserveViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        //let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount + 1) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
         let width = (Int(collectionView.frame.width)) / (Room.shared.columnCount ) ///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
-
         let size = CGSize(width: width, height: width) //이렇게 주게 되면 한줄에 4개씩 보여지게 됌 240번 줄 return 16으로 수정하면 확인 가능
         return size
     }
