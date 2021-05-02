@@ -202,7 +202,7 @@ class LoginViewController: UIViewController {
             let activityIndicator = UIActivityIndicatorView()
             activityIndicator.center = self.view.center
             activityIndicator.style = .large
-            setLoading()
+            
             
             
             btnLogin.isEnabled = false
@@ -219,7 +219,11 @@ class LoginViewController: UIViewController {
             
             RequestAPI.post(resource: "/account/login", param: param, responseData: "account", completion: { (result, response) in
                 let data = response as! NSDictionary
+                print(result)
+                
+                
                 if (result) {
+                    //UserDefaults.standard.set(data, forKey: "accountInfo")
                     UserDefaults.standard.set(data, forKey: "studentInfo")
                     var isAutoLogin: Bool
                     if self.autoLoginBtnState == true {
@@ -233,8 +237,15 @@ class LoginViewController: UIViewController {
                                        "id" : inputID,
                                        "pw" : inputPW   ]
                     UserDefaults.standard.setValue(accountInfo, forKey: "accountInfo")
+                    
+                    let mainVC: MainViewController = MainViewController()
+                    let navVC = UINavigationController(rootViewController: mainVC)
+                    navVC.modalPresentationStyle = .fullScreen
+                    self.present(navVC, animated: true, completion: nil)
+    
 
-                } else {
+                }
+                else {
                     if (data["message"] != nil) {
                         // TODO:토스트메시지 띄우기
                         print("► 로그인 실패: \(String(describing: data["message"]))")
@@ -249,7 +260,7 @@ class LoginViewController: UIViewController {
                         print("알수없는 에러 : \(String(describing: data["error"]))")
                     }
                 }
-                activityIndicator.stopAnimating()
+                //activityIndicator.stopAnimating()
                 self.btnLogin.isEnabled = true
             })
         }

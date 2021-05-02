@@ -48,6 +48,7 @@ class MainViewController: UIViewController {
         super.loadView()
         print("view load")
 
+        
         studentView = UIView()
         studentView.layer.shadowRadius = 5
         studentView.layer.cornerRadius = 10
@@ -192,7 +193,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = #colorLiteral(red: 0.9294117647, green: 0.9333333333, blue: 0.9450980392, alpha: 1)
-        
+        checkUser()
 
         let logoView = UIImageView(frame: .zero)
         logoView.contentMode = .scaleAspectFit
@@ -204,8 +205,10 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
         navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
 
-        checkUser()     //사용자 관리자 체크 함수 밑에서 정의 후 호출
+        
     }
+    
+   
 
     @objc func showMySeat(_ sender: Any) {
 
@@ -299,29 +302,7 @@ class MainViewController: UIViewController {
 
 
     func checkUser() {
-        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
-        let id = accountInfo!["id"]
-        let password = accountInfo!["pw"]
-
-        let param = [
-            "id": id as! String,
-            "password": password as! String
-        ] as [String : Any]
-
-        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
-            if (result) {
-                if (response as! NSArray).isEqual(to: []) {
-                    MainViewController.reservationState = false
-                } else {
-                    MainViewController.reservationState = true
-                }
-            } else {
-                print(response)
-            }
-        })
-
         
-
         if (userType.admin.rawValue == UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"] as! String){
 
             let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
