@@ -716,14 +716,11 @@ extension ReserveViewController: UICollectionViewDataSource {
     // 좌석 클릭시 시간바 보여줌
     // TODO : 빈자리 클릭시에도 타는지 확인
     @objc func tapBtn(_ sender: UIButton){
-        if !Bool(truncating: NSNumber(value: CollectionCell.self.countOne)) {
-            // TODO : jy :?
+        if !Bool(truncating: NSNumber(value: CollectionCell.self.countOne)) && doNotShowTimeScroll {
             hideTimeBar()
             return
         }
-        if doNotShowTimeScroll {
-            //return
-        }
+        
         let seatNo = Int((sender.titleLabel?.text)!)
         let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any> // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인
         
@@ -772,11 +769,7 @@ extension ReserveViewController: UICollectionViewDataSource {
     func hideTimeBar() {
         if timeScrollView != nil && timeScrollView.frame.height > 0 {
             timeScrollView.removeFromSuperview()
-            view.layoutIfNeeded()
-            UIView.animate(withDuration: 0.1, animations: { [self] in
-                setTimeScrollViewHeight(willShow: false)
-                view.layoutIfNeeded()
-            })
+            setTimeScrollViewHeight(willShow: false)
             doNotShowTimeScroll = false
         }
     }
@@ -784,12 +777,6 @@ extension ReserveViewController: UICollectionViewDataSource {
     func setTimeScrollViewHeight(willShow: Bool) {
         let height: CGFloat = willShow ? 70 : 10
         self.timeScrollViewHeight?.constant = height
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if touches.first?.view != timeScrollView {
-            hideTimeBar()
-        }
     }
     
 }
