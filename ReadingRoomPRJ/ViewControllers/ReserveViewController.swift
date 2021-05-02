@@ -34,6 +34,11 @@ class ReserveViewController: UIViewController{
     var seatInfo: [Any] = []
     var seats = [Int:Int]()
   
+    // 시간바 관련
+    var timeScrollView: UIScrollView!
+    var timeScrollViewSpace: UIView!
+    var timeScrollViewHeight: NSLayoutConstraint? = nil
+    var doNotShowTimeScroll: Bool = false
     
     var selectedLeftTime: Int!
     var showLeftTime: Date!
@@ -198,6 +203,18 @@ class ReserveViewController: UIViewController{
         totalStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(totalStackView)
         
+        timeScrollViewSpace = UIView()
+        timeScrollViewSpace.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(timeScrollViewSpace)
+        timeScrollViewHeight = NSLayoutConstraint(item: timeScrollViewSpace!,
+                                                  attribute: .height,
+                                                  relatedBy: .equal,
+                                                  toItem: nil,
+                                                  attribute: .notAnAttribute,
+                                                  multiplier: 1,
+                                                  constant: 10)
+        view.addConstraint(timeScrollViewHeight!)
+        
         NSLayoutConstraint.activate([
             
             totalStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
@@ -210,8 +227,11 @@ class ReserveViewController: UIViewController{
             showSeatCollectionView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             showSeatCollectionView.heightAnchor.constraint(equalTo: showSeatCollectionView.widthAnchor, constant: -70),
             
+            timeScrollViewSpace.topAnchor.constraint(equalTo: showSeatCollectionView.bottomAnchor),
+            timeScrollViewSpace.leadingAnchor.constraint(equalTo: showSeatCollectionView.leadingAnchor),
+            timeScrollViewSpace.trailingAnchor.constraint(equalTo: showSeatCollectionView.trailingAnchor),
             
-            currentDay.topAnchor.constraint(equalTo: showSeatCollectionView.bottomAnchor, constant: 10),
+            currentDay.topAnchor.constraint(equalTo: timeScrollViewSpace.bottomAnchor),
             currentDay.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             currentDay.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
             currentDay.heightAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.15),
@@ -227,29 +247,25 @@ class ReserveViewController: UIViewController{
             endLb.widthAnchor.constraint(equalTo: currentDay.widthAnchor, multiplier: 0.5),
             endLb.heightAnchor.constraint(equalTo: currentDay.heightAnchor, multiplier: 0.5),
             
-            refreshBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            refreshBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
-            //refreshBtn.widthAnchor.constraint(equalTo: currentDay.widthAnchor),
-            refreshBtn.leadingAnchor.constraint(equalTo: startLb.leadingAnchor),
-            refreshBtn.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -5),
-            refreshBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
-            
-            completeBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            completeBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20),
-            completeBtn.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 5),
-            completeBtn.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
-            completeBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
-            
             startTime.topAnchor.constraint(equalTo: startLb.bottomAnchor),
-            startTime.bottomAnchor.constraint(equalTo: completeBtn.topAnchor, constant: -10),
+            startTime.bottomAnchor.constraint(equalTo: completeBtn.topAnchor, constant: -5),
             startTime.leadingAnchor.constraint(equalTo: startLb.leadingAnchor),
             startTime.trailingAnchor.constraint(equalTo: view.centerXAnchor),
             
             endTime.topAnchor.constraint(equalTo: endLb.bottomAnchor),
-            endTime.bottomAnchor.constraint(equalTo: completeBtn.topAnchor, constant: -10),
+            endTime.bottomAnchor.constraint(equalTo: completeBtn.topAnchor, constant: -5),
             endTime.leadingAnchor.constraint(equalTo: view.centerXAnchor),
             endTime.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
             
+            refreshBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -10),
+            refreshBtn.leadingAnchor.constraint(equalTo: startLb.leadingAnchor),
+            refreshBtn.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -5),
+            refreshBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
+            
+            completeBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -10),
+            completeBtn.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 5),
+            completeBtn.trailingAnchor.constraint(equalTo: endLb.trailingAnchor),
+            completeBtn.heightAnchor.constraint(equalTo: currentDay.heightAnchor),
         ])
         
     }
@@ -310,7 +326,7 @@ class ReserveViewController: UIViewController{
     func alertMaxTime() {
         let alert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: .alert)
         let okButton = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alert.view.tintColor = UIColor.appColor(.textColor)
+        alert.view.tintColor = UIColor.appColor(.coal)
         alert.addAction(okButton)
         present(alert, animated: true, completion: nil)
     }
@@ -407,7 +423,7 @@ class ReserveViewController: UIViewController{
             
             reFreshAlert.addAction(reFreshAlertNo)
             reFreshAlert.addAction(reFreshAlertYes)
-            reFreshAlert.view.tintColor = UIColor.appColor(.textColor)
+            reFreshAlert.view.tintColor = UIColor.appColor(.coal)
             present(reFreshAlert, animated: true, completion: nil)
         }
         
@@ -487,7 +503,7 @@ class ReserveViewController: UIViewController{
             print("현재 시간 이후로 예약이 가능합니다.")
             let thirdAlert = UIAlertController(title: "예약", message: "현재 시간 이후로 예약 가능합니다.", preferredStyle: UIAlertController.Style.alert)
             let thirdAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
-            thirdAlert.view.tintColor = UIColor.appColor(.textColor)
+            thirdAlert.view.tintColor = UIColor.appColor(.coal)
             thirdAlert.addAction(thirdAlertAction)
             present(thirdAlert, animated: true, completion: nil)
         }
@@ -505,14 +521,14 @@ class ReserveViewController: UIViewController{
                 
                 firstAlert.addAction(firstAlertActionNo)
                 firstAlert.addAction(firstAlertActionOk)
-                firstAlert.view.tintColor = UIColor.appColor(.textColor)
+                firstAlert.view.tintColor = UIColor.appColor(.coal)
                 
                 present(firstAlert, animated: true, completion: nil)
             } else if (selectedRightTime - selectedLeftTime) > 14400000 {
                 
                 let secondAlert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: UIAlertController.Style.alert)
                 let secondAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
-                secondAlert.view.tintColor = UIColor.appColor(.textColor)
+                secondAlert.view.tintColor = UIColor.appColor(.coal)
                 secondAlert.addAction(secondAlertAction)
                 present(secondAlert, animated: true, completion: nil)
                 
@@ -522,7 +538,7 @@ class ReserveViewController: UIViewController{
                 
                 let fourthAlert = UIAlertController(title: "예약", message: "잘못된 시간 선택입니다", preferredStyle: UIAlertController.Style.alert)
                 let fourthAlertAction = UIAlertAction(title: "다시 설정하기", style: UIAlertAction.Style.default, handler: nil)
-                fourthAlert.view.tintColor = UIColor.appColor(.textColor)
+                fourthAlert.view.tintColor = UIColor.appColor(.coal)
                 fourthAlert.addAction(fourthAlertAction)
                 present(fourthAlert, animated: true, completion: nil)
             }
@@ -696,9 +712,84 @@ extension ReserveViewController: UICollectionViewDataSource {
             print("Got clicked on index: \(index[1])!")
         }
     }
-                //좌석 클릭시 선택 좌석을 알려주는 알림창 함수였는데 취소를 눌러서 다시 원래 색상으로 변경을 시킨다면 그때 다시 사용할 예정. 현재는 이미지 변경으로 처리해 놓음.
+    
+    // 좌석 클릭시 시간바 보여줌
+    // TODO : 빈자리 클릭시에도 타는지 확인
     @objc func tapBtn(_ sender: UIButton){
+        if !Bool(truncating: NSNumber(value: CollectionCell.self.countOne)) {
+            // TODO : jy :?
+            hideTimeBar()
+            return
+        }
+        if doNotShowTimeScroll {
+            //return
+        }
+        let seatNo = Int((sender.titleLabel?.text)!)
+        let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any> // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인
         
+        let reservedTimes = NSMutableArray()
+        for reserve in reserveList {
+            let reserveDic = reserve as! NSDictionary
+            let times = [
+                "begin" : (reserveDic["begin"] as! Int) / 1000,
+                "end" : (reserveDic["end"] as! Int) / 1000
+            ]
+            reservedTimes.add(times)
+        }
+        
+        if timeScrollView != nil {
+            hideTimeBar()
+        }
+        timeScrollView = TimeBarView(reservedTimes)
+        showTimeBar()
+    }
+    
+    func showTimeBar() {
+        if timeScrollView == nil || timeScrollView.frame.height == 0 {
+            timeScrollViewSpace.addSubview(timeScrollView)
+            timeScrollView.translatesAutoresizingMaskIntoConstraints = false
+            timeScrollView.topAnchor.constraint(equalTo: timeScrollViewSpace.topAnchor, constant: 10).isActive = true
+            timeScrollView.leadingAnchor.constraint(equalTo: timeScrollViewSpace.leadingAnchor).isActive = true
+            timeScrollView.trailingAnchor.constraint(equalTo: timeScrollViewSpace.trailingAnchor).isActive = true
+            let height = NSLayoutConstraint(item: timeScrollView!,
+                                            attribute: .height,
+                                            relatedBy: .equal,
+                                            toItem: nil,
+                                            attribute: .notAnAttribute,
+                                            multiplier: 1,
+                                            constant: 1)
+            view.addConstraint(height)
+            self.view.layoutIfNeeded()
+            UIView.animate(withDuration: 0.1, animations: { [self] in
+                setTimeScrollViewHeight(willShow: true)
+                height.constant = 50
+                view.layoutIfNeeded()
+            })
+            doNotShowTimeScroll = true
+        }
+    }
+    
+    func hideTimeBar() {
+        if timeScrollView != nil && timeScrollView.frame.height > 0 {
+            timeScrollView.removeFromSuperview()
+            view.layoutIfNeeded()
+            UIView.animate(withDuration: 0.1, animations: { [self] in
+                setTimeScrollViewHeight(willShow: false)
+                view.layoutIfNeeded()
+            })
+            doNotShowTimeScroll = false
+        }
+    }
+    
+    func setTimeScrollViewHeight(willShow: Bool) {
+        let height: CGFloat = willShow ? 70 : 10
+        self.timeScrollViewHeight?.constant = height
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.first?.view != timeScrollView {
+            hideTimeBar()
+        }
     }
     
 }
