@@ -27,7 +27,7 @@ class MainViewController: UIViewController {
     static var baseUserEndTime = 0
 
     var studentView : UIView!
-    var stBaseImgView : UIView!
+    var studentImageView : UIView!
     
     var studentImage: UIImage!
     var studentOption: UIImage!
@@ -65,37 +65,33 @@ class MainViewController: UIViewController {
         line.translatesAutoresizingMaskIntoConstraints = false
         studentView.addSubview(line)
 
-        stBaseImgView = UIView()
-        stBaseImgView.translatesAutoresizingMaskIntoConstraints = false
-        stBaseImgView.backgroundColor = .none
-        stBaseImgView.layer.borderWidth = 0.5
-        stBaseImgView.layer.borderColor = #colorLiteral(red: 0.837041378, green: 0.8320663571, blue: 0.8408662081, alpha: 1)
-        studentView.addSubview(stBaseImgView)
-
         studentImage = UIImage(named: "stdEx.png")
-        let studentImageView = UIImageView(image: studentImage)
+        studentImageView = UIImageView(image: studentImage)
+        studentImageView.layer.borderWidth = 0.5
+        studentImageView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        studentImageView.contentMode = .scaleAspectFit
         studentImageView.translatesAutoresizingMaskIntoConstraints = false
-
         studentView.addSubview(studentImageView)
 
         nameLabel = UILabel()     //이름
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = UIFont.systemFont(ofSize: 30)
+        nameLabel.font = .appFont(size: 24, family: .Bold)
         studentView.addSubview(nameLabel)
 
         subNameLabel = UILabel()       //학번
         subNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        subNameLabel.font = UIFont.systemFont(ofSize: 20)
+        subNameLabel.font = .appFont(size: 15, family: .Regular)
+        subNameLabel.textColor = .appColor(.nickel)
         studentView.addSubview(subNameLabel)
 
         studentCollege = UILabel()       //단과대학
         studentCollege.translatesAutoresizingMaskIntoConstraints = false
-        studentCollege.font = UIFont.systemFont(ofSize: 20)
+        studentCollege.font = .appFont(size: 18, family: .Regular)
         studentView.addSubview(studentCollege)
 
         studentDepartment = UILabel()            //학과
         studentDepartment.translatesAutoresizingMaskIntoConstraints = false
-        studentDepartment.font = UIFont.systemFont(ofSize: 20)
+        studentDepartment.font = .appFont(size: 18, family: .Regular)
         studentView.addSubview(studentDepartment)
 
         studentOption = UIImage(named: "setting.png")
@@ -106,7 +102,7 @@ class MainViewController: UIViewController {
         studentView.addSubview(studentOptionButton)
 
         firstButton = UIButton(type: .custom)
-        firstButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        firstButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
         firstButton.setBackgroundImage(UIImage(named: "btn_1.png"), for: .normal)
         firstButton.layer.masksToBounds = true
         firstButton.layer.cornerRadius = 10
@@ -116,7 +112,7 @@ class MainViewController: UIViewController {
         view.addSubview(firstButton)
 
         secondButton = UIButton(type: .custom)
-        secondButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        secondButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
         secondButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
         secondButton.layer.masksToBounds = true
         //secondButton.layer.cornerRadius = 10
@@ -125,7 +121,7 @@ class MainViewController: UIViewController {
         view.addSubview(secondButton)
 
         thirdButton = UIButton(type: .custom)
-        thirdButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 30)
+        thirdButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
         thirdButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
         thirdButton.layer.masksToBounds = true
         thirdButton.layer.cornerRadius = 10
@@ -133,42 +129,42 @@ class MainViewController: UIViewController {
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
         thirdButton.tintColor = .white
         view.addSubview(thirdButton)
-
+        
+        var marginHeight: CGFloat = 30
+        if view.frame.height < 750 {
+            marginHeight = 10
+        }
+        
         NSLayoutConstraint.activate([
-            studentView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
+            studentView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: marginHeight),
             studentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            studentView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor),
-            studentView.heightAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: 0.5),
-
-            stBaseImgView.centerYAnchor.constraint(equalTo: studentView.centerYAnchor),
-            stBaseImgView.leadingAnchor.constraint(equalTo: studentView.leadingAnchor, constant: 20),
-            stBaseImgView.heightAnchor.constraint(equalTo: studentView.heightAnchor, multiplier: 0.9),
-            stBaseImgView.widthAnchor.constraint(equalTo: studentImageView.heightAnchor, multiplier: 0.8),
+            studentView.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor, multiplier: 0.9),
+            studentView.heightAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: 0.6),
 
             studentImageView.centerYAnchor.constraint(equalTo: studentView.centerYAnchor),
             studentImageView.leadingAnchor.constraint(equalTo: studentView.leadingAnchor, constant: 20),
-            studentImageView.heightAnchor.constraint(equalTo: studentView.heightAnchor, multiplier: 0.9),
-            studentImageView.widthAnchor.constraint(equalTo: studentImageView.heightAnchor, multiplier: 0.8),
+            studentImageView.heightAnchor.constraint(equalTo: studentView.heightAnchor, multiplier: 0.7),
+            studentImageView.widthAnchor.constraint(equalTo: studentImageView.heightAnchor, multiplier: 0.7),
 
             line.topAnchor.constraint(equalTo: studentImageView.topAnchor),
-            line.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 15),
-            line.widthAnchor.constraint(equalTo: studentImageView.widthAnchor, multiplier: 0.5),
-            line.heightAnchor.constraint(equalToConstant: 5),
+            line.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 20),
+            line.widthAnchor.constraint(equalTo: studentImageView.widthAnchor, multiplier: 0.6),
+            line.heightAnchor.constraint(equalToConstant: 3),
 
-            nameLabel.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 15),
-            nameLabel.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 5),
+            nameLabel.leadingAnchor.constraint(equalTo: line.leadingAnchor),
+            nameLabel.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 7),
 
             subNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
-            subNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 1),
+            subNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
 
-            studentDepartment.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 15),
-            studentDepartment.topAnchor.constraint(equalTo: subNameLabel.bottomAnchor, constant: 15),
-
-            studentCollege.leadingAnchor.constraint(equalTo: studentImageView.trailingAnchor, constant: 15),
-            studentCollege.topAnchor.constraint(equalTo: studentDepartment.bottomAnchor, constant: 1),
+            studentCollege.leadingAnchor.constraint(equalTo: subNameLabel.leadingAnchor),
+            studentCollege.bottomAnchor.constraint(equalTo: studentImageView.bottomAnchor, constant: -7),
+            
+            studentDepartment.leadingAnchor.constraint(equalTo: line.leadingAnchor),
+            studentDepartment.bottomAnchor.constraint(equalTo: studentCollege.topAnchor, constant: -5),
 
             studentOptionButton.topAnchor.constraint(equalTo: studentImageView.topAnchor),
-            studentOptionButton.trailingAnchor.constraint(equalTo: studentView.trailingAnchor, constant: -5),
+            studentOptionButton.trailingAnchor.constraint(equalTo: studentView.trailingAnchor, constant: -20),
             studentOptionButton.widthAnchor.constraint(equalToConstant: 30),
             studentOptionButton.heightAnchor.constraint(equalToConstant: 30),
 
@@ -192,7 +188,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = #colorLiteral(red: 0.9294117647, green: 0.9333333333, blue: 0.9450980392, alpha: 1)
+        view.backgroundColor = .appColor(.mainBackgroundColor)
         checkUser()
 
         let logoView = UIImageView(frame: .zero)
@@ -202,10 +198,8 @@ class MainViewController: UIViewController {
         navigationItem.titleView = logoView
 
         navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.barTintColor = UIColor.rgbColor(r: 244, g: 244, b: 244)
+        navigationController?.navigationBar.barTintColor = .appColor(.mainBackgroundColor)
         navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
-
-        
     }
     
    
@@ -268,7 +262,7 @@ class MainViewController: UIViewController {
                     let room = rooms[i] as! NSDictionary
                     let roomListAction = UIAlertAction(title: room["roomName"] as? String, style: .default,
                                        handler: { action in self.showSelectedRoomSeats(index: i, selectedRoom: rooms[i] as! NSDictionary) })
-                    roomListAlert.view.tintColor = UIColor.appColor(.textColor)
+                    roomListAlert.view.tintColor = UIColor.appColor(.coal)
                     roomListAlert.addAction(roomListAction)
                 }
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
@@ -329,7 +323,7 @@ class MainViewController: UIViewController {
             studentCollege.text = "(" + (studentCollegeText as! String) + ")"
 
 
-            firstButton.setTitle("나의 자리", for: .normal)
+            firstButton.setTitle("나의 자리 확인", for: .normal)
             secondButton.setTitle("자리 선택/예약", for: .normal)
             thirdButton.setTitle("자리 확정", for: .normal)
 

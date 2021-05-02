@@ -49,7 +49,7 @@ class CollectionCell: UICollectionViewCell {
                     
                     let alert = UIAlertController(title: "경고", message: "하나의 좌석만 선택할 수 있습니다.", preferredStyle: UIAlertController.Style.alert)
                     let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
-                    alert.view.tintColor = UIColor.appColor(.textColor)
+                    alert.view.tintColor = UIColor.appColor(.coal)
                     alert.addAction(okButton)
                     viewController?.present(alert, animated: false, completion: nil)
                 } else if CollectionCell.checkArr[btnNum!] == 1 && myImageView.image == UIImage(named: "selectedSeat.png") && CollectionCell.countOne == 1 {
