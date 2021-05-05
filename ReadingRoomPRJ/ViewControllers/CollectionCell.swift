@@ -18,7 +18,7 @@ class CollectionCell: UICollectionViewCell {
     static var userSelectedSeat = ""
     static var userSeatInfo = 0
     static var checkArr = ReserveViewController().stateArr
-    static var countOne = 0
+    static var countOne = false
     
     var userSeat: Int!
     var k: Array<String>!
@@ -34,8 +34,8 @@ class CollectionCell: UICollectionViewCell {
             if btnNum == nil {
                 print("testERROR")
             } else {
-                if CollectionCell.checkArr[btnNum!] == 0 && myImageView.image == UIImage(named: "emptySeat.png") && CollectionCell.countOne == 0 {
-                    CollectionCell.countOne += 1
+                if CollectionCell.checkArr[btnNum!] == 0 && myImageView.image == UIImage(named: "emptySeat.png") && CollectionCell.countOne == false {
+                    CollectionCell.countOne = true
                     CollectionCell.checkArr[btnNum!] = 1
                     CollectionCell.userSeatInfo = btnNum!
                     myImageView.image = UIImage(named: "selectedSeat.png")
@@ -45,16 +45,16 @@ class CollectionCell: UICollectionViewCell {
                     
                     
                   //오류 발생
-                } else if CollectionCell.checkArr[CollectionCell.userSeatInfo] == 1 && CollectionCell.checkArr[btnNum!] == 0 && myImageView.image == UIImage(named: "emptySeat.png") && CollectionCell.countOne >= 1 {
+                } else if CollectionCell.checkArr[CollectionCell.userSeatInfo] == 1 && CollectionCell.checkArr[btnNum!] == 0 && myImageView.image == UIImage(named: "emptySeat.png") && CollectionCell.countOne == true {
                     
                     let alert = UIAlertController(title: "경고", message: "하나의 좌석만 선택할 수 있습니다.", preferredStyle: UIAlertController.Style.alert)
                     let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.default, handler: nil)
                     alert.view.tintColor = UIColor.appColor(.coal)
                     alert.addAction(okButton)
                     viewController?.present(alert, animated: false, completion: nil)
-                } else if CollectionCell.checkArr[btnNum!] == 1 && myImageView.image == UIImage(named: "selectedSeat.png") && CollectionCell.countOne == 1 {
+                } else if CollectionCell.checkArr[btnNum!] == 1 && myImageView.image == UIImage(named: "selectedSeat.png") && CollectionCell.countOne == true {
                     
-                    CollectionCell.countOne -= 1
+                    CollectionCell.countOne = false
                     CollectionCell.checkArr[btnNum!] = 0
                     myImageView.image = UIImage(named: "emptySeat.png")
                     print(CollectionCell.countOne)

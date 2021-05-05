@@ -290,7 +290,7 @@ class ReserveViewController: UIViewController{
         
         //  <-- 컬렉션뷰 --> //
         stateArr = Array(repeating: 0, count: Room.shared.totalCount)
-        CollectionCell.countOne = 0
+        CollectionCell.countOne = false
         
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
@@ -433,8 +433,10 @@ class ReserveViewController: UIViewController{
     func collectionViewReload() {
         showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
         CollectionCell.userSelectedSeat = ""
-        CollectionCell.userSeatInfo = -1
+        CollectionCell.userSeatInfo = 0
         CollectionCell.checkArr = ReserveViewController().stateArr
+        CollectionCell.countOne = false
+        CollectionCell.checkArr[Int(CollectionCell.userSelectedSeat) ?? 0] = 0
            
     }
     

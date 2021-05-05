@@ -11,13 +11,15 @@
 		2C130462262AD3F6006470C3 /* ExtendQRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */; };
 		2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */; };
 		2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */; };
+		2C295B17263F26F100C3641D /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C295B16263F26F100C3641D /* AppStyle.swift */; };
+		2C295B19263F26FD00C3641D /* TimeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C295B18263F26FD00C3641D /* TimeBarView.swift */; };
+		2C295B1B263F278B00C3641D /* CameraAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C295B1A263F278B00C3641D /* CameraAccess.swift */; };
 		2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B357260CC326003AB505 /* CollectionCell.swift */; };
 		2C59B35A260CC326003AB505 /* CollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B358260CC326003AB505 /* CollectionCell.xib */; };
 		2C59B371260CC4D6003AB505 /* logo_jungsook.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36D260CC4D6003AB505 /* logo_jungsook.png */; };
 		2C59B372260CC4D6003AB505 /* logo_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36E260CC4D6003AB505 /* logo_green.png */; };
 		2C59B373260CC4D6003AB505 /* logo_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B36F260CC4D6003AB505 /* logo_white.png */; };
 		2C59B374260CC4D6003AB505 /* splash_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B370260CC4D6003AB505 /* splash_background.png */; };
-		2C59B37C260CC575003AB505 /* RGBColorPick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B37B260CC575003AB505 /* RGBColorPick.swift */; };
 		2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B37F260CC599003AB505 /* RequestAPI.swift */; };
 		2C59B38E260CE90E003AB505 /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B38D260CE90E003AB505 /* OptionViewController.swift */; };
 		2C59B392260CE92E003AB505 /* QRReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59B391260CE92E003AB505 /* QRReaderView.swift */; };
@@ -57,6 +59,9 @@
 		2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendQRScanViewController.swift; sourceTree = "<group>"; };
 		2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeat.swift; sourceTree = "<group>"; };
 		2C181FE225E062B50075ACC6 /* ShowMySeatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeatCell.swift; sourceTree = "<group>"; };
+		2C295B16263F26F100C3641D /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
+		2C295B18263F26FD00C3641D /* TimeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeBarView.swift; sourceTree = "<group>"; };
+		2C295B1A263F278B00C3641D /* CameraAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccess.swift; sourceTree = "<group>"; };
 		2C59B357260CC326003AB505 /* CollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
 		2C59B358260CC326003AB505 /* CollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionCell.xib; sourceTree = "<group>"; };
 		2C59B36D260CC4D6003AB505 /* logo_jungsook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_jungsook.png; sourceTree = "<group>"; };
@@ -64,7 +69,6 @@
 		2C59B36F260CC4D6003AB505 /* logo_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_white.png; sourceTree = "<group>"; };
 		2C59B370260CC4D6003AB505 /* splash_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_background.png; sourceTree = "<group>"; };
 		2C59B376260CC4EA003AB505 /* RobotoMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoMono-Regular.ttf"; sourceTree = "<group>"; };
-		2C59B37B260CC575003AB505 /* RGBColorPick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBColorPick.swift; sourceTree = "<group>"; };
 		2C59B37F260CC599003AB505 /* RequestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAPI.swift; sourceTree = "<group>"; };
 		2C59B38D260CE90E003AB505 /* OptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionViewController.swift; sourceTree = "<group>"; };
 		2C59B391260CE92E003AB505 /* QRReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderView.swift; sourceTree = "<group>"; };
@@ -149,10 +153,11 @@
 		2C59B378260CC522003AB505 /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				2C295B16263F26F100C3641D /* AppStyle.swift */,
 				2CBA2F682623526B000369FC /* Toast.swift */,
-				2C59B37B260CC575003AB505 /* RGBColorPick.swift */,
 				2CBA2F6B26235273000369FC /* Room.swift */,
 				2C59B37F260CC599003AB505 /* RequestAPI.swift */,
+				2C295B1A263F278B00C3641D /* CameraAccess.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 		79A61F8425DE42C700B5C24E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				2C295B18263F26FD00C3641D /* TimeBarView.swift */,
 				79B6A1B625DE347500666EAE /* LoginViewController.swift */,
 				79A61F8A25DE44BE00B5C24E /* MainViewController.swift */,
 				79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */,
@@ -361,19 +367,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C295B1B263F278B00C3641D /* CameraAccess.swift in Sources */,
 				2C130462262AD3F6006470C3 /* ExtendQRScanViewController.swift in Sources */,
 				79B6A1B725DE347500666EAE /* LoginViewController.swift in Sources */,
 				79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */,
 				2CBA2F692623526B000369FC /* Toast.swift in Sources */,
 				79A61F9125DE47A400B5C24E /* ReserveViewController.swift in Sources */,
 				2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */,
+				2C295B17263F26F100C3641D /* AppStyle.swift in Sources */,
 				79B6A1B325DE347500666EAE /* AppDelegate.swift in Sources */,
-				2C59B37C260CC575003AB505 /* RGBColorPick.swift in Sources */,
 				79B6A1BD25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld in Sources */,
 				2C181FE325E062B50075ACC6 /* ShowMySeatCell.swift in Sources */,
 				79B6A1B525DE347500666EAE /* SceneDelegate.swift in Sources */,
 				2C59B392260CE92E003AB505 /* QRReaderView.swift in Sources */,
 				2C59B395260CE949003AB505 /* QRCodeViewController.swift in Sources */,
+				2C295B19263F26FD00C3641D /* TimeBarView.swift in Sources */,
 				79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */,
 				2C59B359260CC326003AB505 /* CollectionCell.swift in Sources */,
 				2C59B398260CE961003AB505 /* QRScanViewController.swift in Sources */,

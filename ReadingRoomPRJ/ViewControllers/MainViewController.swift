@@ -6,6 +6,7 @@ import UIKit
 import Foundation
 import PanModal
 import Alamofire
+import Photos
 
 enum userType: String {
     case admin = "ADMIN"
@@ -94,9 +95,10 @@ class MainViewController: UIViewController {
         studentDepartment.font = .appFont(size: 18, family: .Regular)
         studentView.addSubview(studentDepartment)
 
-        studentOption = UIImage(named: "setting.png")
+        studentOption = UIImage(systemName: "gearshape")
         let studentOptionButton = UIButton()
         studentOptionButton.setImage(studentOption, for: .normal)
+        studentOptionButton.tintColor = .black
         studentOptionButton.translatesAutoresizingMaskIntoConstraints = false
         studentOptionButton.addTarget(self, action: #selector(self.optionView(_:)), for: .touchUpInside)
         studentView.addSubview(studentOptionButton)
@@ -188,6 +190,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        CameraAccess().requestCameraPermission()
         view.backgroundColor = .appColor(.mainBackgroundColor)
         checkUser()
 
@@ -360,8 +363,29 @@ class MainViewController: UIViewController {
                     self.present(userNotReserve, animated: true)
                     //Toast.showToast(vc: self, message: "예약정보 없음")
                 } else {
-                    let vc: QRScanViewController = QRScanViewController()
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    
+                    let cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)
+                    switch cameraStatus {
+                        case .authorized:
+                            print("접근 허용됌")
+                            let vc: QRScanViewController = QRScanViewController()
+                            self.navigationController?.pushViewController(vc, animated: true)
+                            
+                        case .denied:
+                            print("접근 허용 안됌")
+                            let alert = UIAlertController(title: "권한", message: "카메라 권한이 필요합니다.", preferredStyle: .alert)
+                            let okButton = UIAlertAction(title: "이동", style: .default, handler: {(UIAlertAction) in
+                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                                }
+                            })
+                            alert.addAction(okButton)
+                            self.present(alert, animated: true, completion: nil)
+                            
+                        default:
+                            break
+                        }
+                    
                 }
             } else {
                 print(response)
