@@ -33,6 +33,8 @@ class QRScanViewController: UIViewController {
         super.viewDidLoad()
         self.readerView.delegate = self
         self.readerView.start()
+        self.navigationItem.title = "자리 확정"
+        self.navigationController?.navigationBar.tintColor = UIColor.appColor(.coal)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -68,7 +68,7 @@ class ReserveViewController: UIViewController{
     
     override func loadView() {
         super.loadView()
-        navigationController?.navigationBar.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
+        navigationController?.navigationBar.tintColor = UIColor.appColor(.coal)
         navigationItem.title = "좌석 예약"
         print("ReserveViewController의 loadView가 출력됩니다.")
         
@@ -280,11 +280,8 @@ class ReserveViewController: UIViewController{
         alertMaxTime()
         ReserveViewController().modalPresentationStyle = .fullScreen
         
-        startTime.minimumDate = Date()
-        endTime.minimumDate = Date()
         
         
-        baseTimeRule()
         print("데이트피커 시간 표시 : \(startTime.date)")
         
         
@@ -296,6 +293,16 @@ class ReserveViewController: UIViewController{
         showSeatCollectionView.dataSource = self
         showSeatCollectionView.delegate = self
         showSeatCollectionView.register(UINib(nibName: "CollectionCell", bundle: nil), forCellWithReuseIdentifier: CollectionCell.identifire)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        baseStartTime()
+        baseEndTime()
+        //startTime.minimumDate = Date()
+        endTime.minimumDate = startTime.date
+        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
         
     }
     
@@ -319,9 +326,7 @@ class ReserveViewController: UIViewController{
         }
     
     
-    @objc func addTargetDatePicker(_ sender: Any) {
-        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
-    }
+    
     
     func alertMaxTime() {
         let alert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: .alert)
@@ -332,7 +337,8 @@ class ReserveViewController: UIViewController{
     }
     
     
-    func baseTimeRule() {
+    
+    func baseStartTime() {
         let calendar = Calendar.current
         var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
         guard var hour = startDateComponents.hour, var minute = startDateComponents.minute else {
@@ -360,10 +366,16 @@ class ReserveViewController: UIViewController{
             }
 
             // update the datepicker
-            startTime.date = roundedDate
+            //startTime.date = roundedDate
+            startTime.minimumDate = roundedDate
         }
         
-        //종류 데이트피커를 시작시간 +2시간으로 세팅
+    }
+    
+    func baseEndTime() {
+        let calendar = Calendar.current
+        var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
+        //종류 데이트피커를 시작시간 +3시간으로 세팅
         var endDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: endTime.date)
         guard var endHour = endDateComponents.hour else {
             print("www")
@@ -391,8 +403,9 @@ class ReserveViewController: UIViewController{
         }
         
         endTime.date = addHour
-        startTime.addTarget(self, action: #selector(addTargetDatePicker), for: .allEvents)
+        
     }
+    
     
     
     @objc func clickReloadBtn(_ sender: Any){
@@ -663,6 +676,7 @@ extension ReserveViewController: UICollectionViewDataSource {
             RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: {(result, response) in
                 if (result) {
                     let reserveInfo = ((response as! NSArray)[0] as! NSDictionary)["reserved"] as! NSArray
+                    print(">>> 좌석 현황 확인")
                     if (reserveInfo[curr] as AnyObject).count == 0 {
                         cell.myImageView.image = UIImage(named: "emptySeat.png")
                         cellState()
@@ -724,7 +738,8 @@ extension ReserveViewController: UICollectionViewDataSource {
         }
         
         let seatNo = Int((sender.titleLabel?.text)!)
-        let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any> // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인
+        let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any>
+        // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인 => 같이 업데이트 되는 것 확인.[본의]
         
         let reservedTimes = NSMutableArray()
         for reserve in reserveList {

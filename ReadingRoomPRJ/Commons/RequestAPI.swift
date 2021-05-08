@@ -78,7 +78,6 @@ class RequestAPI: NSObject {
                 completion(false, ["error":error])
             }
         }
-        
     }
 }
 

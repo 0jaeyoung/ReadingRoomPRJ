@@ -98,7 +98,7 @@ class MainViewController: UIViewController {
         studentOption = UIImage(systemName: "gearshape")
         let studentOptionButton = UIButton()
         studentOptionButton.setImage(studentOption, for: .normal)
-        studentOptionButton.tintColor = .black
+        studentOptionButton.tintColor = UIColor.appColor(.coal)
         studentOptionButton.translatesAutoresizingMaskIntoConstraints = false
         studentOptionButton.addTarget(self, action: #selector(self.optionView(_:)), for: .touchUpInside)
         studentView.addSubview(studentOptionButton)
@@ -230,7 +230,7 @@ class MainViewController: UIViewController {
                 self.present(userNotReserve, animated: true)
                 }
                 else {
-                
+                    self.presentPanModal(MySeatViewController())
                     let userReserveInfo = (response as! NSArray)[0] as! NSDictionary
                     MainViewController.reserveID = userReserveInfo["reservationId"] as! String
                     MainViewController.college = userReserveInfo["college"] as! String
@@ -240,7 +240,7 @@ class MainViewController: UIViewController {
                     MainViewController.userBeginTime = userReserveInfo["begin"] as! Int
                     MainViewController.userEndTime = userReserveInfo["end"] as! Int
                     self._seat = userReserveInfo["seat"] as! Int
-                    self.presentPanModal(MySeatViewController())
+                    
 
                 }
             } else {

@@ -11,11 +11,13 @@ class OptionViewController: UIViewController {
     var logoutButton: UIButton!
     override func loadView() {
         super.loadView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
+        self.navigationController?.navigationBar.tintColor = UIColor.appColor(.coal)
+        self.navigationItem.title = "설정"
         
         logoutButton = UIButton(type: .system)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        logoutButton.backgroundColor = .systemIndigo
+        logoutButton.backgroundColor = UIColor.appColor(.mainColor)
         logoutButton.setTitle("로그아웃", for: .normal)
         view.addSubview(logoutButton)
         
@@ -31,6 +33,8 @@ class OptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("option view")
+        
+        
         
         print("I'm test")
         if UserDefaults.standard.dictionary(forKey: "tokenDic")?.count == 0{

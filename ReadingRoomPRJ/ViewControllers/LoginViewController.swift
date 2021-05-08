@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
         
         id = UITextField()
         id.translatesAutoresizingMaskIntoConstraints = false
-        id.backgroundColor = #colorLiteral(red: 0.953684628, green: 0.9676424861, blue: 0.9900485873, alpha: 1)
+        id.backgroundColor = UIColor.appColor(.mainBackgroundColor)
         id.layer.borderWidth = 0.5
         id.layer.borderColor = #colorLiteral(red: 0.837041378, green: 0.8320663571, blue: 0.8408662081, alpha: 1)
         id.autocapitalizationType = .none
@@ -42,7 +42,7 @@ class LoginViewController: UIViewController {
     
         password = UITextField()
         password.translatesAutoresizingMaskIntoConstraints = false
-        password.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.968627451, blue: 0.9882352941, alpha: 1)
+        password.backgroundColor = UIColor.appColor(.mainBackgroundColor)
         password.layer.borderWidth = 0.5
         password.layer.borderColor = #colorLiteral(red: 0.837041378, green: 0.8320663571, blue: 0.8408662081, alpha: 1)
         password.autocapitalizationType = .none
@@ -54,7 +54,7 @@ class LoginViewController: UIViewController {
         
         btnAutoLogin = UIButton(type: .system)
         btnAutoLogin.translatesAutoresizingMaskIntoConstraints = false
-        btnAutoLogin.tintColor = .black
+        btnAutoLogin.tintColor = UIColor.appColor(.coal)
         let unchecked = UIImage(systemName: "square")
         btnAutoLogin.setImage(unchecked, for: .normal)
         btnAutoLogin.addTarget(self, action: #selector(self.changeBtnImage), for: .touchUpInside)
