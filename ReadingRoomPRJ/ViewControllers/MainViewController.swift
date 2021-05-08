@@ -230,7 +230,7 @@ class MainViewController: UIViewController {
                 self.present(userNotReserve, animated: true)
                 }
                 else {
-                    self.presentPanModal(MySeatViewController())
+                    
                     let userReserveInfo = (response as! NSArray)[0] as! NSDictionary
                     MainViewController.reserveID = userReserveInfo["reservationId"] as! String
                     MainViewController.college = userReserveInfo["college"] as! String
@@ -240,7 +240,7 @@ class MainViewController: UIViewController {
                     MainViewController.userBeginTime = userReserveInfo["begin"] as! Int
                     MainViewController.userEndTime = userReserveInfo["end"] as! Int
                     self._seat = userReserveInfo["seat"] as! Int
-                    
+                    self.presentPanModal(MySeatViewController())
 
                 }
             } else {

@@ -280,7 +280,10 @@ class ReserveViewController: UIViewController{
         alertMaxTime()
         ReserveViewController().modalPresentationStyle = .fullScreen
         
-        
+        baseStartTime()
+        baseEndTime()
+        endTime.minimumDate = startTime.date
+        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
         
         print("데이트피커 시간 표시 : \(startTime.date)")
         
@@ -296,17 +299,7 @@ class ReserveViewController: UIViewController{
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        baseStartTime()
-        baseEndTime()
-        //startTime.minimumDate = Date()
-        endTime.minimumDate = startTime.date
-        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
-        
-    }
-    
-    
+  
     
     func showToast(controller: UIViewController, message: String) {
         let width_variable = 10
