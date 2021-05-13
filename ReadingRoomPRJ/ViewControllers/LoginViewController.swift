@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import NVActivityIndicatorView
+//import NVActivityIndicatorView
 
 class LoginViewController: UIViewController {
     var subLogo: UIImageView!
@@ -142,26 +142,27 @@ class LoginViewController: UIViewController {
     
     //https://github.com/ninjaprox/NVActivityIndicatorView
     func setLoading(){
-        let loading = NVActivityIndicatorView(frame: .zero, type: .pacman, color: .yellow, padding: 0)
-        loading.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loading)
+        //let loading = NVActivityIndicatorView(frame: .zero, type: .pacman, color: .yellow, padding: 0)
+        //loading.translatesAutoresizingMaskIntoConstraints = false
+        //view.addSubview(loading)
         
-        NSLayoutConstraint.activate([
-            loading.widthAnchor.constraint(equalToConstant: 60),
-            loading.heightAnchor.constraint(equalToConstant: 60),
-            loading.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            loading.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-               
-        loading.startAnimating()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0){
-            loading.stopAnimating()
-            let mainVC: MainViewController = MainViewController()
-            let navVC = UINavigationController(rootViewController: mainVC)
-            navVC.modalPresentationStyle = .fullScreen
-            self.present(navVC, animated: true, completion: nil)
-        }
+//        NSLayoutConstraint.activate([
+//            loading.widthAnchor.constraint(equalToConstant: 60),
+//            loading.heightAnchor.constraint(equalToConstant: 60),
+//            loading.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            loading.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+//        ])
+//               
+//        loading.startAnimating()
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0){
+//            loading.stopAnimating()
+//            let mainVC: MainViewController = MainViewController()
+//            let navVC = UINavigationController(rootViewController: mainVC)
+//            navVC.modalPresentationStyle = .fullScreen
+//            self.present(navVC, animated: true, completion: nil)
+//        }
     }
+    
     
     func resignForKeyboardNotification() {
         
@@ -170,6 +171,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        self.view.frame.origin.y = 0
         
         let bottom = view.frame.origin.y
         
@@ -177,7 +179,9 @@ class LoginViewController: UIViewController {
             let keyboardReactangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardReactangle.height
             
-            self.view.frame.origin.y = bottom - (keyboardHeight / 4)
+            self.view.frame.origin.y = bottom - (keyboardHeight / 1) + 70
+            //self.view.frame.origin.y = bottom - 80
+            print(keyboardHeight)
         }
     }
     

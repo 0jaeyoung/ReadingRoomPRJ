@@ -11,7 +11,8 @@ import Alamofire
 import PanModal
 
 class ReserveViewController: UIViewController{
-
+    var selectedCell: CollectionCell?
+    
     var showCurrentSeat: UILabel!
     var currentDay: UILabel!
     var startLb: UILabel!
@@ -68,7 +69,7 @@ class ReserveViewController: UIViewController{
     
     override func loadView() {
         super.loadView()
-        navigationController?.navigationBar.tintColor = UIColor.appColor(.coal)
+        navigationController?.navigationBar.tintColor = UIColor.rgbColor(r: 51, g: 51, b: 51)
         navigationItem.title = "좌석 예약"
         print("ReserveViewController의 loadView가 출력됩니다.")
         
@@ -280,26 +281,36 @@ class ReserveViewController: UIViewController{
         alertMaxTime()
         ReserveViewController().modalPresentationStyle = .fullScreen
         
-        baseStartTime()
-        baseEndTime()
-        endTime.minimumDate = startTime.date
-        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
+        startTime.minimumDate = Date()
+        endTime.minimumDate = Date()
         
+        
+        baseTimeRule()
         print("데이트피커 시간 표시 : \(startTime.date)")
         
         
         //  <-- 컬렉션뷰 --> //
         stateArr = Array(repeating: 0, count: Room.shared.totalCount)
-        CollectionCell.countOne = false
+        //CollectionCell.countOne = 0
         
         //컬렉션뷰 delegate, datasource 호출 및 register주기
         showSeatCollectionView.dataSource = self
         showSeatCollectionView.delegate = self
         showSeatCollectionView.register(UINib(nibName: "CollectionCell", bundle: nil), forCellWithReuseIdentifier: CollectionCell.identifire)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(seatSelected), name: Notification.Name("seatSelected"), object: nil)
+        
     }
     
-  
+    @objc func seatSelected(_ notification: Notification) {
+        if selectedCell == notification.object as? CollectionCell {
+            return
+        }
+        if selectedCell != nil {
+            selectedCell?.myImageView.image = selectedCell?.state
+        }
+        selectedCell = notification.object as? CollectionCell
+    }
     
     func showToast(controller: UIViewController, message: String) {
         let width_variable = 10
@@ -319,7 +330,9 @@ class ReserveViewController: UIViewController{
         }
     
     
-    
+    @objc func addTargetDatePicker(_ sender: Any) {
+        endTime.maximumDate = Calendar.current.date(byAdding: .hour, value: 4, to: startTime.date)
+    }
     
     func alertMaxTime() {
         let alert = UIAlertController(title: "예약", message: "최대 예약 시간은 4시간 입니다", preferredStyle: .alert)
@@ -330,8 +343,7 @@ class ReserveViewController: UIViewController{
     }
     
     
-    
-    func baseStartTime() {
+    func baseTimeRule() {
         let calendar = Calendar.current
         var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
         guard var hour = startDateComponents.hour, var minute = startDateComponents.minute else {
@@ -359,16 +371,10 @@ class ReserveViewController: UIViewController{
             }
 
             // update the datepicker
-            //startTime.date = roundedDate
-            startTime.minimumDate = roundedDate
+            startTime.date = roundedDate
         }
         
-    }
-    
-    func baseEndTime() {
-        let calendar = Calendar.current
-        var startDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: startTime.date)
-        //종류 데이트피커를 시작시간 +3시간으로 세팅
+        //종류 데이트피커를 시작시간 +2시간으로 세팅
         var endDateComponents = calendar.dateComponents([.month, .day, .year, .hour, .minute], from: endTime.date)
         guard var endHour = endDateComponents.hour else {
             print("www")
@@ -396,9 +402,8 @@ class ReserveViewController: UIViewController{
         }
         
         endTime.date = addHour
-        
+        startTime.addTarget(self, action: #selector(addTargetDatePicker), for: .allEvents)
     }
-    
     
     
     @objc func clickReloadBtn(_ sender: Any){
@@ -439,11 +444,6 @@ class ReserveViewController: UIViewController{
     func collectionViewReload() {
         showSeatCollectionView.reloadData()     //* 한줄 추가시에 데이터 리로드 성공!
         CollectionCell.userSelectedSeat = ""
-        CollectionCell.userSeatInfo = 0
-        CollectionCell.checkArr = ReserveViewController().stateArr
-        CollectionCell.countOne = false
-        CollectionCell.checkArr[Int(CollectionCell.userSelectedSeat) ?? 0] = 0
-           
     }
     
     
@@ -648,18 +648,13 @@ extension ReserveViewController: UICollectionViewDataSource {
         
         switch curr{
         case SeatType.Wall.rawValue:
-            cell.myImageView.image = UIImage(named: "road.png")
-            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             break
 
         case SeatType.Door.rawValue:
             cell.myImageView.image = UIImage(named: "door.jpeg")
-            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width, height: cell.bounds.size.width)
             break
 
         case SeatType.Empty.rawValue:
-            cell.myImageView.image = UIImage(named: "road.png")
-            cell.myImageView.frame = CGRect(x: 0, y: 0, width: cell.bounds.size.width*0.8, height: cell.bounds.size.width)
             break
 
         default:
@@ -669,7 +664,6 @@ extension ReserveViewController: UICollectionViewDataSource {
             RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: {(result, response) in
                 if (result) {
                     let reserveInfo = ((response as! NSArray)[0] as! NSDictionary)["reserved"] as! NSArray
-                    print(">>> 좌석 현황 확인")
                     if (reserveInfo[curr] as AnyObject).count == 0 {
                         cell.myImageView.image = UIImage(named: "emptySeat.png")
                         cellState()
@@ -725,14 +719,13 @@ extension ReserveViewController: UICollectionViewDataSource {
     // 좌석 클릭시 시간바 보여줌
     // TODO : 빈자리 클릭시에도 타는지 확인
     @objc func tapBtn(_ sender: UIButton){
-        if !Bool(truncating: NSNumber(value: CollectionCell.self.countOne)) && doNotShowTimeScroll {
-            hideTimeBar()
-            return
-        }
+//        if doNotShowTimeScroll {
+//            hideTimeBar()
+//            return
+//        }
         
         let seatNo = Int((sender.titleLabel?.text)!)
-        let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any>
-        // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인 => 같이 업데이트 되는 것 확인.[본의]
+        let reserveList = (Room.shared.reserved as Array)[seatNo!] as! Array<Any> // TODO : ReserveVC 열때 싱글톤에 저장한 예약정보를 가져옴. 실시간 업데이트를 위해서는 [재설정] 버튼 클릭시 Room.shared.reserved 값도 업데이트 했는지 확인
         
         let reservedTimes = NSMutableArray()
         for reserve in reserveList {

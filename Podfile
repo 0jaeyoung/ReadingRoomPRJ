@@ -8,5 +8,7 @@ target 'ReadingRoomPRJ' do
   # Pods for ReadingRoomPRJ
   pod 'Alamofire'
   pod 'PanModal'
+  pod 'Firebase/Analytics', '~> 7.2-M1'
+  
 
 end

@@ -190,6 +190,11 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print(">>>>>>.")
+        
+        
+        
         CameraAccess().requestCameraPermission()
         view.backgroundColor = .appColor(.mainBackgroundColor)
         checkUser()
@@ -290,10 +295,10 @@ class MainViewController: UIViewController {
     
     @objc func goReserveView(_ sender: Any) {
 
-            let vc = ReserveViewController()
-            vc.modalPresentationStyle = .fullScreen
+        let vc = ReserveViewController()
+        vc.modalPresentationStyle = .fullScreen
 
-            self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)
 
        }
 

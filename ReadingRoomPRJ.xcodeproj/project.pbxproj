@@ -33,6 +33,7 @@
 		2C59B3AC260CEA9F003AB505 /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AB260CEA9F003AB505 /* line.png */; };
 		2C59B3AF260CEAA7003AB505 /* imgOption.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3AE260CEAA7003AB505 /* imgOption.jpg */; };
 		2C59B3B2260CEB25003AB505 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C59B3B1260CEB25003AB505 /* Assets.xcassets */; };
+		2C9B3AE3264A69CC006016C9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C9B3AE2264A69CC006016C9 /* GoogleService-Info.plist */; };
 		2CA0C11A263301840077E327 /* g300.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C118263301840077E327 /* g300.ttf */; };
 		2CA0C11B263301840077E327 /* g600.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C119263301840077E327 /* g600.ttf */; };
 		2CA0C1202633067C0077E327 /* btn_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C11F2633067C0077E327 /* btn_1.png */; };
@@ -82,6 +83,7 @@
 		2C59B3AB260CEA9F003AB505 /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		2C59B3AE260CEAA7003AB505 /* imgOption.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = imgOption.jpg; sourceTree = "<group>"; };
 		2C59B3B1260CEB25003AB505 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C9B3AE2264A69CC006016C9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2CA0C118263301840077E327 /* g300.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g300.ttf; sourceTree = "<group>"; };
 		2CA0C119263301840077E327 /* g600.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = g600.ttf; sourceTree = "<group>"; };
 		2CA0C11F2633067C0077E327 /* btn_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_1.png; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 				79B6A1B825DE347500666EAE /* Main.storyboard */,
 				79B6A1C025DE347800666EAE /* LaunchScreen.storyboard */,
 				79B6A1C325DE347800666EAE /* Info.plist */,
+				2C9B3AE2264A69CC006016C9 /* GoogleService-Info.plist */,
 				79B6A1BB25DE347500666EAE /* ReadingRoomPRJ.xcdatamodeld */,
 			);
 			path = ReadingRoomPRJ;
@@ -315,6 +318,7 @@
 				2C59B3A6260CEA42003AB505 /* selectedSeat.png in Resources */,
 				2C59B35A260CC326003AB505 /* CollectionCell.xib in Resources */,
 				2C59B3A3260CEA3B003AB505 /* ingSeat.png in Resources */,
+				2C9B3AE3264A69CC006016C9 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
