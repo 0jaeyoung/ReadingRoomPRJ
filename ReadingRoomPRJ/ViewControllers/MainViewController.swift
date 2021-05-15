@@ -29,15 +29,15 @@ class MainViewController: UIViewController {
 
     var studentView : UIView!
     var studentImageView : UIView!
-    
+
     var studentImage: UIImage!
     var studentOption: UIImage!
-    
+
     var nameLabel: UILabel!
     var subNameLabel: UILabel!
     var studentDepartment: UILabel!
     var studentCollege: UILabel!
-    
+
     var firstButton: UIButton!
     var secondButton: UIButton!
     var thirdButton: UIButton!
@@ -49,7 +49,7 @@ class MainViewController: UIViewController {
         super.loadView()
         print("view load")
 
-        
+
         studentView = UIView()
         studentView.layer.shadowRadius = 5
         studentView.layer.cornerRadius = 10
@@ -131,12 +131,12 @@ class MainViewController: UIViewController {
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
         thirdButton.tintColor = .white
         view.addSubview(thirdButton)
-        
+
         var marginHeight: CGFloat = 30
         if view.frame.height < 750 {
             marginHeight = 10
         }
-        
+
         NSLayoutConstraint.activate([
             studentView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: marginHeight),
             studentView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -161,7 +161,7 @@ class MainViewController: UIViewController {
 
             studentCollege.leadingAnchor.constraint(equalTo: subNameLabel.leadingAnchor),
             studentCollege.bottomAnchor.constraint(equalTo: studentImageView.bottomAnchor, constant: -7),
-            
+
             studentDepartment.leadingAnchor.constraint(equalTo: line.leadingAnchor),
             studentDepartment.bottomAnchor.constraint(equalTo: studentCollege.topAnchor, constant: -5),
 
@@ -190,12 +190,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print(">>>>>>.")
-        
-        
-        
-        CameraAccess().requestCameraPermission()
+
         view.backgroundColor = .appColor(.mainBackgroundColor)
         checkUser()
 
@@ -209,8 +204,8 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .appColor(.mainBackgroundColor)
         navigationController?.navigationBar.isTranslucent = false // 진해지는거 방지
     }
-    
-   
+
+
 
     @objc func showMySeat(_ sender: Any) {
 
@@ -235,7 +230,7 @@ class MainViewController: UIViewController {
                 self.present(userNotReserve, animated: true)
                 }
                 else {
-                    
+
                     let userReserveInfo = (response as! NSArray)[0] as! NSDictionary
                     MainViewController.reserveID = userReserveInfo["reservationId"] as! String
                     MainViewController.college = userReserveInfo["college"] as! String
@@ -277,22 +272,22 @@ class MainViewController: UIViewController {
 
                 roomListAlert.addAction(cancelAction)
                 self.present(roomListAlert, animated: true, completion: nil)
-                
-                
+
+
             } else {
                 print("실패")
             }
         })
 
     }
-    
-    
+
+
     func showSelectedRoomSeats(index: Int, selectedRoom: NSDictionary) {
         // #boni --- userDefault로 세팅되있던거 전부 클래스화 해서 전역변수 사용으로 바꾸꿨어
         Room.shared = Room.init(room: selectedRoom)
         self.goReserveView((Any).self)
     }
-    
+
     @objc func goReserveView(_ sender: Any) {
 
         let vc = ReserveViewController()
@@ -304,7 +299,7 @@ class MainViewController: UIViewController {
 
 
     func checkUser() {
-        
+
         if (userType.admin.rawValue == UserDefaults.standard.dictionary(forKey: "studentInfo")?["type"] as! String){
 
             let nameLabelText = UserDefaults.standard.dictionary(forKey: "studentInfo")?["college"]!
@@ -344,58 +339,54 @@ class MainViewController: UIViewController {
 
 
     @objc func qrReader(_ sender: Any) {
+        CameraAccess().requestCameraPermission()
+        let cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)     //권한 허용 상태 확인 변수
+        
+        switch cameraStatus {
+            case .authorized:
+                print("접근 허용됌")
+                let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
+                let id = accountInfo!["id"]
+                let password = accountInfo!["pw"]
 
-
-        let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
-        let id = accountInfo!["id"]
-        let password = accountInfo!["pw"]
-
-        let param = [
-            "id": id as! String,
-            "password": password as! String
-        ] as [String : Any]
-
-
-
-        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
-            if (result) {
-                //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
-                if (response as! NSArray).isEqual(to: []) {
-                    print("예약정보 없음")
-                    let userNotReserve = UIAlertController(title: "오류", message: "예약 정보가 없습니다.", preferredStyle: .alert)
-                    let userNotReserveOK = UIAlertAction(title: "확인", style: .default, handler: nil)
-                    userNotReserve.addAction(userNotReserveOK)
-                    self.present(userNotReserve, animated: true)
-                    //Toast.showToast(vc: self, message: "예약정보 없음")
-                } else {
-                    
-                    let cameraStatus = AVCaptureDevice.authorizationStatus(for: .video)
-                    switch cameraStatus {
-                        case .authorized:
-                            print("접근 허용됌")
+                let param = [
+                    "id": id as! String,
+                    "password": password as! String
+                ] as [String : Any]
+                
+                RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+                    if (result) {
+                        //print((response as! Array<Any>).count) // 배열 아닐수도있는데 count 접근해서 예약없을때 무조건 크러쉬남. 이렇게 짜면 안됑 확인하면 지우삼
+                        if (response as! NSArray).isEqual(to: []) {
+                            print("예약정보 없음")
+                            let userNotReserve = UIAlertController(title: "오류", message: "예약 정보가 없습니다.", preferredStyle: .alert)
+                            let userNotReserveOK = UIAlertAction(title: "확인", style: .default, handler: nil)
+                            userNotReserve.addAction(userNotReserveOK)
+                            self.present(userNotReserve, animated: true)
+                            //Toast.showToast(vc: self, message: "예약정보 없음")
+                        } else {
                             let vc: QRScanViewController = QRScanViewController()
                             self.navigationController?.pushViewController(vc, animated: true)
-                            
-                        case .denied:
-                            print("접근 허용 안됌")
-                            let alert = UIAlertController(title: "권한", message: "카메라 권한이 필요합니다.", preferredStyle: .alert)
-                            let okButton = UIAlertAction(title: "이동", style: .default, handler: {(UIAlertAction) in
-                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-                                }
-                            })
-                            alert.addAction(okButton)
-                            self.present(alert, animated: true, completion: nil)
-                            
-                        default:
-                            break
                         }
-                    
-                }
-            } else {
-                print(response)
+                    } else {
+                        print(response)
+                    }
+                })
+                
+            case .denied:
+                print("접근 허용 안됌")
+                let alert = UIAlertController(title: "권한", message: "카메라 권한이 필요합니다.", preferredStyle: .alert)
+                let okButton = UIAlertAction(title: "이동", style: .default, handler: {(UIAlertAction) in
+                    if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                    }
+                })
+                alert.addAction(okButton)
+                self.present(alert, animated: true, completion: nil)
+
+            default:
+                break
             }
-        })
     }
     @objc func optionView(_ sender: Any) {
             print("option")
@@ -418,8 +409,6 @@ class MainViewController: UIViewController {
                         let vc: OptionViewController = OptionViewController()
                         self.navigationController?.pushViewController(vc, animated: true)
 
-                        //let vc: TestPicker = TestPicker()
-                        //self.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         let data = response as! NSDictionary
                         if (data["response"] != nil) {
@@ -433,12 +422,8 @@ class MainViewController: UIViewController {
                 })
             } else {
                 print("옵션뷰 통신 실패")
-//                let vc: OptionViewController = OptionViewController()
-//                navigationController?.pushViewController(vc, animated: true)
             }
         }
-    
-    
 
     @objc func showQr(_ sender: Any) {
         let vc: QRCodeViewController = QRCodeViewController()

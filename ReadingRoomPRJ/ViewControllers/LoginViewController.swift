@@ -106,6 +106,10 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        
         resignForKeyboardNotification()
         //다른 공간 클릭 시 키보드 내리기
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -119,6 +123,7 @@ class LoginViewController: UIViewController {
                 id.text = autoLoginValue.object(forKey: "id") as? String
                 password.text = autoLoginValue.object(forKey: "pw") as? String
                 autoLoginBtnState = true
+                self.btnAutoLogin.setImage(UIImage(systemName: "checkmark.square.fill"), for: .normal)
                 self.loginClick(self)
             }
         }
@@ -142,25 +147,7 @@ class LoginViewController: UIViewController {
     
     //https://github.com/ninjaprox/NVActivityIndicatorView
     func setLoading(){
-        //let loading = NVActivityIndicatorView(frame: .zero, type: .pacman, color: .yellow, padding: 0)
-        //loading.translatesAutoresizingMaskIntoConstraints = false
-        //view.addSubview(loading)
-        
-//        NSLayoutConstraint.activate([
-//            loading.widthAnchor.constraint(equalToConstant: 60),
-//            loading.heightAnchor.constraint(equalToConstant: 60),
-//            loading.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-//            loading.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-//        ])
-//               
-//        loading.startAnimating()
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0){
-//            loading.stopAnimating()
-//            let mainVC: MainViewController = MainViewController()
-//            let navVC = UINavigationController(rootViewController: mainVC)
-//            navVC.modalPresentationStyle = .fullScreen
-//            self.present(navVC, animated: true, completion: nil)
-//        }
+        //Todo: 로딩화면 구성...?
     }
     
     
@@ -232,8 +219,10 @@ class LoginViewController: UIViewController {
                     var isAutoLogin: Bool
                     if self.autoLoginBtnState == true {
                         isAutoLogin = true
+                        
                     } else {
                         isAutoLogin = false
+                        
                     }
                     
                     var accountInfo: NSDictionary
@@ -246,10 +235,7 @@ class LoginViewController: UIViewController {
                     let navVC = UINavigationController(rootViewController: mainVC)
                     navVC.modalPresentationStyle = .fullScreen
                     self.present(navVC, animated: true, completion: nil)
-    
-
-                }
-                else {
+                } else {
                     if (data["message"] != nil) {
                         // TODO:토스트메시지 띄우기
                         print("► 로그인 실패: \(String(describing: data["message"]))")
@@ -269,10 +255,6 @@ class LoginViewController: UIViewController {
             })
         }
         
-        
-        
-        
-       
     }
 }
 

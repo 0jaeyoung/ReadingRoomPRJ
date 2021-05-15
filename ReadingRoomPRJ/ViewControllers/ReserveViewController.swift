@@ -276,6 +276,10 @@ class ReserveViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         print("ReserveViewController의 viewDidLoad가 출력됩니다")
+        print("<-----Room Test")
+        print(Room.shared)
+        print(Room.shared.reserved as NSArray)
+        
         view.backgroundColor = UIColor.appColor(.mainBackgroundColor)
 
         alertMaxTime()
@@ -658,52 +662,41 @@ extension ReserveViewController: UICollectionViewDataSource {
             break
 
         default:
-            let college: String = String(utf8String: UserDefaults.standard.dictionary(forKey: "studentInfo")!["college"] as! String)! //2층
-            let param = ["college": college] as [String : Any]
-            
-            RequestAPI.post(resource: "/rooms", param: param, responseData: "rooms", completion: {(result, response) in
-                if (result) {
-                    let reserveInfo = ((response as! NSArray)[0] as! NSDictionary)["reserved"] as! NSArray
-                    if (reserveInfo[curr] as AnyObject).count == 0 {
-                        cell.myImageView.image = UIImage(named: "emptySeat.png")
-                        cellState()
-                    } else {
-                        let selectedStartTime = self.startTime.date
-                        let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
-                   
-                        let selectedEndTime = self.endTime.date
-                        let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
-                    
-                        let seatReserveInfo = reserveInfo[curr] as! NSArray
-                        for currNum in 0..<seatReserveInfo.count {
-                            print("i:::: \(currNum)")
-                            let currSeatInfo = seatReserveInfo[currNum] as! NSDictionary
-                            let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
-                            let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
-                                                    
-                                                    
-                            if userStartTime < end && userEndTime > begin {
-                                if currSeatInfo["confirmed"] as! Int == 0 {
-                                    cell.myImageView.image = UIImage(named: "ingSeat.png")
-                                    cellState()
-                                    break
-                                    }
-                                else {
-                                        cell.myImageView.image = UIImage(named: "fullSeat.png")
-                                        cellState()
-                                        break
-                                        }
-                                }
-                            else {
-                                    cell.myImageView.image = UIImage(named: "emptySeat.png")
-                                    cellState()
-
-                                }
-                            }
+            let reserveInfo = Room.shared.reserved! as NSArray
+            if (reserveInfo[curr] as AnyObject).count == 0 {
+                cell.myImageView.image = UIImage(named: "emptySeat.png")
+                cellState()
+            } else {
+                let selectedStartTime = self.startTime.date
+                let userStartTime = Int(selectedStartTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
+                
+                let selectedEndTime = self.endTime.date
+                let userEndTime = Int(selectedEndTime.timeIntervalSince1970) * 1000    //서버로 보내는 long값
+                let seatReserveInfo = reserveInfo[curr] as! NSArray
+                for currNum in 0..<seatReserveInfo.count {
+                    print("i:::: \(currNum)")
+                    let currSeatInfo = seatReserveInfo[currNum] as! NSDictionary
+                    let begin = currSeatInfo["begin"] as! Int    //예약된 좌석의 시작시간
+                    let end = currSeatInfo["end"] as! Int        //예약된 좌석의 종료시간
+                                            
+                                            
+                    if userStartTime < end && userEndTime > begin {
+                        if currSeatInfo["confirmed"] as! Int == 0 {
+                            cell.myImageView.image = UIImage(named: "ingSeat.png")
+                            cellState()
+                            break
+                        } else {
+                                cell.myImageView.image = UIImage(named: "fullSeat.png")
+                                cellState()
+                                break
                         }
+                    } else {
+                            cell.myImageView.image = UIImage(named: "emptySeat.png")
+                            cellState()
                     }
-                })
+                }
             }
+        }
         cell.viewController = self
         return cell
     }
