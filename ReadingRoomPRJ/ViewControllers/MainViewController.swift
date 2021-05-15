@@ -77,6 +77,7 @@ class MainViewController: UIViewController {
         nameLabel = UILabel()     //이름
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = .appFont(size: 24, family: .Bold)
+        //nameLabel.font = .appFont(size: 24, family: .Regular)
         studentView.addSubview(nameLabel)
 
         subNameLabel = UILabel()       //학번
