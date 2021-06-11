@@ -170,7 +170,7 @@ class LoginViewController: UIViewController {
             
             self.view.frame.origin.y = bottom - (keyboardHeight / 1) + 70
             //self.view.frame.origin.y = bottom - 80
-            print(keyboardHeight)
+            //print(keyboardHeight)
         }
     }
     
@@ -205,22 +205,23 @@ class LoginViewController: UIViewController {
             let inputPW: String = password.text ?? ""
             
             let param = [
-                "id":inputID,
-                "password":inputPW
+                "id": inputID,
+                "password": inputPW
             ]
             // TODO : 입력값 유효 확인 (공백, 특수문자, 한글 검사 등)
             
-            let response:Dictionary<String,Any> = [
-                "type":"STUDENT",
-                "college":"IT",
-                "studentName":"김재영",
-                "studentId":"201625938",
-                "department":"컴퓨터공학과"
-                
-            ]
+//            let response:Dictionary<String,Any> = [
+//                "type":"STUDENT",
+//                "college":"IT",
+//                "studentName":"김재영",
+//                "studentId":"201625938",
+//                "department":"컴퓨터공학과"
+//
+//            ]
             let result = true
-//            RequestAPI.post(resource: "/account/login", param: param, responseData: "account", completion: { (result, response) in
+            RequestAPI.post(resource: "/account/signIn", param: param, responseData: "account", completion: { (result, response) in
                 let data = response as! NSDictionary
+                
                 print(result)
                 
                 
@@ -263,7 +264,7 @@ class LoginViewController: UIViewController {
                 }
                 //activityIndicator.stopAnimating()
                 self.btnLogin.isEnabled = true
-//            })
+            })
         }
         
     }

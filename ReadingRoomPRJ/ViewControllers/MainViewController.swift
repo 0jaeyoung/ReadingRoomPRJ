@@ -213,15 +213,20 @@ class MainViewController: UIViewController {
         let accountInfo = UserDefaults.standard.dictionary(forKey: "accountInfo")
         let id = accountInfo!["id"]
         let password = accountInfo!["pw"]
-
-        let param = [
+        
+        var param = Dictionary<String,Any>()
+        let loginRequest = [
             "id": id as! String,
             "password": password as! String
         ] as [String : Any]
 
+        param = ["containExpired":true,
+                 "loginRequest":loginRequest]
+        
 
-        RequestAPI.post(resource: "/room/reserve/my", param: param, responseData: "reservations", completion: {(result, response) in
+        RequestAPI.post(resource: "/reservation/history", param: param, responseData: "reservations", completion: {(result, response) in
             if (result) {
+                print("성공")
                 if (response as! NSArray).isEqual(to: []) {
                 print("예약정보 없음")
                 //Toast.showToast(vc: self, message: "예약정보 없음")
@@ -245,7 +250,8 @@ class MainViewController: UIViewController {
 
                 }
             } else {
-                print(response)
+                print("실패")
+                //print(response)
             }
 
         })
