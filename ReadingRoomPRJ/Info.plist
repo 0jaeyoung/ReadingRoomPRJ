@@ -21,7 +21,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>(필수) &quot;가천열람실&quot;은 QR을 통해 예약 확정 및 연장을 위해 카메라 접근 권한이 필요합니다.</string>
+	<string>(필수) "가천열람실"은 QR을 통해 예약 확정 및 연장을 위해 카메라 접근 권한이 필요합니다.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>개인화 추천 서비스 등을 위해 앱추적 동의가 필요합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>g300.ttf</string>
@@ -69,7 +71,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>개인화 추천 서비스 등을 위해 앱추적 동의가 필요합니다.</string>
 </dict>
 </plist>
