@@ -76,13 +76,12 @@ class MainViewController: UIViewController {
 
         nameLabel = UILabel()     //이름
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = .appFont(size: 24, family: .Bold)
-        //nameLabel.font = .appFont(size: 24, family: .Regular)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 24)
         studentView.addSubview(nameLabel)
 
         subNameLabel = UILabel()       //학번
         subNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        subNameLabel.font = .appFont(size: 15, family: .Regular)
+        subNameLabel.font = UIFont.systemFont(ofSize: 15)
         subNameLabel.textColor = .appColor(.nickel)
         studentView.addSubview(subNameLabel)
 
@@ -93,19 +92,20 @@ class MainViewController: UIViewController {
 
         studentDepartment = UILabel()            //학과
         studentDepartment.translatesAutoresizingMaskIntoConstraints = false
-        studentDepartment.font = .appFont(size: 18, family: .Regular)
+        studentDepartment.font = UIFont.systemFont(ofSize: 18)
         studentView.addSubview(studentDepartment)
 
         studentOption = UIImage(systemName: "gearshape")
         let studentOptionButton = UIButton()
         studentOptionButton.setImage(studentOption, for: .normal)
         studentOptionButton.tintColor = UIColor.appColor(.coal)
+        //studentOptionButton.tintColor = UIColor.appColor(.mainColor)
         studentOptionButton.translatesAutoresizingMaskIntoConstraints = false
         studentOptionButton.addTarget(self, action: #selector(self.optionView(_:)), for: .touchUpInside)
         studentView.addSubview(studentOptionButton)
 
         firstButton = UIButton(type: .custom)
-        firstButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
+        firstButton.titleLabel!.font = UIFont.boldSystemFont(ofSize: 30)
         firstButton.setBackgroundImage(UIImage(named: "btn_1.png"), for: .normal)
         firstButton.layer.masksToBounds = true
         firstButton.layer.cornerRadius = 10
@@ -115,7 +115,7 @@ class MainViewController: UIViewController {
         view.addSubview(firstButton)
 
         secondButton = UIButton(type: .custom)
-        secondButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
+        secondButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
         secondButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
         secondButton.layer.masksToBounds = true
         //secondButton.layer.cornerRadius = 10
@@ -124,7 +124,7 @@ class MainViewController: UIViewController {
         view.addSubview(secondButton)
 
         thirdButton = UIButton(type: .custom)
-        thirdButton.titleLabel?.font = .appFont(size: 30, family: .Bold)
+        thirdButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
         thirdButton.setBackgroundImage(UIImage(named: "btn_2.png"), for: .normal)
         thirdButton.layer.masksToBounds = true
         thirdButton.layer.cornerRadius = 10

@@ -36,6 +36,7 @@ class LoginViewController: UIViewController {
         id.layer.borderWidth = 0.5
         id.layer.borderColor = #colorLiteral(red: 0.837041378, green: 0.8320663571, blue: 0.8408662081, alpha: 1)
         id.autocapitalizationType = .none
+        id.font = UIFont.systemFont(ofSize: 15)
         id.placeholder = " 아이디를 입력해주세요."
         id.keyboardType = .alphabet
         self.view.addSubview(id)
@@ -46,6 +47,7 @@ class LoginViewController: UIViewController {
         password.layer.borderWidth = 0.5
         password.layer.borderColor = #colorLiteral(red: 0.837041378, green: 0.8320663571, blue: 0.8408662081, alpha: 1)
         password.autocapitalizationType = .none
+        password.font = UIFont.systemFont(ofSize: 15)
         password.placeholder = " 비밀번호를 입력해주세요."
         password.keyboardType = .alphabet
         password.isSecureTextEntry = true
@@ -56,12 +58,14 @@ class LoginViewController: UIViewController {
         btnAutoLogin.translatesAutoresizingMaskIntoConstraints = false
         btnAutoLogin.tintColor = UIColor.appColor(.coal)
         let unchecked = UIImage(systemName: "square")
+        btnAutoLogin.tintColor = .appColor(.mainColor)
         btnAutoLogin.setImage(unchecked, for: .normal)
         btnAutoLogin.addTarget(self, action: #selector(self.changeBtnImage), for: .touchUpInside)
         self.view.addSubview(btnAutoLogin)
         
         autoLoginLb = UILabel()
         autoLoginLb.text = "자동로그인"
+        autoLoginLb.font = .appFont(size: 15, family: .Bold)
         autoLoginLb.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(autoLoginLb)
         
@@ -69,6 +73,7 @@ class LoginViewController: UIViewController {
         btnLogin.translatesAutoresizingMaskIntoConstraints = false
         btnLogin.backgroundColor = #colorLiteral(red: 0.5215686275, green: 0.6784313725, blue: 0.9019607843, alpha: 1)
         btnLogin.setTitle("로그인", for: .normal)
+        btnLogin.titleLabel!.font = UIFont.boldSystemFont(ofSize: 20)
         btnLogin.addTarget(self, action: #selector(self.loginClick(_:)), for: .touchUpInside)
         self.view.addSubview(btnLogin)
         
@@ -106,9 +111,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         
         resignForKeyboardNotification()
         //다른 공간 클릭 시 키보드 내리기

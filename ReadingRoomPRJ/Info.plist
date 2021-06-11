@@ -69,5 +69,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>개인화 추천 서비스 등을 위해 앱추적 동의가 필요합니다.</string>
 </dict>
 </plist>

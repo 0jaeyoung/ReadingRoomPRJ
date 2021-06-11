@@ -39,6 +39,7 @@
 		2CA0C1202633067C0077E327 /* btn_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C11F2633067C0077E327 /* btn_1.png */; };
 		2CA0C123263306830077E327 /* btn_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C122263306830077E327 /* btn_2.png */; };
 		2CA0C126263306890077E327 /* btn_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0C125263306890077E327 /* btn_3.png */; };
+		2CA6D515264FE4BD0031C356 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA6D514264FE4BD0031C356 /* UIFont.swift */; };
 		2CBA2F692623526B000369FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F682623526B000369FC /* Toast.swift */; };
 		2CBA2F6C26235273000369FC /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6B26235273000369FC /* Room.swift */; };
 		2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6E262359A6000369FC /* OptionViewController.swift */; };
@@ -89,6 +90,7 @@
 		2CA0C11F2633067C0077E327 /* btn_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_1.png; sourceTree = "<group>"; };
 		2CA0C122263306830077E327 /* btn_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_2.png; sourceTree = "<group>"; };
 		2CA0C125263306890077E327 /* btn_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_3.png; sourceTree = "<group>"; };
+		2CA6D514264FE4BD0031C356 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		2CBA2F682623526B000369FC /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		2CBA2F6B26235273000369FC /* Room.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
 		2CBA2F6E262359A6000369FC /* OptionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionViewController.swift; path = ReadingRoomPRJ/ViewControllers/OptionViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -160,6 +162,7 @@
 				2CBA2F6B26235273000369FC /* Room.swift */,
 				2C59B37F260CC599003AB505 /* RequestAPI.swift */,
 				2C295B1A263F278B00C3641D /* CameraAccess.swift */,
+				2CA6D514264FE4BD0031C356 /* UIFont.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
@@ -391,6 +394,7 @@
 				2C59B398260CE961003AB505 /* QRScanViewController.swift in Sources */,
 				2CBA2F6C26235273000369FC /* Room.swift in Sources */,
 				2C59B380260CC599003AB505 /* RequestAPI.swift in Sources */,
+				2CA6D515264FE4BD0031C356 /* UIFont.swift in Sources */,
 				2C59B38E260CE90E003AB505 /* OptionViewController.swift in Sources */,
 				2C181FE025DE96B40075ACC6 /* ShowMySeat.swift in Sources */,
 				2C13045E262AD361006470C3 /* ExtendQRReaderView.swift in Sources */,

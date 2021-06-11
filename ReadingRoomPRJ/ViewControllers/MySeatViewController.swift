@@ -44,7 +44,7 @@ class MySeatViewController: UIViewController {
         mySeat.translatesAutoresizingMaskIntoConstraints = false
         mySeat.textAlignment = .center
         mySeat.text = "나의 자리"
-        mySeat.font = UIFont.systemFont(ofSize: 30)
+        mySeat.font = UIFont.boldSystemFont(ofSize: 30)
         mySeat.textColor = .black
         view.addSubview(mySeat)
 

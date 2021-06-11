@@ -8,11 +8,18 @@
 import UIKit
 import CoreData
 import Firebase
+import AdSupport
+import AppTrackingTransparency
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    override init() {
+        super.init()
+        UIFont.overrideInitialize()
+    }
+
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -31,8 +38,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           application.registerUserNotificationSettings(settings)
         }
         
+        
+        
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
+        
+        
+        
+        ATTrackingManager.requestTrackingAuthorization { status in
+            DispatchQueue.main.async {
+                switch status {
+                case .authorized:
+                    //idfa = identity for advertisers
+                    let idfa = ASIdentifierManager.shared().advertisingIdentifier
+                    print("앱 추적허용 IDFA: \(idfa)")
+                case .denied,
+                     .notDetermined,
+                     .restricted:
+                    print("앱 추적허용x")
+                    break
+                @unknown default:
+                    break
+                }
+            }
+        }
+    
+        
+        
+        
         
         
         return true
@@ -98,6 +131,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
+
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

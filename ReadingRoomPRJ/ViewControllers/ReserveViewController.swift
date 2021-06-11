@@ -91,6 +91,7 @@ class ReserveViewController: UIViewController{
         startLb = UILabel()
         startLb.translatesAutoresizingMaskIntoConstraints = false
         startLb.text = "시작 시간"
+        startLb.font = UIFont.boldSystemFont(ofSize: 17)
         startLb.textAlignment = .center
         self.view.addSubview(startLb)
         
@@ -106,6 +107,7 @@ class ReserveViewController: UIViewController{
         endLb = UILabel()
         endLb.translatesAutoresizingMaskIntoConstraints = false
         endLb.text = "종료 시간"
+        endLb.font = UIFont.boldSystemFont(ofSize: 17)
         endLb.textAlignment = .center
         self.view.addSubview(endLb)
         
@@ -121,6 +123,7 @@ class ReserveViewController: UIViewController{
         refreshBtn = UIButton(type: .system)
         refreshBtn.translatesAutoresizingMaskIntoConstraints = false
         refreshBtn.setTitle("재설정", for: .normal)
+        refreshBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         refreshBtn.backgroundColor = UIColor.appColor(.mainColor)
         refreshBtn.tintColor = .white
         refreshBtn.layer.cornerRadius = 5
@@ -130,6 +133,7 @@ class ReserveViewController: UIViewController{
         completeBtn = UIButton(type: .system)
         completeBtn.translatesAutoresizingMaskIntoConstraints = false
         completeBtn.setTitle("예약하기", for: .normal)
+        completeBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         completeBtn.tintColor = .white
         completeBtn.layer.cornerRadius = 5
         completeBtn.backgroundColor = UIColor.appColor(.mainColor)
