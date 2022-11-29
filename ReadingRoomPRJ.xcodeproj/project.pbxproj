@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -43,7 +43,6 @@
 		2CBA2F692623526B000369FC /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F682623526B000369FC /* Toast.swift */; };
 		2CBA2F6C26235273000369FC /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6B26235273000369FC /* Room.swift */; };
 		2CBA2F6F262359A6000369FC /* OptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBA2F6E262359A6000369FC /* OptionViewController.swift */; };
-		440220F1F69E5135B49233B7 /* Pods_ReadingRoomPRJ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */; };
 		79A61F8B25DE44BE00B5C24E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8A25DE44BE00B5C24E /* MainViewController.swift */; };
 		79A61F8E25DE46F200B5C24E /* MySeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F8D25DE46F200B5C24E /* MySeatViewController.swift */; };
 		79A61F9125DE47A400B5C24E /* ReserveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A61F9025DE47A400B5C24E /* ReserveViewController.swift */; };
@@ -56,7 +55,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReadingRoomPRJ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C13045D262AD360006470C3 /* ExtendQRReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendQRReaderView.swift; sourceTree = "<group>"; };
 		2C130461262AD3F6006470C3 /* ExtendQRScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendQRScanViewController.swift; sourceTree = "<group>"; };
 		2C181FDF25DE96B40075ACC6 /* ShowMySeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowMySeat.swift; sourceTree = "<group>"; };
@@ -105,8 +103,6 @@
 		79B6A1BC25DE347500666EAE /* ReadingRoomPRJ.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReadingRoomPRJ.xcdatamodel; sourceTree = "<group>"; };
 		79B6A1C125DE347800666EAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79B6A1C325DE347800666EAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E06083627197587410796F84 /* Pods-ReadingRoomPRJ.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadingRoomPRJ.debug.xcconfig"; path = "Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ.debug.xcconfig"; sourceTree = "<group>"; };
-		F544C5D547A5BC6937EBCCA7 /* Pods-ReadingRoomPRJ.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReadingRoomPRJ.release.xcconfig"; path = "Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +110,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				440220F1F69E5135B49233B7 /* Pods_ReadingRoomPRJ.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,23 +162,6 @@
 			path = Commons;
 			sourceTree = "<group>";
 		};
-		6F6EDE87115E467A7F18EC6A /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				24DCAD65E10983C472F9C7AF /* Pods_ReadingRoomPRJ.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		76E30D358A91B4ABA7BCC393 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E06083627197587410796F84 /* Pods-ReadingRoomPRJ.debug.xcconfig */,
-				F544C5D547A5BC6937EBCCA7 /* Pods-ReadingRoomPRJ.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		79A61F8425DE42C700B5C24E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,8 +189,6 @@
 			children = (
 				79B6A1B125DE347500666EAE /* ReadingRoomPRJ */,
 				79B6A1B025DE347500666EAE /* Products */,
-				76E30D358A91B4ABA7BCC393 /* Pods */,
-				6F6EDE87115E467A7F18EC6A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -249,11 +225,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79B6A1C625DE347800666EAE /* Build configuration list for PBXNativeTarget "ReadingRoomPRJ" */;
 			buildPhases = (
-				2E73FDD707B1BFB050656505 /* [CP] Check Pods Manifest.lock */,
 				79B6A1AB25DE347500666EAE /* Sources */,
 				79B6A1AC25DE347500666EAE /* Frameworks */,
 				79B6A1AD25DE347500666EAE /* Resources */,
-				C0CBC755B2493DAF4594D314 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -326,48 +300,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2E73FDD707B1BFB050656505 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ReadingRoomPRJ-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C0CBC755B2493DAF4594D314 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReadingRoomPRJ/Pods-ReadingRoomPRJ-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		79B6A1AB25DE347500666EAE /* Sources */ = {
@@ -541,7 +473,6 @@
 		};
 		79B6A1C725DE347800666EAE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E06083627197587410796F84 /* Pods-ReadingRoomPRJ.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -561,7 +492,6 @@
 		};
 		79B6A1C825DE347800666EAE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F544C5D547A5BC6937EBCCA7 /* Pods-ReadingRoomPRJ.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
